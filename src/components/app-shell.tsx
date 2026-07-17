@@ -14,6 +14,7 @@ import {
 } from "@remixicon/react";
 
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
+import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Button } from "@/components/ui/button";
 import {
   Sidebar,
@@ -95,8 +96,11 @@ export function AppShell({
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter className="border-t border-sidebar-border p-3">
-          <div className="text-muted-foreground mb-2 truncate px-1 text-xs">
-            {userName ?? "Signed in"}
+          <div className="mb-2 flex items-center justify-between gap-2 px-1">
+            <div className="text-muted-foreground truncate text-xs">
+              {userName ?? "Signed in"}
+            </div>
+            <ThemeSwitcher align="end" />
           </div>
           <Button
             variant="outline"
@@ -127,6 +131,9 @@ export function AppShell({
           </div>
           <div className="font-heading truncate text-sm font-semibold sm:hidden">
             Spooler
+          </div>
+          <div className="ml-auto">
+            <ThemeSwitcher />
           </div>
         </header>
         <div className="flex-1 p-3 pb-[calc(5rem+env(safe-area-inset-bottom))] sm:p-4 md:p-6 md:pb-6">

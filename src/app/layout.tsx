@@ -52,6 +52,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={cn(
         geist.variable,
         "font-mono",
@@ -60,7 +61,12 @@ export default function RootLayout({
       )}
     >
       <body className="min-h-dvh antialiased">
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
           <TRPCReactProvider>
             <TooltipProvider>
               {children}
