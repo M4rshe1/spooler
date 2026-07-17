@@ -29,6 +29,8 @@ export type NfcSpoolDraft = {
   notes?: string;
   minNozzleC?: number;
   maxNozzleC?: number;
+  minBedC?: number;
+  maxBedC?: number;
   locationName?: string;
   source: "openprinttag" | "openspool" | "spooler" | "url" | "json";
   rawLabel?: string;
@@ -116,6 +118,8 @@ function draftFromUnknownJson(
     const productUrl = pickString(obj, ["url", "product_url", "productUrl"]);
     const minNozzleC = asInt(obj.min_temp ?? obj.minNozzleC ?? obj.min_temp_c);
     const maxNozzleC = asInt(obj.max_temp ?? obj.maxNozzleC ?? obj.max_temp_c);
+    const minBedC = asInt(obj.min_bed ?? obj.minBedC ?? obj.min_bed_c);
+    const maxBedC = asInt(obj.max_bed ?? obj.maxBedC ?? obj.max_bed_c);
 
     if (!brandName && !materialName && !colorHex) return null;
 
@@ -130,6 +134,8 @@ function draftFromUnknownJson(
       productUrl,
       minNozzleC,
       maxNozzleC,
+      minBedC,
+      maxBedC,
       notes:
         minNozzleC != null || maxNozzleC != null
           ? [
@@ -160,6 +166,10 @@ function draftFromUnknownJson(
     );
     const productUrl = pickString(obj, ["productUrl", "product_url", "url"]);
     const notes = pickString(obj, ["notes", "note"]);
+    const minNozzleC = asInt(obj.minNozzleC ?? obj.min_temp);
+    const maxNozzleC = asInt(obj.maxNozzleC ?? obj.max_temp);
+    const minBedC = asInt(obj.minBedC ?? obj.min_bed);
+    const maxBedC = asInt(obj.maxBedC ?? obj.max_bed);
 
     if (!brandName && !materialName && !colorHex) return null;
 
@@ -173,6 +183,10 @@ function draftFromUnknownJson(
       remainingWeightG,
       productUrl,
       notes,
+      minNozzleC,
+      maxNozzleC,
+      minBedC,
+      maxBedC,
       source: "spooler",
       rawLabel: [brandName, materialName, colorName].filter(Boolean).join(" · "),
     };
@@ -335,6 +349,8 @@ function draftFromOpenPrintTag(decoded: OpenPrintTagDecoded): NfcSpoolDraft {
     remainingWeightG: decoded.remainingWeightG,
     minNozzleC: decoded.minNozzleC,
     maxNozzleC: decoded.maxNozzleC,
+    minBedC: decoded.minBedC,
+    maxBedC: decoded.maxBedC,
     locationName: decoded.storageLocation,
     notes: noteParts.length > 0 ? noteParts.join(" · ") : undefined,
     source: "openprinttag",

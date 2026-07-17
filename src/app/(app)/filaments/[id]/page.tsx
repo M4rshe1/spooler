@@ -13,7 +13,13 @@ import {
 import { FilamentBuyButton } from "@/components/filament/filament-buy-button";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { displayUrlHost, formatNozzleMaterial, parseMultiSelect } from "@/lib/filament";
+import {
+  displayUrlHost,
+  effectiveFilamentTemps,
+  formatNozzleMaterial,
+  formatTempRangeC,
+  parseMultiSelect,
+} from "@/lib/filament";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 
@@ -71,6 +77,10 @@ export default function FilamentDetailPage() {
     return <p className="text-muted-foreground text-sm">Filament not found.</p>;
   }
 
+  const temps = effectiveFilamentTemps(filament);
+  const nozzleRange = formatTempRangeC(temps.minNozzleC, temps.maxNozzleC);
+  const bedRange = formatTempRangeC(temps.minBedC, temps.maxBedC);
+
   return (
     <div className="mx-auto max-w-3xl space-y-8">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -87,8 +97,8 @@ export default function FilamentDetailPage() {
             <p className="text-muted-foreground mt-1 text-sm">
               {filament.brand.name} · {filament.material.name} ·{" "}
               {filament.diameterMm}mm
-              {filament.material.preferredNozzle
-                ? ` · ${formatNozzleMaterial(filament.material.preferredNozzle)} nozzle`
+              {temps.preferredNozzle
+                ? ` · ${formatNozzleMaterial(temps.preferredNozzle)} nozzle`
                 : ""}
             </p>
             <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
@@ -121,6 +131,10 @@ export default function FilamentDetailPage() {
                   empty {filament.defaultEmptyWeightG}g
                 </Badge>
               )}
+              {nozzleRange && (
+                <Badge variant="outline">Nozzle {nozzleRange}</Badge>
+              )}
+              {bedRange && <Badge variant="outline">Bed {bedRange}</Badge>}
               <Badge variant="outline">
                 {filament._count.spools} spool
                 {filament._count.spools === 1 ? "" : "s"}

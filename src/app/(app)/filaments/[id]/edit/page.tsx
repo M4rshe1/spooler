@@ -47,6 +47,11 @@ export default function EditFilamentPage() {
           diameterMm: filament.diameterMm,
           defaultWeightG: filament.defaultWeightG,
           defaultEmptyWeightG: filament.defaultEmptyWeightG,
+          minNozzleC: filament.minNozzleC,
+          maxNozzleC: filament.maxNozzleC,
+          minBedC: filament.minBedC,
+          maxBedC: filament.maxBedC,
+          preferredNozzle: filament.preferredNozzle,
           notes: filament.notes,
           productUrl: filament.productUrl,
           color: {

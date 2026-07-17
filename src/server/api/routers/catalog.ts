@@ -157,6 +157,8 @@ export const catalogRouter = createTRPCRouter({
         name: z.string().trim().min(1).max(64),
         minNozzleC: z.number().int().optional().nullable(),
         maxNozzleC: z.number().int().optional().nullable(),
+        minBedC: z.number().int().optional().nullable(),
+        maxBedC: z.number().int().optional().nullable(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -165,15 +167,19 @@ export const catalogRouter = createTRPCRouter({
         (m) => m.name.toLowerCase() === input.name.toLowerCase(),
       );
       if (ci) {
-        if (
+        const shouldFill =
           (input.minNozzleC != null && ci.minNozzleC == null) ||
-          (input.maxNozzleC != null && ci.maxNozzleC == null)
-        ) {
+          (input.maxNozzleC != null && ci.maxNozzleC == null) ||
+          (input.minBedC != null && ci.minBedC == null) ||
+          (input.maxBedC != null && ci.maxBedC == null);
+        if (shouldFill) {
           return ctx.db.material.update({
             where: { id: ci.id },
             data: {
               minNozzleC: ci.minNozzleC ?? input.minNozzleC ?? null,
               maxNozzleC: ci.maxNozzleC ?? input.maxNozzleC ?? null,
+              minBedC: ci.minBedC ?? input.minBedC ?? null,
+              maxBedC: ci.maxBedC ?? input.maxBedC ?? null,
             },
           });
         }
@@ -185,6 +191,8 @@ export const catalogRouter = createTRPCRouter({
           name: input.name,
           minNozzleC: input.minNozzleC ?? null,
           maxNozzleC: input.maxNozzleC ?? null,
+          minBedC: input.minBedC ?? null,
+          maxBedC: input.maxBedC ?? null,
         },
       });
     }),

@@ -16,7 +16,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { displayUrlHost, formatNozzleMaterial, grossFromFilamentWeight, parseMultiSelect } from "@/lib/filament";
+import {
+  displayUrlHost,
+  effectiveFilamentTemps,
+  formatNozzleMaterial,
+  formatTempRangeC,
+  grossFromFilamentWeight,
+  parseMultiSelect,
+} from "@/lib/filament";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 
@@ -129,6 +136,9 @@ function SpoolDetailContent() {
     spool.remainingWeightG,
     emptyWeightG,
   );
+  const temps = effectiveFilamentTemps(filament);
+  const nozzleRange = formatTempRangeC(temps.minNozzleC, temps.maxNozzleC);
+  const bedRange = formatTempRangeC(temps.minBedC, temps.maxBedC);
 
   return (
     <div className="mx-auto max-w-3xl space-y-8">
@@ -146,9 +156,11 @@ function SpoolDetailContent() {
             <p className="text-muted-foreground mt-1 text-sm">
               {filament.brand.name} · {filament.material.name} ·{" "}
               {filament.diameterMm}mm
-              {filament.material.preferredNozzle
-                ? ` · ${formatNozzleMaterial(filament.material.preferredNozzle)} nozzle`
+              {temps.preferredNozzle
+                ? ` · ${formatNozzleMaterial(temps.preferredNozzle)} nozzle`
                 : ""}
+              {nozzleRange ? ` · nozzle ${nozzleRange}` : ""}
+              {bedRange ? ` · bed ${bedRange}` : ""}
             </p>
             <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
               <Link

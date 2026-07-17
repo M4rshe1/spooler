@@ -31,10 +31,22 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { SearchableSelect } from "@/components/ui/searchable-select";
+import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { defaultColorsForMode } from "@/lib/color-preview";
+import {
+  NOZZLE_MATERIAL_LABELS,
+  NOZZLE_MATERIALS,
+  type NozzleMaterial,
+} from "@/lib/filament";
 import { findCatalogMatch, type NfcSpoolDraft } from "@/lib/nfc";
 import { api } from "@/trpc/react";
+
+function optionalInt(value: string): number | null {
+  if (value.trim() === "") return null;
+  const n = Number.parseInt(value, 10);
+  return Number.isFinite(n) ? n : null;
+}
 
 type FilamentFormProps = {
   mode: "create" | "edit";
@@ -45,6 +57,11 @@ type FilamentFormProps = {
     diameterMm: number;
     defaultWeightG: number;
     defaultEmptyWeightG: number | null;
+    minNozzleC: number | null;
+    maxNozzleC: number | null;
+    minBedC: number | null;
+    maxBedC: number | null;
+    preferredNozzle: string | null;
     notes: string | null;
     productUrl: string | null;
     color: ColorEditorValue;
@@ -74,6 +91,21 @@ export function FilamentForm({ mode, filamentId, initial }: FilamentFormProps) {
       ? String(initial.defaultEmptyWeightG)
       : "",
   );
+  const [minNozzleC, setMinNozzleC] = useState(
+    initial?.minNozzleC != null ? String(initial.minNozzleC) : "",
+  );
+  const [maxNozzleC, setMaxNozzleC] = useState(
+    initial?.maxNozzleC != null ? String(initial.maxNozzleC) : "",
+  );
+  const [minBedC, setMinBedC] = useState(
+    initial?.minBedC != null ? String(initial.minBedC) : "",
+  );
+  const [maxBedC, setMaxBedC] = useState(
+    initial?.maxBedC != null ? String(initial.maxBedC) : "",
+  );
+  const [preferredNozzle, setPreferredNozzle] = useState(
+    initial?.preferredNozzle ?? "",
+  );
   const [notes, setNotes] = useState(initial?.notes ?? "");
   const [productUrl, setProductUrl] = useState(initial?.productUrl ?? "");
   const [color, setColor] = useState<ColorEditorValue>(
@@ -85,6 +117,10 @@ export function FilamentForm({ mode, filamentId, initial }: FilamentFormProps) {
   );
   const [customValues, setCustomValues] = useState<CustomFieldFormValue[]>(
     initial?.customValues ?? [],
+  );
+
+  const selectedMaterial = (materialsQuery.data ?? []).find(
+    (m) => m.id === materialId,
   );
 
   const createFilament = api.filament.create.useMutation({
@@ -126,6 +162,7 @@ export function FilamentForm({ mode, filamentId, initial }: FilamentFormProps) {
       }
     }
 
+    let materialExisted = false;
     if (draft.materialName) {
       const local = findCatalogMatch(
         materialsQuery.data ?? [],
@@ -133,11 +170,14 @@ export function FilamentForm({ mode, filamentId, initial }: FilamentFormProps) {
       );
       if (local) {
         nextMaterialId = local.id;
+        materialExisted = true;
       } else {
         const material = await ensureMaterial.mutateAsync({
           name: draft.materialName,
           minNozzleC: draft.minNozzleC ?? null,
           maxNozzleC: draft.maxNozzleC ?? null,
+          minBedC: draft.minBedC ?? null,
+          maxBedC: draft.maxBedC ?? null,
         });
         nextMaterialId = material.id;
         await utils.catalog.materials.invalidate();
@@ -146,6 +186,20 @@ export function FilamentForm({ mode, filamentId, initial }: FilamentFormProps) {
 
     setBrandId(nextBrandId);
     setMaterialId(nextMaterialId);
+
+    // Brand-specific NFC temps override the shared material when it already exists
+    if (
+      materialExisted &&
+      (draft.minNozzleC != null ||
+        draft.maxNozzleC != null ||
+        draft.minBedC != null ||
+        draft.maxBedC != null)
+    ) {
+      if (draft.minNozzleC != null) setMinNozzleC(String(draft.minNozzleC));
+      if (draft.maxNozzleC != null) setMaxNozzleC(String(draft.maxNozzleC));
+      if (draft.minBedC != null) setMinBedC(String(draft.minBedC));
+      if (draft.maxBedC != null) setMaxBedC(String(draft.maxBedC));
+    }
 
     if (draft.diameterMm != null) setDiameterMm(draft.diameterMm);
     if (draft.initialWeightG != null) {
@@ -204,6 +258,13 @@ export function FilamentForm({ mode, filamentId, initial }: FilamentFormProps) {
         defaultEmptyWeightG.trim() === ""
           ? null
           : Number(defaultEmptyWeightG),
+      minNozzleC: optionalInt(minNozzleC),
+      maxNozzleC: optionalInt(maxNozzleC),
+      minBedC: optionalInt(minBedC),
+      maxBedC: optionalInt(maxBedC),
+      preferredNozzle: preferredNozzle
+        ? (preferredNozzle as NozzleMaterial)
+        : null,
       notes: notes || null,
       productUrl: productUrl.trim() || null,
       colorMode: color.colorMode,
@@ -380,6 +441,119 @@ export function FilamentForm({ mode, filamentId, initial }: FilamentFormProps) {
                 className="text-base sm:text-sm"
               />
             </Field>
+          </FieldGroup>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Print settings</CardTitle>
+          <CardDescription>
+            Optional overrides for this product. Leave blank to inherit from{" "}
+            {selectedMaterial?.name ?? "the material"}.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <FieldGroup>
+            <Field>
+              <FieldLabel>Preferred nozzle</FieldLabel>
+              <SearchableSelect
+                value={preferredNozzle || "none"}
+                onValueChange={(value) => {
+                  if (value === "none" || value == null) setPreferredNozzle("");
+                  else setPreferredNozzle(value);
+                }}
+                placeholder="Inherit from material…"
+                allowClear
+                options={[
+                  {
+                    value: "none",
+                    label: selectedMaterial?.preferredNozzle
+                      ? `Inherit (${NOZZLE_MATERIAL_LABELS[selectedMaterial.preferredNozzle as NozzleMaterial] ?? selectedMaterial.preferredNozzle})`
+                      : "Inherit from material",
+                  },
+                  ...NOZZLE_MATERIALS.map((n) => ({
+                    value: n,
+                    label: NOZZLE_MATERIAL_LABELS[n],
+                  })),
+                ]}
+              />
+            </Field>
+            <Separator />
+            <div className="grid grid-cols-2 gap-3">
+              <Field>
+                <FieldLabel htmlFor="filament-min-nozzle">
+                  Min nozzle °C
+                </FieldLabel>
+                <Input
+                  id="filament-min-nozzle"
+                  type="number"
+                  inputMode="numeric"
+                  placeholder={
+                    selectedMaterial?.minNozzleC != null
+                      ? String(selectedMaterial.minNozzleC)
+                      : "—"
+                  }
+                  className="min-h-11 text-base sm:min-h-9 sm:text-sm"
+                  value={minNozzleC}
+                  onChange={(e) => setMinNozzleC(e.target.value)}
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="filament-max-nozzle">
+                  Max nozzle °C
+                </FieldLabel>
+                <Input
+                  id="filament-max-nozzle"
+                  type="number"
+                  inputMode="numeric"
+                  placeholder={
+                    selectedMaterial?.maxNozzleC != null
+                      ? String(selectedMaterial.maxNozzleC)
+                      : "—"
+                  }
+                  className="min-h-11 text-base sm:min-h-9 sm:text-sm"
+                  value={maxNozzleC}
+                  onChange={(e) => setMaxNozzleC(e.target.value)}
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="filament-min-bed">Min bed °C</FieldLabel>
+                <Input
+                  id="filament-min-bed"
+                  type="number"
+                  inputMode="numeric"
+                  placeholder={
+                    selectedMaterial?.minBedC != null
+                      ? String(selectedMaterial.minBedC)
+                      : "—"
+                  }
+                  className="min-h-11 text-base sm:min-h-9 sm:text-sm"
+                  value={minBedC}
+                  onChange={(e) => setMinBedC(e.target.value)}
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="filament-max-bed">Max bed °C</FieldLabel>
+                <Input
+                  id="filament-max-bed"
+                  type="number"
+                  inputMode="numeric"
+                  placeholder={
+                    selectedMaterial?.maxBedC != null
+                      ? String(selectedMaterial.maxBedC)
+                      : "—"
+                  }
+                  className="min-h-11 text-base sm:min-h-9 sm:text-sm"
+                  value={maxBedC}
+                  onChange={(e) => setMaxBedC(e.target.value)}
+                />
+              </Field>
+            </div>
+            <FieldDescription>
+              Placeholders show the material defaults. Clearing a field inherits
+              again.
+            </FieldDescription>
           </FieldGroup>
         </CardContent>
       </Card>

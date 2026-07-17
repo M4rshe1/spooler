@@ -139,6 +139,13 @@ model Filament {
   defaultWeightG    Int                  @default(1000)
   /// Typical empty plastic spool tare (g); copied onto new spool instances
   defaultEmptyWeightG Int?
+  /// Optional print-temp overrides; null inherits from Material
+  minNozzleC        Int?
+  maxNozzleC        Int?
+  minBedC           Int?
+  maxBedC           Int?
+  /// brass | stainless | hardened | ruby — overrides Material.preferredNozzle when set
+  preferredNozzle   String?
   /// Product page / store listing
   productUrl        String?
   notes             String?

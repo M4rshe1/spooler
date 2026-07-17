@@ -138,6 +138,39 @@ export const customValueInputSchema = z.object({
   valueMulti: z.array(z.string()).optional().nullable(),
 });
 
+/** Preferred hotend nozzle tip material for a filament type */
+export const NOZZLE_MATERIALS = [
+  "brass",
+  "stainless",
+  "hardened",
+  "ruby",
+] as const;
+
+export type NozzleMaterial = (typeof NOZZLE_MATERIALS)[number];
+
+export const NOZZLE_MATERIAL_LABELS: Record<NozzleMaterial, string> = {
+  brass: "Brass",
+  stainless: "Stainless steel",
+  hardened: "Hardened steel",
+  ruby: "Ruby / jewel",
+};
+
+const optionalTempC = z.number().int().min(0).max(500).optional().nullable();
+
+/** Preferred nozzle tip; null clears the filament override. */
+const optionalPreferredNozzle = z
+  .enum(NOZZLE_MATERIALS)
+  .optional()
+  .nullable();
+
+export const filamentTempFieldsSchema = z.object({
+  minNozzleC: optionalTempC,
+  maxNozzleC: optionalTempC,
+  minBedC: optionalTempC,
+  maxBedC: optionalTempC,
+  preferredNozzle: optionalPreferredNozzle,
+});
+
 export const filamentCreateSchema = z
   .object({
     brandId: z.string().min(1),
@@ -149,6 +182,7 @@ export const filamentCreateSchema = z
     notes: z.string().max(2000).optional().nullable(),
     customValues: z.array(customValueInputSchema).default([]),
   })
+  .and(filamentTempFieldsSchema)
   .and(colorsForModeSchema);
 
 export const filamentUpdateSchema = z
@@ -166,6 +200,7 @@ export const filamentUpdateSchema = z
     colorName: z.string().trim().max(128).optional().nullable(),
     colors: z.array(colorStopSchema).min(1).max(12).optional(),
   })
+  .and(filamentTempFieldsSchema.partial())
   .superRefine((data, ctx) => {
     if (data.colors !== undefined || data.colorMode !== undefined) {
       if (!data.colorMode || !data.colors) {
@@ -288,23 +323,6 @@ export function parseOptionsJson(options: string | null | undefined): string[] {
   return parseMultiSelect(options);
 }
 
-/** Preferred hotend nozzle tip material for a filament type */
-export const NOZZLE_MATERIALS = [
-  "brass",
-  "stainless",
-  "hardened",
-  "ruby",
-] as const;
-
-export type NozzleMaterial = (typeof NOZZLE_MATERIALS)[number];
-
-export const NOZZLE_MATERIAL_LABELS: Record<NozzleMaterial, string> = {
-  brass: "Brass",
-  stainless: "Stainless steel",
-  hardened: "Hardened steel",
-  ruby: "Ruby / jewel",
-};
-
 export function formatNozzleMaterial(
   value: string | null | undefined,
 ): string | null {
@@ -313,6 +331,36 @@ export function formatNozzleMaterial(
     return NOZZLE_MATERIAL_LABELS[value as NozzleMaterial];
   }
   return value;
+}
+
+type TempSource = {
+  minNozzleC: number | null;
+  maxNozzleC: number | null;
+  minBedC: number | null;
+  maxBedC: number | null;
+  preferredNozzle: string | null;
+};
+
+/** Resolve filament print temps with material fallbacks (null = inherit). */
+export function effectiveFilamentTemps(
+  filament: TempSource & { material: TempSource },
+): TempSource {
+  return {
+    minNozzleC: filament.minNozzleC ?? filament.material.minNozzleC,
+    maxNozzleC: filament.maxNozzleC ?? filament.material.maxNozzleC,
+    minBedC: filament.minBedC ?? filament.material.minBedC,
+    maxBedC: filament.maxBedC ?? filament.material.maxBedC,
+    preferredNozzle:
+      filament.preferredNozzle ?? filament.material.preferredNozzle,
+  };
+}
+
+export function formatTempRangeC(
+  minC: number | null | undefined,
+  maxC: number | null | undefined,
+): string | null {
+  if (minC == null && maxC == null) return null;
+  return `${minC ?? "?"}–${maxC ?? "?"}°C`;
 }
 
 export const DEFAULT_MATERIALS = [
