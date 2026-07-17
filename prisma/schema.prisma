@@ -1,0 +1,229 @@
+// Prisma schema for Spooler + Better Auth
+// learn more: https://better-auth.com/docs/concepts/database
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  /// admin | user
+  role          String    @default("user")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now()) @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+
+  brands       Brand[]
+  locations    Location[]
+  spools       Spool[]
+  customFields CustomField[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@map("verification")
+}
+
+model Brand {
+  id         String   @id @default(cuid())
+  name       String
+  /// Storefront / manufacturer website
+  websiteUrl String?
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  spools     Spool[]
+
+  @@unique([userId, name])
+  @@index([userId])
+}
+
+model Material {
+  id         String   @id @default(cuid())
+  name       String   @unique
+  density    Float?
+  maxNozzleC Int?
+  maxBedC    Int?
+  minNozzleC Int?
+  minBedC    Int?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  spools     Spool[]
+}
+
+model Location {
+  id        String   @id @default(cuid())
+  name      String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  spools    Spool[]
+
+  @@unique([userId, name])
+  @@index([userId])
+}
+
+/// SOLID | GRADIENT | MULTI
+model Spool {
+  id                String             @id @default(cuid())
+  userId            String
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  brandId           String
+  brand             Brand              @relation(fields: [brandId], references: [id])
+  materialId        String
+  material          Material           @relation(fields: [materialId], references: [id])
+  locationId        String?
+  location          Location?          @relation(fields: [locationId], references: [id], onDelete: SetNull)
+  colorMode         String             @default("SOLID")
+  colorName         String?
+  diameterMm        Float              @default(1.75)
+  initialWeightG    Int
+  remainingWeightG  Int
+  /// sealed | open | empty | archived
+  status            String             @default("sealed")
+  /// Manually or auto flagged for repurchase list
+  needsRepurchase   Boolean            @default(false)
+  /// Product page / store listing for this spool
+  productUrl        String?
+  purchasedAt       DateTime?
+  priceCents        Int?
+  notes             String?
+  lastDriedAt       DateTime?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  colors            SpoolColorStop[]
+  usages            Usage[]
+  customFieldValues CustomFieldValue[]
+
+  @@index([userId])
+  @@index([userId, status])
+  @@index([materialId])
+  @@index([brandId])
+}
+
+model SpoolColorStop {
+  id       String  @id @default(cuid())
+  spoolId  String
+  spool    Spool   @relation(fields: [spoolId], references: [id], onDelete: Cascade)
+  hex      String
+  name     String?
+  position Float
+  weight   Float?
+
+  @@index([spoolId])
+}
+
+model Usage {
+  id        String   @id @default(cuid())
+  spoolId   String
+  spool     Spool    @relation(fields: [spoolId], references: [id], onDelete: Cascade)
+  gramsUsed Int
+  note      String?
+  usedAt    DateTime @default(now())
+
+  @@index([spoolId])
+}
+
+/// TEXT | NUMBER | BOOLEAN | DATE | SELECT | MULTISELECT
+model CustomField {
+  id         String             @id @default(cuid())
+  userId     String
+  user       User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// SPOOL for now
+  entity     String             @default("SPOOL")
+  key        String
+  label      String
+  type       String
+  required   Boolean            @default(false)
+  /// JSON string array for SELECT / MULTISELECT
+  options    String?
+  sortOrder  Int                @default(0)
+  showInList Boolean            @default(false)
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+  values     CustomFieldValue[]
+
+  @@unique([userId, entity, key])
+  @@index([userId, entity])
+}
+
+model CustomFieldValue {
+  id           String      @id @default(cuid())
+  fieldId      String
+  field        CustomField @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  spoolId      String
+  spool        Spool       @relation(fields: [spoolId], references: [id], onDelete: Cascade)
+  valueText    String?
+  valueNumber  Float?
+  valueBoolean Boolean?
+  valueDate    DateTime?
+
+  @@unique([fieldId, spoolId])
+  @@index([spoolId])
+}
+
+/// Singleton row (id = 1) tracking first-run setup
+model AppSetup {
+  id                Int       @id @default(1)
+  completed         Boolean   @default(false)
+  completedAt       DateTime?
+  installedDatasets String    @default("[]")
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
