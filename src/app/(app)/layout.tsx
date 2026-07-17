@@ -5,6 +5,8 @@ import { db } from "@/server/db";
 import { getSession } from "@/server/better-auth/server";
 import { isSetupComplete } from "@/server/setup/install-datasets";
 
+export const dynamic = "force-dynamic";
+
 export default async function AppLayout({
   children,
 }: {

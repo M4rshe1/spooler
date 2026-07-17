@@ -6,6 +6,10 @@ import "./src/env.js";
 
 /** @type {import("next").NextConfig} */
 const config = {
+  // Lint separately via `bun run check`; don't block production image builds.
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   async headers() {
     return [
       {
