@@ -399,9 +399,6 @@ export function MaterialsPanel() {
                   })),
                 ]}
               />
-              <FieldDescription>
-                Tip material — use hardened for carbon/glass-filled filaments.
-              </FieldDescription>
             </Field>
             <Separator />
             <div className="grid grid-cols-2 gap-3">
