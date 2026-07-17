@@ -137,8 +137,14 @@ export function BrandsPanel() {
             }
             onClick={onSubmit}
           >
-            <RiAddLine />
-            {editingId ? "Save brand" : "Add brand"}
+            {editingId ? (
+              "Save changes"
+            ) : (
+              <>
+                <RiAddLine />
+                Add brand
+              </>
+            )}
           </Button>
           {editingId && (
             <Button
@@ -202,10 +208,10 @@ export function BrandsPanel() {
                       ) : null}
                     </div>
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex shrink-0 items-center gap-1">
                     <Button
                       size="sm"
-                      variant="ghost"
+                      variant="outline"
                       onClick={() => {
                         setEditingId(brand.id);
                         setName(brand.name);
@@ -566,12 +572,27 @@ export function LocationsPanel() {
   const utils = api.useUtils();
   const locationsQuery = api.catalog.locations.useQuery();
   const [name, setName] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
+
+  const resetForm = () => {
+    setEditingId(null);
+    setName("");
+  };
 
   const createLocation = api.catalog.createLocation.useMutation({
     onSuccess: async () => {
       await utils.catalog.locations.invalidate();
-      setName("");
+      resetForm();
       toast.success("Location added");
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const updateLocation = api.catalog.updateLocation.useMutation({
+    onSuccess: async () => {
+      await utils.catalog.locations.invalidate();
+      resetForm();
+      toast.success("Location updated");
     },
     onError: (err) => toast.error(err.message),
   });
@@ -579,16 +600,30 @@ export function LocationsPanel() {
   const deleteLocation = api.catalog.deleteLocation.useMutation({
     onSuccess: async () => {
       await utils.catalog.locations.invalidate();
+      if (editingId) resetForm();
       toast.success("Location deleted");
     },
     onError: (err) => toast.error(err.message),
   });
 
+  const busy = createLocation.isPending || updateLocation.isPending;
+
+  const onSubmit = () => {
+    if (!name.trim()) return;
+    if (editingId) {
+      updateLocation.mutate({ id: editingId, name: name.trim() });
+      return;
+    }
+    createLocation.mutate({ name: name.trim() });
+  };
+
   return (
     <div className="grid gap-4 lg:grid-cols-[minmax(0,22rem)_1fr]">
       <Card>
         <CardHeader>
-          <CardTitle>Add location</CardTitle>
+          <CardTitle>
+            {editingId ? "Edit location" : "Add location"}
+          </CardTitle>
           <CardDescription>
             Shelf, dryer, AMS slot, or any storage spot.
           </CardDescription>
@@ -605,22 +640,34 @@ export function LocationsPanel() {
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     e.preventDefault();
-                    if (name.trim())
-                      createLocation.mutate({ name: name.trim() });
+                    onSubmit();
                   }
                 }}
               />
             </Field>
           </FieldGroup>
         </CardContent>
-        <CardFooter>
-          <Button
-            disabled={!name.trim() || createLocation.isPending}
-            onClick={() => createLocation.mutate({ name: name.trim() })}
-          >
-            <RiAddLine />
-            Add location
+        <CardFooter className="flex flex-wrap gap-2">
+          <Button disabled={!name.trim() || busy} onClick={onSubmit}>
+            {editingId ? (
+              "Save changes"
+            ) : (
+              <>
+                <RiAddLine />
+                Add location
+              </>
+            )}
           </Button>
+          {editingId && (
+            <Button
+              type="button"
+              variant="outline"
+              disabled={busy}
+              onClick={resetForm}
+            >
+              Cancel
+            </Button>
+          )}
         </CardFooter>
       </Card>
 
@@ -655,21 +702,33 @@ export function LocationsPanel() {
                       {location._count.spools === 1 ? "" : "s"}
                     </div>
                   </div>
-                  <Button
-                    size="icon-sm"
-                    variant="ghost"
-                    disabled={
-                      location._count.spools > 0 || deleteLocation.isPending
-                    }
-                    onClick={() => {
-                      if (confirm(`Delete location “${location.name}”?`)) {
-                        deleteLocation.mutate({ id: location.id });
+                  <div className="flex shrink-0 items-center gap-1">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => {
+                        setEditingId(location.id);
+                        setName(location.name);
+                      }}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      size="icon-sm"
+                      variant="ghost"
+                      disabled={
+                        location._count.spools > 0 || deleteLocation.isPending
                       }
-                    }}
-                    aria-label={`Delete ${location.name}`}
-                  >
-                    <RiDeleteBinLine />
-                  </Button>
+                      onClick={() => {
+                        if (confirm(`Delete location “${location.name}”?`)) {
+                          deleteLocation.mutate({ id: location.id });
+                        }
+                      }}
+                      aria-label={`Delete ${location.name}`}
+                    >
+                      <RiDeleteBinLine />
+                    </Button>
+                  </div>
                 </li>
               ))}
             </ul>

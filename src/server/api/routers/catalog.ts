@@ -279,6 +279,36 @@ export const catalogRouter = createTRPCRouter({
       }
     }),
 
+  updateLocation: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string().trim().min(1).max(64),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const location = await ctx.db.location.findFirst({
+        where: { id: input.id, userId: ctx.session.user.id },
+      });
+      if (!location) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Location not found",
+        });
+      }
+      try {
+        return await ctx.db.location.update({
+          where: { id: location.id },
+          data: { name: input.name },
+        });
+      } catch {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "A location with that name already exists",
+        });
+      }
+    }),
+
   deleteLocation: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {

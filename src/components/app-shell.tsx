@@ -56,7 +56,7 @@ export function AppShell({
   return (
     <SidebarProvider>
       <Sidebar>
-        <SidebarHeader className="border-b border-sidebar-border px-4 py-4">
+        <SidebarHeader className="border-sidebar-border border-b px-4 py-4">
           <Link href="/dashboard" className="block">
             <span className="font-heading text-xl font-bold tracking-tight">
               Spooler
@@ -95,7 +95,7 @@ export function AppShell({
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter className="border-t border-sidebar-border p-3">
+        <SidebarFooter className="border-sidebar-border border-t p-3">
           <div className="mb-2 flex items-center justify-between gap-2 px-1">
             <div className="text-muted-foreground truncate text-xs">
               {userName ?? "Signed in"}
@@ -122,9 +122,12 @@ export function AppShell({
         </SidebarFooter>
       </Sidebar>
       <SidebarInset className="min-h-svh">
-        <header className="bg-background/95 supports-backdrop-filter:bg-background/80 sticky top-0 z-20 flex h-12 shrink-0 items-center gap-2 border-b border-border px-3 backdrop-blur sm:px-4">
+        <header className="bg-background/95 supports-backdrop-filter:bg-background/80 border-border sticky top-0 z-20 flex h-12 shrink-0 items-center gap-2 border-b px-3 backdrop-blur sm:px-4">
           <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-1 hidden h-4 sm:block" />
+          <Separator
+            orientation="vertical"
+            className="mr-1 hidden h-4 sm:block"
+          />
           <div className="text-muted-foreground hidden items-center gap-1 text-xs sm:flex">
             <RiArchiveLine className="size-3.5" />
             Track every roll
