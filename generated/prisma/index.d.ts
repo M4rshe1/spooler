@@ -49,15 +49,21 @@ export type Material = $Result.DefaultSelection<Prisma.$MaterialPayload>
  */
 export type Location = $Result.DefaultSelection<Prisma.$LocationPayload>
 /**
- * Model Spool
+ * Model Filament
+ * Product definition: brand + material + color (+ defaults)
  * SOLID | GRADIENT | MULTI
  */
-export type Spool = $Result.DefaultSelection<Prisma.$SpoolPayload>
+export type Filament = $Result.DefaultSelection<Prisma.$FilamentPayload>
 /**
- * Model SpoolColorStop
+ * Model FilamentColorStop
  * 
  */
-export type SpoolColorStop = $Result.DefaultSelection<Prisma.$SpoolColorStopPayload>
+export type FilamentColorStop = $Result.DefaultSelection<Prisma.$FilamentColorStopPayload>
+/**
+ * Model Spool
+ * Physical spool instance (weights, status, location, usage logs)
+ */
+export type Spool = $Result.DefaultSelection<Prisma.$SpoolPayload>
 /**
  * Model Usage
  * 
@@ -65,7 +71,7 @@ export type SpoolColorStop = $Result.DefaultSelection<Prisma.$SpoolColorStopPayl
 export type Usage = $Result.DefaultSelection<Prisma.$UsagePayload>
 /**
  * Model CustomField
- * TEXT | NUMBER | BOOLEAN | DATE | SELECT | MULTISELECT
+ * TEXT | NUMBER | BOOLEAN | DATE | SELECT | MULTISELECT | URL
  */
 export type CustomField = $Result.DefaultSelection<Prisma.$CustomFieldPayload>
 /**
@@ -268,6 +274,26 @@ export class PrismaClient<
   get location(): Prisma.LocationDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.filament`: Exposes CRUD operations for the **Filament** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Filaments
+    * const filaments = await prisma.filament.findMany()
+    * ```
+    */
+  get filament(): Prisma.FilamentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.filamentColorStop`: Exposes CRUD operations for the **FilamentColorStop** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FilamentColorStops
+    * const filamentColorStops = await prisma.filamentColorStop.findMany()
+    * ```
+    */
+  get filamentColorStop(): Prisma.FilamentColorStopDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.spool`: Exposes CRUD operations for the **Spool** model.
     * Example usage:
     * ```ts
@@ -276,16 +302,6 @@ export class PrismaClient<
     * ```
     */
   get spool(): Prisma.SpoolDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.spoolColorStop`: Exposes CRUD operations for the **SpoolColorStop** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more SpoolColorStops
-    * const spoolColorStops = await prisma.spoolColorStop.findMany()
-    * ```
-    */
-  get spoolColorStop(): Prisma.SpoolColorStopDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.usage`: Exposes CRUD operations for the **Usage** model.
@@ -774,8 +790,9 @@ export namespace Prisma {
     Brand: 'Brand',
     Material: 'Material',
     Location: 'Location',
+    Filament: 'Filament',
+    FilamentColorStop: 'FilamentColorStop',
     Spool: 'Spool',
-    SpoolColorStop: 'SpoolColorStop',
     Usage: 'Usage',
     CustomField: 'CustomField',
     CustomFieldValue: 'CustomFieldValue',
@@ -798,7 +815,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "brand" | "material" | "location" | "spool" | "spoolColorStop" | "usage" | "customField" | "customFieldValue" | "appSetup"
+      modelProps: "user" | "session" | "account" | "verification" | "brand" | "material" | "location" | "filament" | "filamentColorStop" | "spool" | "usage" | "customField" | "customFieldValue" | "appSetup"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1320,6 +1337,154 @@ export namespace Prisma {
           }
         }
       }
+      Filament: {
+        payload: Prisma.$FilamentPayload<ExtArgs>
+        fields: Prisma.FilamentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FilamentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilamentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FilamentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilamentPayload>
+          }
+          findFirst: {
+            args: Prisma.FilamentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilamentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FilamentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilamentPayload>
+          }
+          findMany: {
+            args: Prisma.FilamentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilamentPayload>[]
+          }
+          create: {
+            args: Prisma.FilamentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilamentPayload>
+          }
+          createMany: {
+            args: Prisma.FilamentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FilamentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilamentPayload>[]
+          }
+          delete: {
+            args: Prisma.FilamentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilamentPayload>
+          }
+          update: {
+            args: Prisma.FilamentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilamentPayload>
+          }
+          deleteMany: {
+            args: Prisma.FilamentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FilamentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FilamentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilamentPayload>[]
+          }
+          upsert: {
+            args: Prisma.FilamentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilamentPayload>
+          }
+          aggregate: {
+            args: Prisma.FilamentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFilament>
+          }
+          groupBy: {
+            args: Prisma.FilamentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FilamentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FilamentCountArgs<ExtArgs>
+            result: $Utils.Optional<FilamentCountAggregateOutputType> | number
+          }
+        }
+      }
+      FilamentColorStop: {
+        payload: Prisma.$FilamentColorStopPayload<ExtArgs>
+        fields: Prisma.FilamentColorStopFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FilamentColorStopFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilamentColorStopPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FilamentColorStopFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilamentColorStopPayload>
+          }
+          findFirst: {
+            args: Prisma.FilamentColorStopFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilamentColorStopPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FilamentColorStopFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilamentColorStopPayload>
+          }
+          findMany: {
+            args: Prisma.FilamentColorStopFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilamentColorStopPayload>[]
+          }
+          create: {
+            args: Prisma.FilamentColorStopCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilamentColorStopPayload>
+          }
+          createMany: {
+            args: Prisma.FilamentColorStopCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FilamentColorStopCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilamentColorStopPayload>[]
+          }
+          delete: {
+            args: Prisma.FilamentColorStopDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilamentColorStopPayload>
+          }
+          update: {
+            args: Prisma.FilamentColorStopUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilamentColorStopPayload>
+          }
+          deleteMany: {
+            args: Prisma.FilamentColorStopDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FilamentColorStopUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FilamentColorStopUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilamentColorStopPayload>[]
+          }
+          upsert: {
+            args: Prisma.FilamentColorStopUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FilamentColorStopPayload>
+          }
+          aggregate: {
+            args: Prisma.FilamentColorStopAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFilamentColorStop>
+          }
+          groupBy: {
+            args: Prisma.FilamentColorStopGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FilamentColorStopGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FilamentColorStopCountArgs<ExtArgs>
+            result: $Utils.Optional<FilamentColorStopCountAggregateOutputType> | number
+          }
+        }
+      }
       Spool: {
         payload: Prisma.$SpoolPayload<ExtArgs>
         fields: Prisma.SpoolFieldRefs
@@ -1391,80 +1556,6 @@ export namespace Prisma {
           count: {
             args: Prisma.SpoolCountArgs<ExtArgs>
             result: $Utils.Optional<SpoolCountAggregateOutputType> | number
-          }
-        }
-      }
-      SpoolColorStop: {
-        payload: Prisma.$SpoolColorStopPayload<ExtArgs>
-        fields: Prisma.SpoolColorStopFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.SpoolColorStopFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SpoolColorStopPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.SpoolColorStopFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SpoolColorStopPayload>
-          }
-          findFirst: {
-            args: Prisma.SpoolColorStopFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SpoolColorStopPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.SpoolColorStopFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SpoolColorStopPayload>
-          }
-          findMany: {
-            args: Prisma.SpoolColorStopFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SpoolColorStopPayload>[]
-          }
-          create: {
-            args: Prisma.SpoolColorStopCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SpoolColorStopPayload>
-          }
-          createMany: {
-            args: Prisma.SpoolColorStopCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.SpoolColorStopCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SpoolColorStopPayload>[]
-          }
-          delete: {
-            args: Prisma.SpoolColorStopDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SpoolColorStopPayload>
-          }
-          update: {
-            args: Prisma.SpoolColorStopUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SpoolColorStopPayload>
-          }
-          deleteMany: {
-            args: Prisma.SpoolColorStopDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.SpoolColorStopUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.SpoolColorStopUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SpoolColorStopPayload>[]
-          }
-          upsert: {
-            args: Prisma.SpoolColorStopUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SpoolColorStopPayload>
-          }
-          aggregate: {
-            args: Prisma.SpoolColorStopAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateSpoolColorStop>
-          }
-          groupBy: {
-            args: Prisma.SpoolColorStopGroupByArgs<ExtArgs>
-            result: $Utils.Optional<SpoolColorStopGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.SpoolColorStopCountArgs<ExtArgs>
-            result: $Utils.Optional<SpoolColorStopCountAggregateOutputType> | number
           }
         }
       }
@@ -1867,8 +1958,9 @@ export namespace Prisma {
     brand?: BrandOmit
     material?: MaterialOmit
     location?: LocationOmit
+    filament?: FilamentOmit
+    filamentColorStop?: FilamentColorStopOmit
     spool?: SpoolOmit
-    spoolColorStop?: SpoolColorStopOmit
     usage?: UsageOmit
     customField?: CustomFieldOmit
     customFieldValue?: CustomFieldValueOmit
@@ -1957,6 +2049,7 @@ export namespace Prisma {
     accounts: number
     brands: number
     locations: number
+    filaments: number
     spools: number
     customFields: number
   }
@@ -1966,6 +2059,7 @@ export namespace Prisma {
     accounts?: boolean | UserCountOutputTypeCountAccountsArgs
     brands?: boolean | UserCountOutputTypeCountBrandsArgs
     locations?: boolean | UserCountOutputTypeCountLocationsArgs
+    filaments?: boolean | UserCountOutputTypeCountFilamentsArgs
     spools?: boolean | UserCountOutputTypeCountSpoolsArgs
     customFields?: boolean | UserCountOutputTypeCountCustomFieldsArgs
   }
@@ -2012,6 +2106,13 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
+  export type UserCountOutputTypeCountFilamentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FilamentWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
   export type UserCountOutputTypeCountSpoolsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SpoolWhereInput
   }
@@ -2029,11 +2130,11 @@ export namespace Prisma {
    */
 
   export type BrandCountOutputType = {
-    spools: number
+    filaments: number
   }
 
   export type BrandCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    spools?: boolean | BrandCountOutputTypeCountSpoolsArgs
+    filaments?: boolean | BrandCountOutputTypeCountFilamentsArgs
   }
 
   // Custom InputTypes
@@ -2050,8 +2151,8 @@ export namespace Prisma {
   /**
    * BrandCountOutputType without action
    */
-  export type BrandCountOutputTypeCountSpoolsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: SpoolWhereInput
+  export type BrandCountOutputTypeCountFilamentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FilamentWhereInput
   }
 
 
@@ -2060,11 +2161,11 @@ export namespace Prisma {
    */
 
   export type MaterialCountOutputType = {
-    spools: number
+    filaments: number
   }
 
   export type MaterialCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    spools?: boolean | MaterialCountOutputTypeCountSpoolsArgs
+    filaments?: boolean | MaterialCountOutputTypeCountFilamentsArgs
   }
 
   // Custom InputTypes
@@ -2081,8 +2182,8 @@ export namespace Prisma {
   /**
    * MaterialCountOutputType without action
    */
-  export type MaterialCountOutputTypeCountSpoolsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: SpoolWhereInput
+  export type MaterialCountOutputTypeCountFilamentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FilamentWhereInput
   }
 
 
@@ -2118,19 +2219,64 @@ export namespace Prisma {
 
 
   /**
+   * Count Type FilamentCountOutputType
+   */
+
+  export type FilamentCountOutputType = {
+    colors: number
+    spools: number
+    customFieldValues: number
+  }
+
+  export type FilamentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    colors?: boolean | FilamentCountOutputTypeCountColorsArgs
+    spools?: boolean | FilamentCountOutputTypeCountSpoolsArgs
+    customFieldValues?: boolean | FilamentCountOutputTypeCountCustomFieldValuesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * FilamentCountOutputType without action
+   */
+  export type FilamentCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilamentCountOutputType
+     */
+    select?: FilamentCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * FilamentCountOutputType without action
+   */
+  export type FilamentCountOutputTypeCountColorsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FilamentColorStopWhereInput
+  }
+
+  /**
+   * FilamentCountOutputType without action
+   */
+  export type FilamentCountOutputTypeCountSpoolsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SpoolWhereInput
+  }
+
+  /**
+   * FilamentCountOutputType without action
+   */
+  export type FilamentCountOutputTypeCountCustomFieldValuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomFieldValueWhereInput
+  }
+
+
+  /**
    * Count Type SpoolCountOutputType
    */
 
   export type SpoolCountOutputType = {
-    colors: number
     usages: number
-    customFieldValues: number
   }
 
   export type SpoolCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    colors?: boolean | SpoolCountOutputTypeCountColorsArgs
     usages?: boolean | SpoolCountOutputTypeCountUsagesArgs
-    customFieldValues?: boolean | SpoolCountOutputTypeCountCustomFieldValuesArgs
   }
 
   // Custom InputTypes
@@ -2147,22 +2293,8 @@ export namespace Prisma {
   /**
    * SpoolCountOutputType without action
    */
-  export type SpoolCountOutputTypeCountColorsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: SpoolColorStopWhereInput
-  }
-
-  /**
-   * SpoolCountOutputType without action
-   */
   export type SpoolCountOutputTypeCountUsagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UsageWhereInput
-  }
-
-  /**
-   * SpoolCountOutputType without action
-   */
-  export type SpoolCountOutputTypeCountCustomFieldValuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: CustomFieldValueWhereInput
   }
 
 
@@ -2393,6 +2525,7 @@ export namespace Prisma {
     accounts?: boolean | User$accountsArgs<ExtArgs>
     brands?: boolean | User$brandsArgs<ExtArgs>
     locations?: boolean | User$locationsArgs<ExtArgs>
+    filaments?: boolean | User$filamentsArgs<ExtArgs>
     spools?: boolean | User$spoolsArgs<ExtArgs>
     customFields?: boolean | User$customFieldsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -2437,6 +2570,7 @@ export namespace Prisma {
     accounts?: boolean | User$accountsArgs<ExtArgs>
     brands?: boolean | User$brandsArgs<ExtArgs>
     locations?: boolean | User$locationsArgs<ExtArgs>
+    filaments?: boolean | User$filamentsArgs<ExtArgs>
     spools?: boolean | User$spoolsArgs<ExtArgs>
     customFields?: boolean | User$customFieldsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -2451,6 +2585,7 @@ export namespace Prisma {
       accounts: Prisma.$AccountPayload<ExtArgs>[]
       brands: Prisma.$BrandPayload<ExtArgs>[]
       locations: Prisma.$LocationPayload<ExtArgs>[]
+      filaments: Prisma.$FilamentPayload<ExtArgs>[]
       spools: Prisma.$SpoolPayload<ExtArgs>[]
       customFields: Prisma.$CustomFieldPayload<ExtArgs>[]
     }
@@ -2864,6 +2999,7 @@ export namespace Prisma {
     accounts<T extends User$accountsArgs<ExtArgs> = {}>(args?: Subset<T, User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     brands<T extends User$brandsArgs<ExtArgs> = {}>(args?: Subset<T, User$brandsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BrandPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     locations<T extends User$locationsArgs<ExtArgs> = {}>(args?: Subset<T, User$locationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    filaments<T extends User$filamentsArgs<ExtArgs> = {}>(args?: Subset<T, User$filamentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FilamentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     spools<T extends User$spoolsArgs<ExtArgs> = {}>(args?: Subset<T, User$spoolsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SpoolPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     customFields<T extends User$customFieldsArgs<ExtArgs> = {}>(args?: Subset<T, User$customFieldsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomFieldPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -3382,6 +3518,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: LocationScalarFieldEnum | LocationScalarFieldEnum[]
+  }
+
+  /**
+   * User.filaments
+   */
+  export type User$filamentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Filament
+     */
+    select?: FilamentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Filament
+     */
+    omit?: FilamentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentInclude<ExtArgs> | null
+    where?: FilamentWhereInput
+    orderBy?: FilamentOrderByWithRelationInput | FilamentOrderByWithRelationInput[]
+    cursor?: FilamentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FilamentScalarFieldEnum | FilamentScalarFieldEnum[]
   }
 
   /**
@@ -6885,7 +7045,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-    spools?: boolean | Brand$spoolsArgs<ExtArgs>
+    filaments?: boolean | Brand$filamentsArgs<ExtArgs>
     _count?: boolean | BrandCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["brand"]>
 
@@ -6921,7 +7081,7 @@ export namespace Prisma {
   export type BrandOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "websiteUrl" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["brand"]>
   export type BrandInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
-    spools?: boolean | Brand$spoolsArgs<ExtArgs>
+    filaments?: boolean | Brand$filamentsArgs<ExtArgs>
     _count?: boolean | BrandCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type BrandIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6935,7 +7095,7 @@ export namespace Prisma {
     name: "Brand"
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
-      spools: Prisma.$SpoolPayload<ExtArgs>[]
+      filaments: Prisma.$FilamentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -7342,7 +7502,7 @@ export namespace Prisma {
   export interface Prisma__BrandClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    spools<T extends Brand$spoolsArgs<ExtArgs> = {}>(args?: Subset<T, Brand$spoolsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SpoolPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    filaments<T extends Brand$filamentsArgs<ExtArgs> = {}>(args?: Subset<T, Brand$filamentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FilamentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7772,27 +7932,27 @@ export namespace Prisma {
   }
 
   /**
-   * Brand.spools
+   * Brand.filaments
    */
-  export type Brand$spoolsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Brand$filamentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Spool
+     * Select specific fields to fetch from the Filament
      */
-    select?: SpoolSelect<ExtArgs> | null
+    select?: FilamentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Spool
+     * Omit specific fields from the Filament
      */
-    omit?: SpoolOmit<ExtArgs> | null
+    omit?: FilamentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: SpoolInclude<ExtArgs> | null
-    where?: SpoolWhereInput
-    orderBy?: SpoolOrderByWithRelationInput | SpoolOrderByWithRelationInput[]
-    cursor?: SpoolWhereUniqueInput
+    include?: FilamentInclude<ExtArgs> | null
+    where?: FilamentWhereInput
+    orderBy?: FilamentOrderByWithRelationInput | FilamentOrderByWithRelationInput[]
+    cursor?: FilamentWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: SpoolScalarFieldEnum | SpoolScalarFieldEnum[]
+    distinct?: FilamentScalarFieldEnum | FilamentScalarFieldEnum[]
   }
 
   /**
@@ -8060,7 +8220,7 @@ export namespace Prisma {
     minBedC?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    spools?: boolean | Material$spoolsArgs<ExtArgs>
+    filaments?: boolean | Material$filamentsArgs<ExtArgs>
     _count?: boolean | MaterialCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["material"]>
 
@@ -8102,7 +8262,7 @@ export namespace Prisma {
 
   export type MaterialOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "density" | "maxNozzleC" | "maxBedC" | "minNozzleC" | "minBedC" | "createdAt" | "updatedAt", ExtArgs["result"]["material"]>
   export type MaterialInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    spools?: boolean | Material$spoolsArgs<ExtArgs>
+    filaments?: boolean | Material$filamentsArgs<ExtArgs>
     _count?: boolean | MaterialCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MaterialIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -8111,7 +8271,7 @@ export namespace Prisma {
   export type $MaterialPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Material"
     objects: {
-      spools: Prisma.$SpoolPayload<ExtArgs>[]
+      filaments: Prisma.$FilamentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8517,7 +8677,7 @@ export namespace Prisma {
    */
   export interface Prisma__MaterialClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    spools<T extends Material$spoolsArgs<ExtArgs> = {}>(args?: Subset<T, Material$spoolsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SpoolPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    filaments<T extends Material$filamentsArgs<ExtArgs> = {}>(args?: Subset<T, Material$filamentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FilamentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8942,27 +9102,27 @@ export namespace Prisma {
   }
 
   /**
-   * Material.spools
+   * Material.filaments
    */
-  export type Material$spoolsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Material$filamentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Spool
+     * Select specific fields to fetch from the Filament
      */
-    select?: SpoolSelect<ExtArgs> | null
+    select?: FilamentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Spool
+     * Omit specific fields from the Filament
      */
-    omit?: SpoolOmit<ExtArgs> | null
+    omit?: FilamentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: SpoolInclude<ExtArgs> | null
-    where?: SpoolWhereInput
-    orderBy?: SpoolOrderByWithRelationInput | SpoolOrderByWithRelationInput[]
-    cursor?: SpoolWhereUniqueInput
+    include?: FilamentInclude<ExtArgs> | null
+    where?: FilamentWhereInput
+    orderBy?: FilamentOrderByWithRelationInput | FilamentOrderByWithRelationInput[]
+    cursor?: FilamentWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: SpoolScalarFieldEnum | SpoolScalarFieldEnum[]
+    distinct?: FilamentScalarFieldEnum | FilamentScalarFieldEnum[]
   }
 
   /**
@@ -10071,6 +10231,2406 @@ export namespace Prisma {
 
 
   /**
+   * Model Filament
+   */
+
+  export type AggregateFilament = {
+    _count: FilamentCountAggregateOutputType | null
+    _avg: FilamentAvgAggregateOutputType | null
+    _sum: FilamentSumAggregateOutputType | null
+    _min: FilamentMinAggregateOutputType | null
+    _max: FilamentMaxAggregateOutputType | null
+  }
+
+  export type FilamentAvgAggregateOutputType = {
+    diameterMm: number | null
+    defaultWeightG: number | null
+  }
+
+  export type FilamentSumAggregateOutputType = {
+    diameterMm: number | null
+    defaultWeightG: number | null
+  }
+
+  export type FilamentMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    brandId: string | null
+    materialId: string | null
+    colorMode: string | null
+    colorName: string | null
+    diameterMm: number | null
+    defaultWeightG: number | null
+    productUrl: string | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FilamentMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    brandId: string | null
+    materialId: string | null
+    colorMode: string | null
+    colorName: string | null
+    diameterMm: number | null
+    defaultWeightG: number | null
+    productUrl: string | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FilamentCountAggregateOutputType = {
+    id: number
+    userId: number
+    brandId: number
+    materialId: number
+    colorMode: number
+    colorName: number
+    diameterMm: number
+    defaultWeightG: number
+    productUrl: number
+    notes: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type FilamentAvgAggregateInputType = {
+    diameterMm?: true
+    defaultWeightG?: true
+  }
+
+  export type FilamentSumAggregateInputType = {
+    diameterMm?: true
+    defaultWeightG?: true
+  }
+
+  export type FilamentMinAggregateInputType = {
+    id?: true
+    userId?: true
+    brandId?: true
+    materialId?: true
+    colorMode?: true
+    colorName?: true
+    diameterMm?: true
+    defaultWeightG?: true
+    productUrl?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FilamentMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    brandId?: true
+    materialId?: true
+    colorMode?: true
+    colorName?: true
+    diameterMm?: true
+    defaultWeightG?: true
+    productUrl?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FilamentCountAggregateInputType = {
+    id?: true
+    userId?: true
+    brandId?: true
+    materialId?: true
+    colorMode?: true
+    colorName?: true
+    diameterMm?: true
+    defaultWeightG?: true
+    productUrl?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type FilamentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Filament to aggregate.
+     */
+    where?: FilamentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Filaments to fetch.
+     */
+    orderBy?: FilamentOrderByWithRelationInput | FilamentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FilamentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Filaments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Filaments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Filaments
+    **/
+    _count?: true | FilamentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FilamentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FilamentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FilamentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FilamentMaxAggregateInputType
+  }
+
+  export type GetFilamentAggregateType<T extends FilamentAggregateArgs> = {
+        [P in keyof T & keyof AggregateFilament]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFilament[P]>
+      : GetScalarType<T[P], AggregateFilament[P]>
+  }
+
+
+
+
+  export type FilamentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FilamentWhereInput
+    orderBy?: FilamentOrderByWithAggregationInput | FilamentOrderByWithAggregationInput[]
+    by: FilamentScalarFieldEnum[] | FilamentScalarFieldEnum
+    having?: FilamentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FilamentCountAggregateInputType | true
+    _avg?: FilamentAvgAggregateInputType
+    _sum?: FilamentSumAggregateInputType
+    _min?: FilamentMinAggregateInputType
+    _max?: FilamentMaxAggregateInputType
+  }
+
+  export type FilamentGroupByOutputType = {
+    id: string
+    userId: string
+    brandId: string
+    materialId: string
+    colorMode: string
+    colorName: string | null
+    diameterMm: number
+    defaultWeightG: number
+    productUrl: string | null
+    notes: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: FilamentCountAggregateOutputType | null
+    _avg: FilamentAvgAggregateOutputType | null
+    _sum: FilamentSumAggregateOutputType | null
+    _min: FilamentMinAggregateOutputType | null
+    _max: FilamentMaxAggregateOutputType | null
+  }
+
+  type GetFilamentGroupByPayload<T extends FilamentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FilamentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FilamentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FilamentGroupByOutputType[P]>
+            : GetScalarType<T[P], FilamentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FilamentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    brandId?: boolean
+    materialId?: boolean
+    colorMode?: boolean
+    colorName?: boolean
+    diameterMm?: boolean
+    defaultWeightG?: boolean
+    productUrl?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    brand?: boolean | BrandDefaultArgs<ExtArgs>
+    material?: boolean | MaterialDefaultArgs<ExtArgs>
+    colors?: boolean | Filament$colorsArgs<ExtArgs>
+    spools?: boolean | Filament$spoolsArgs<ExtArgs>
+    customFieldValues?: boolean | Filament$customFieldValuesArgs<ExtArgs>
+    _count?: boolean | FilamentCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["filament"]>
+
+  export type FilamentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    brandId?: boolean
+    materialId?: boolean
+    colorMode?: boolean
+    colorName?: boolean
+    diameterMm?: boolean
+    defaultWeightG?: boolean
+    productUrl?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    brand?: boolean | BrandDefaultArgs<ExtArgs>
+    material?: boolean | MaterialDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["filament"]>
+
+  export type FilamentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    brandId?: boolean
+    materialId?: boolean
+    colorMode?: boolean
+    colorName?: boolean
+    diameterMm?: boolean
+    defaultWeightG?: boolean
+    productUrl?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    brand?: boolean | BrandDefaultArgs<ExtArgs>
+    material?: boolean | MaterialDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["filament"]>
+
+  export type FilamentSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    brandId?: boolean
+    materialId?: boolean
+    colorMode?: boolean
+    colorName?: boolean
+    diameterMm?: boolean
+    defaultWeightG?: boolean
+    productUrl?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type FilamentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "brandId" | "materialId" | "colorMode" | "colorName" | "diameterMm" | "defaultWeightG" | "productUrl" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["filament"]>
+  export type FilamentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    brand?: boolean | BrandDefaultArgs<ExtArgs>
+    material?: boolean | MaterialDefaultArgs<ExtArgs>
+    colors?: boolean | Filament$colorsArgs<ExtArgs>
+    spools?: boolean | Filament$spoolsArgs<ExtArgs>
+    customFieldValues?: boolean | Filament$customFieldValuesArgs<ExtArgs>
+    _count?: boolean | FilamentCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type FilamentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    brand?: boolean | BrandDefaultArgs<ExtArgs>
+    material?: boolean | MaterialDefaultArgs<ExtArgs>
+  }
+  export type FilamentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    brand?: boolean | BrandDefaultArgs<ExtArgs>
+    material?: boolean | MaterialDefaultArgs<ExtArgs>
+  }
+
+  export type $FilamentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Filament"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      brand: Prisma.$BrandPayload<ExtArgs>
+      material: Prisma.$MaterialPayload<ExtArgs>
+      colors: Prisma.$FilamentColorStopPayload<ExtArgs>[]
+      spools: Prisma.$SpoolPayload<ExtArgs>[]
+      customFieldValues: Prisma.$CustomFieldValuePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      brandId: string
+      materialId: string
+      colorMode: string
+      colorName: string | null
+      diameterMm: number
+      /**
+       * Nominal full weight used when opening a new spool
+       */
+      defaultWeightG: number
+      /**
+       * Product page / store listing
+       */
+      productUrl: string | null
+      notes: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["filament"]>
+    composites: {}
+  }
+
+  type FilamentGetPayload<S extends boolean | null | undefined | FilamentDefaultArgs> = $Result.GetResult<Prisma.$FilamentPayload, S>
+
+  type FilamentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FilamentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FilamentCountAggregateInputType | true
+    }
+
+  export interface FilamentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Filament'], meta: { name: 'Filament' } }
+    /**
+     * Find zero or one Filament that matches the filter.
+     * @param {FilamentFindUniqueArgs} args - Arguments to find a Filament
+     * @example
+     * // Get one Filament
+     * const filament = await prisma.filament.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FilamentFindUniqueArgs>(args: SelectSubset<T, FilamentFindUniqueArgs<ExtArgs>>): Prisma__FilamentClient<$Result.GetResult<Prisma.$FilamentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Filament that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FilamentFindUniqueOrThrowArgs} args - Arguments to find a Filament
+     * @example
+     * // Get one Filament
+     * const filament = await prisma.filament.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FilamentFindUniqueOrThrowArgs>(args: SelectSubset<T, FilamentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FilamentClient<$Result.GetResult<Prisma.$FilamentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Filament that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FilamentFindFirstArgs} args - Arguments to find a Filament
+     * @example
+     * // Get one Filament
+     * const filament = await prisma.filament.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FilamentFindFirstArgs>(args?: SelectSubset<T, FilamentFindFirstArgs<ExtArgs>>): Prisma__FilamentClient<$Result.GetResult<Prisma.$FilamentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Filament that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FilamentFindFirstOrThrowArgs} args - Arguments to find a Filament
+     * @example
+     * // Get one Filament
+     * const filament = await prisma.filament.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FilamentFindFirstOrThrowArgs>(args?: SelectSubset<T, FilamentFindFirstOrThrowArgs<ExtArgs>>): Prisma__FilamentClient<$Result.GetResult<Prisma.$FilamentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Filaments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FilamentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Filaments
+     * const filaments = await prisma.filament.findMany()
+     * 
+     * // Get first 10 Filaments
+     * const filaments = await prisma.filament.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const filamentWithIdOnly = await prisma.filament.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FilamentFindManyArgs>(args?: SelectSubset<T, FilamentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FilamentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Filament.
+     * @param {FilamentCreateArgs} args - Arguments to create a Filament.
+     * @example
+     * // Create one Filament
+     * const Filament = await prisma.filament.create({
+     *   data: {
+     *     // ... data to create a Filament
+     *   }
+     * })
+     * 
+     */
+    create<T extends FilamentCreateArgs>(args: SelectSubset<T, FilamentCreateArgs<ExtArgs>>): Prisma__FilamentClient<$Result.GetResult<Prisma.$FilamentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Filaments.
+     * @param {FilamentCreateManyArgs} args - Arguments to create many Filaments.
+     * @example
+     * // Create many Filaments
+     * const filament = await prisma.filament.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FilamentCreateManyArgs>(args?: SelectSubset<T, FilamentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Filaments and returns the data saved in the database.
+     * @param {FilamentCreateManyAndReturnArgs} args - Arguments to create many Filaments.
+     * @example
+     * // Create many Filaments
+     * const filament = await prisma.filament.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Filaments and only return the `id`
+     * const filamentWithIdOnly = await prisma.filament.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FilamentCreateManyAndReturnArgs>(args?: SelectSubset<T, FilamentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FilamentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Filament.
+     * @param {FilamentDeleteArgs} args - Arguments to delete one Filament.
+     * @example
+     * // Delete one Filament
+     * const Filament = await prisma.filament.delete({
+     *   where: {
+     *     // ... filter to delete one Filament
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FilamentDeleteArgs>(args: SelectSubset<T, FilamentDeleteArgs<ExtArgs>>): Prisma__FilamentClient<$Result.GetResult<Prisma.$FilamentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Filament.
+     * @param {FilamentUpdateArgs} args - Arguments to update one Filament.
+     * @example
+     * // Update one Filament
+     * const filament = await prisma.filament.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FilamentUpdateArgs>(args: SelectSubset<T, FilamentUpdateArgs<ExtArgs>>): Prisma__FilamentClient<$Result.GetResult<Prisma.$FilamentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Filaments.
+     * @param {FilamentDeleteManyArgs} args - Arguments to filter Filaments to delete.
+     * @example
+     * // Delete a few Filaments
+     * const { count } = await prisma.filament.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FilamentDeleteManyArgs>(args?: SelectSubset<T, FilamentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Filaments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FilamentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Filaments
+     * const filament = await prisma.filament.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FilamentUpdateManyArgs>(args: SelectSubset<T, FilamentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Filaments and returns the data updated in the database.
+     * @param {FilamentUpdateManyAndReturnArgs} args - Arguments to update many Filaments.
+     * @example
+     * // Update many Filaments
+     * const filament = await prisma.filament.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Filaments and only return the `id`
+     * const filamentWithIdOnly = await prisma.filament.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FilamentUpdateManyAndReturnArgs>(args: SelectSubset<T, FilamentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FilamentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Filament.
+     * @param {FilamentUpsertArgs} args - Arguments to update or create a Filament.
+     * @example
+     * // Update or create a Filament
+     * const filament = await prisma.filament.upsert({
+     *   create: {
+     *     // ... data to create a Filament
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Filament we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FilamentUpsertArgs>(args: SelectSubset<T, FilamentUpsertArgs<ExtArgs>>): Prisma__FilamentClient<$Result.GetResult<Prisma.$FilamentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Filaments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FilamentCountArgs} args - Arguments to filter Filaments to count.
+     * @example
+     * // Count the number of Filaments
+     * const count = await prisma.filament.count({
+     *   where: {
+     *     // ... the filter for the Filaments we want to count
+     *   }
+     * })
+    **/
+    count<T extends FilamentCountArgs>(
+      args?: Subset<T, FilamentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FilamentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Filament.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FilamentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FilamentAggregateArgs>(args: Subset<T, FilamentAggregateArgs>): Prisma.PrismaPromise<GetFilamentAggregateType<T>>
+
+    /**
+     * Group by Filament.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FilamentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FilamentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FilamentGroupByArgs['orderBy'] }
+        : { orderBy?: FilamentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FilamentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFilamentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Filament model
+   */
+  readonly fields: FilamentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Filament.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FilamentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    brand<T extends BrandDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BrandDefaultArgs<ExtArgs>>): Prisma__BrandClient<$Result.GetResult<Prisma.$BrandPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    material<T extends MaterialDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MaterialDefaultArgs<ExtArgs>>): Prisma__MaterialClient<$Result.GetResult<Prisma.$MaterialPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    colors<T extends Filament$colorsArgs<ExtArgs> = {}>(args?: Subset<T, Filament$colorsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FilamentColorStopPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    spools<T extends Filament$spoolsArgs<ExtArgs> = {}>(args?: Subset<T, Filament$spoolsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SpoolPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    customFieldValues<T extends Filament$customFieldValuesArgs<ExtArgs> = {}>(args?: Subset<T, Filament$customFieldValuesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomFieldValuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Filament model
+   */
+  interface FilamentFieldRefs {
+    readonly id: FieldRef<"Filament", 'String'>
+    readonly userId: FieldRef<"Filament", 'String'>
+    readonly brandId: FieldRef<"Filament", 'String'>
+    readonly materialId: FieldRef<"Filament", 'String'>
+    readonly colorMode: FieldRef<"Filament", 'String'>
+    readonly colorName: FieldRef<"Filament", 'String'>
+    readonly diameterMm: FieldRef<"Filament", 'Float'>
+    readonly defaultWeightG: FieldRef<"Filament", 'Int'>
+    readonly productUrl: FieldRef<"Filament", 'String'>
+    readonly notes: FieldRef<"Filament", 'String'>
+    readonly createdAt: FieldRef<"Filament", 'DateTime'>
+    readonly updatedAt: FieldRef<"Filament", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Filament findUnique
+   */
+  export type FilamentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Filament
+     */
+    select?: FilamentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Filament
+     */
+    omit?: FilamentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentInclude<ExtArgs> | null
+    /**
+     * Filter, which Filament to fetch.
+     */
+    where: FilamentWhereUniqueInput
+  }
+
+  /**
+   * Filament findUniqueOrThrow
+   */
+  export type FilamentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Filament
+     */
+    select?: FilamentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Filament
+     */
+    omit?: FilamentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentInclude<ExtArgs> | null
+    /**
+     * Filter, which Filament to fetch.
+     */
+    where: FilamentWhereUniqueInput
+  }
+
+  /**
+   * Filament findFirst
+   */
+  export type FilamentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Filament
+     */
+    select?: FilamentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Filament
+     */
+    omit?: FilamentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentInclude<ExtArgs> | null
+    /**
+     * Filter, which Filament to fetch.
+     */
+    where?: FilamentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Filaments to fetch.
+     */
+    orderBy?: FilamentOrderByWithRelationInput | FilamentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Filaments.
+     */
+    cursor?: FilamentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Filaments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Filaments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Filaments.
+     */
+    distinct?: FilamentScalarFieldEnum | FilamentScalarFieldEnum[]
+  }
+
+  /**
+   * Filament findFirstOrThrow
+   */
+  export type FilamentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Filament
+     */
+    select?: FilamentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Filament
+     */
+    omit?: FilamentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentInclude<ExtArgs> | null
+    /**
+     * Filter, which Filament to fetch.
+     */
+    where?: FilamentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Filaments to fetch.
+     */
+    orderBy?: FilamentOrderByWithRelationInput | FilamentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Filaments.
+     */
+    cursor?: FilamentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Filaments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Filaments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Filaments.
+     */
+    distinct?: FilamentScalarFieldEnum | FilamentScalarFieldEnum[]
+  }
+
+  /**
+   * Filament findMany
+   */
+  export type FilamentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Filament
+     */
+    select?: FilamentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Filament
+     */
+    omit?: FilamentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentInclude<ExtArgs> | null
+    /**
+     * Filter, which Filaments to fetch.
+     */
+    where?: FilamentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Filaments to fetch.
+     */
+    orderBy?: FilamentOrderByWithRelationInput | FilamentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Filaments.
+     */
+    cursor?: FilamentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Filaments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Filaments.
+     */
+    skip?: number
+    distinct?: FilamentScalarFieldEnum | FilamentScalarFieldEnum[]
+  }
+
+  /**
+   * Filament create
+   */
+  export type FilamentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Filament
+     */
+    select?: FilamentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Filament
+     */
+    omit?: FilamentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Filament.
+     */
+    data: XOR<FilamentCreateInput, FilamentUncheckedCreateInput>
+  }
+
+  /**
+   * Filament createMany
+   */
+  export type FilamentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Filaments.
+     */
+    data: FilamentCreateManyInput | FilamentCreateManyInput[]
+  }
+
+  /**
+   * Filament createManyAndReturn
+   */
+  export type FilamentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Filament
+     */
+    select?: FilamentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Filament
+     */
+    omit?: FilamentOmit<ExtArgs> | null
+    /**
+     * The data used to create many Filaments.
+     */
+    data: FilamentCreateManyInput | FilamentCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Filament update
+   */
+  export type FilamentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Filament
+     */
+    select?: FilamentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Filament
+     */
+    omit?: FilamentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Filament.
+     */
+    data: XOR<FilamentUpdateInput, FilamentUncheckedUpdateInput>
+    /**
+     * Choose, which Filament to update.
+     */
+    where: FilamentWhereUniqueInput
+  }
+
+  /**
+   * Filament updateMany
+   */
+  export type FilamentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Filaments.
+     */
+    data: XOR<FilamentUpdateManyMutationInput, FilamentUncheckedUpdateManyInput>
+    /**
+     * Filter which Filaments to update
+     */
+    where?: FilamentWhereInput
+    /**
+     * Limit how many Filaments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Filament updateManyAndReturn
+   */
+  export type FilamentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Filament
+     */
+    select?: FilamentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Filament
+     */
+    omit?: FilamentOmit<ExtArgs> | null
+    /**
+     * The data used to update Filaments.
+     */
+    data: XOR<FilamentUpdateManyMutationInput, FilamentUncheckedUpdateManyInput>
+    /**
+     * Filter which Filaments to update
+     */
+    where?: FilamentWhereInput
+    /**
+     * Limit how many Filaments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Filament upsert
+   */
+  export type FilamentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Filament
+     */
+    select?: FilamentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Filament
+     */
+    omit?: FilamentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Filament to update in case it exists.
+     */
+    where: FilamentWhereUniqueInput
+    /**
+     * In case the Filament found by the `where` argument doesn't exist, create a new Filament with this data.
+     */
+    create: XOR<FilamentCreateInput, FilamentUncheckedCreateInput>
+    /**
+     * In case the Filament was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FilamentUpdateInput, FilamentUncheckedUpdateInput>
+  }
+
+  /**
+   * Filament delete
+   */
+  export type FilamentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Filament
+     */
+    select?: FilamentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Filament
+     */
+    omit?: FilamentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentInclude<ExtArgs> | null
+    /**
+     * Filter which Filament to delete.
+     */
+    where: FilamentWhereUniqueInput
+  }
+
+  /**
+   * Filament deleteMany
+   */
+  export type FilamentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Filaments to delete
+     */
+    where?: FilamentWhereInput
+    /**
+     * Limit how many Filaments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Filament.colors
+   */
+  export type Filament$colorsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilamentColorStop
+     */
+    select?: FilamentColorStopSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilamentColorStop
+     */
+    omit?: FilamentColorStopOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentColorStopInclude<ExtArgs> | null
+    where?: FilamentColorStopWhereInput
+    orderBy?: FilamentColorStopOrderByWithRelationInput | FilamentColorStopOrderByWithRelationInput[]
+    cursor?: FilamentColorStopWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FilamentColorStopScalarFieldEnum | FilamentColorStopScalarFieldEnum[]
+  }
+
+  /**
+   * Filament.spools
+   */
+  export type Filament$spoolsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Spool
+     */
+    select?: SpoolSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Spool
+     */
+    omit?: SpoolOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SpoolInclude<ExtArgs> | null
+    where?: SpoolWhereInput
+    orderBy?: SpoolOrderByWithRelationInput | SpoolOrderByWithRelationInput[]
+    cursor?: SpoolWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SpoolScalarFieldEnum | SpoolScalarFieldEnum[]
+  }
+
+  /**
+   * Filament.customFieldValues
+   */
+  export type Filament$customFieldValuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomFieldValue
+     */
+    select?: CustomFieldValueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomFieldValue
+     */
+    omit?: CustomFieldValueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomFieldValueInclude<ExtArgs> | null
+    where?: CustomFieldValueWhereInput
+    orderBy?: CustomFieldValueOrderByWithRelationInput | CustomFieldValueOrderByWithRelationInput[]
+    cursor?: CustomFieldValueWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CustomFieldValueScalarFieldEnum | CustomFieldValueScalarFieldEnum[]
+  }
+
+  /**
+   * Filament without action
+   */
+  export type FilamentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Filament
+     */
+    select?: FilamentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Filament
+     */
+    omit?: FilamentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model FilamentColorStop
+   */
+
+  export type AggregateFilamentColorStop = {
+    _count: FilamentColorStopCountAggregateOutputType | null
+    _avg: FilamentColorStopAvgAggregateOutputType | null
+    _sum: FilamentColorStopSumAggregateOutputType | null
+    _min: FilamentColorStopMinAggregateOutputType | null
+    _max: FilamentColorStopMaxAggregateOutputType | null
+  }
+
+  export type FilamentColorStopAvgAggregateOutputType = {
+    position: number | null
+    weight: number | null
+  }
+
+  export type FilamentColorStopSumAggregateOutputType = {
+    position: number | null
+    weight: number | null
+  }
+
+  export type FilamentColorStopMinAggregateOutputType = {
+    id: string | null
+    filamentId: string | null
+    hex: string | null
+    name: string | null
+    position: number | null
+    weight: number | null
+  }
+
+  export type FilamentColorStopMaxAggregateOutputType = {
+    id: string | null
+    filamentId: string | null
+    hex: string | null
+    name: string | null
+    position: number | null
+    weight: number | null
+  }
+
+  export type FilamentColorStopCountAggregateOutputType = {
+    id: number
+    filamentId: number
+    hex: number
+    name: number
+    position: number
+    weight: number
+    _all: number
+  }
+
+
+  export type FilamentColorStopAvgAggregateInputType = {
+    position?: true
+    weight?: true
+  }
+
+  export type FilamentColorStopSumAggregateInputType = {
+    position?: true
+    weight?: true
+  }
+
+  export type FilamentColorStopMinAggregateInputType = {
+    id?: true
+    filamentId?: true
+    hex?: true
+    name?: true
+    position?: true
+    weight?: true
+  }
+
+  export type FilamentColorStopMaxAggregateInputType = {
+    id?: true
+    filamentId?: true
+    hex?: true
+    name?: true
+    position?: true
+    weight?: true
+  }
+
+  export type FilamentColorStopCountAggregateInputType = {
+    id?: true
+    filamentId?: true
+    hex?: true
+    name?: true
+    position?: true
+    weight?: true
+    _all?: true
+  }
+
+  export type FilamentColorStopAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FilamentColorStop to aggregate.
+     */
+    where?: FilamentColorStopWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FilamentColorStops to fetch.
+     */
+    orderBy?: FilamentColorStopOrderByWithRelationInput | FilamentColorStopOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FilamentColorStopWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FilamentColorStops from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FilamentColorStops.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FilamentColorStops
+    **/
+    _count?: true | FilamentColorStopCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FilamentColorStopAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FilamentColorStopSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FilamentColorStopMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FilamentColorStopMaxAggregateInputType
+  }
+
+  export type GetFilamentColorStopAggregateType<T extends FilamentColorStopAggregateArgs> = {
+        [P in keyof T & keyof AggregateFilamentColorStop]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFilamentColorStop[P]>
+      : GetScalarType<T[P], AggregateFilamentColorStop[P]>
+  }
+
+
+
+
+  export type FilamentColorStopGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FilamentColorStopWhereInput
+    orderBy?: FilamentColorStopOrderByWithAggregationInput | FilamentColorStopOrderByWithAggregationInput[]
+    by: FilamentColorStopScalarFieldEnum[] | FilamentColorStopScalarFieldEnum
+    having?: FilamentColorStopScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FilamentColorStopCountAggregateInputType | true
+    _avg?: FilamentColorStopAvgAggregateInputType
+    _sum?: FilamentColorStopSumAggregateInputType
+    _min?: FilamentColorStopMinAggregateInputType
+    _max?: FilamentColorStopMaxAggregateInputType
+  }
+
+  export type FilamentColorStopGroupByOutputType = {
+    id: string
+    filamentId: string
+    hex: string
+    name: string | null
+    position: number
+    weight: number | null
+    _count: FilamentColorStopCountAggregateOutputType | null
+    _avg: FilamentColorStopAvgAggregateOutputType | null
+    _sum: FilamentColorStopSumAggregateOutputType | null
+    _min: FilamentColorStopMinAggregateOutputType | null
+    _max: FilamentColorStopMaxAggregateOutputType | null
+  }
+
+  type GetFilamentColorStopGroupByPayload<T extends FilamentColorStopGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FilamentColorStopGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FilamentColorStopGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FilamentColorStopGroupByOutputType[P]>
+            : GetScalarType<T[P], FilamentColorStopGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FilamentColorStopSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    filamentId?: boolean
+    hex?: boolean
+    name?: boolean
+    position?: boolean
+    weight?: boolean
+    filament?: boolean | FilamentDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["filamentColorStop"]>
+
+  export type FilamentColorStopSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    filamentId?: boolean
+    hex?: boolean
+    name?: boolean
+    position?: boolean
+    weight?: boolean
+    filament?: boolean | FilamentDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["filamentColorStop"]>
+
+  export type FilamentColorStopSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    filamentId?: boolean
+    hex?: boolean
+    name?: boolean
+    position?: boolean
+    weight?: boolean
+    filament?: boolean | FilamentDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["filamentColorStop"]>
+
+  export type FilamentColorStopSelectScalar = {
+    id?: boolean
+    filamentId?: boolean
+    hex?: boolean
+    name?: boolean
+    position?: boolean
+    weight?: boolean
+  }
+
+  export type FilamentColorStopOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "filamentId" | "hex" | "name" | "position" | "weight", ExtArgs["result"]["filamentColorStop"]>
+  export type FilamentColorStopInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    filament?: boolean | FilamentDefaultArgs<ExtArgs>
+  }
+  export type FilamentColorStopIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    filament?: boolean | FilamentDefaultArgs<ExtArgs>
+  }
+  export type FilamentColorStopIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    filament?: boolean | FilamentDefaultArgs<ExtArgs>
+  }
+
+  export type $FilamentColorStopPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FilamentColorStop"
+    objects: {
+      filament: Prisma.$FilamentPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      filamentId: string
+      hex: string
+      name: string | null
+      position: number
+      weight: number | null
+    }, ExtArgs["result"]["filamentColorStop"]>
+    composites: {}
+  }
+
+  type FilamentColorStopGetPayload<S extends boolean | null | undefined | FilamentColorStopDefaultArgs> = $Result.GetResult<Prisma.$FilamentColorStopPayload, S>
+
+  type FilamentColorStopCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FilamentColorStopFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FilamentColorStopCountAggregateInputType | true
+    }
+
+  export interface FilamentColorStopDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FilamentColorStop'], meta: { name: 'FilamentColorStop' } }
+    /**
+     * Find zero or one FilamentColorStop that matches the filter.
+     * @param {FilamentColorStopFindUniqueArgs} args - Arguments to find a FilamentColorStop
+     * @example
+     * // Get one FilamentColorStop
+     * const filamentColorStop = await prisma.filamentColorStop.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FilamentColorStopFindUniqueArgs>(args: SelectSubset<T, FilamentColorStopFindUniqueArgs<ExtArgs>>): Prisma__FilamentColorStopClient<$Result.GetResult<Prisma.$FilamentColorStopPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FilamentColorStop that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FilamentColorStopFindUniqueOrThrowArgs} args - Arguments to find a FilamentColorStop
+     * @example
+     * // Get one FilamentColorStop
+     * const filamentColorStop = await prisma.filamentColorStop.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FilamentColorStopFindUniqueOrThrowArgs>(args: SelectSubset<T, FilamentColorStopFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FilamentColorStopClient<$Result.GetResult<Prisma.$FilamentColorStopPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FilamentColorStop that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FilamentColorStopFindFirstArgs} args - Arguments to find a FilamentColorStop
+     * @example
+     * // Get one FilamentColorStop
+     * const filamentColorStop = await prisma.filamentColorStop.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FilamentColorStopFindFirstArgs>(args?: SelectSubset<T, FilamentColorStopFindFirstArgs<ExtArgs>>): Prisma__FilamentColorStopClient<$Result.GetResult<Prisma.$FilamentColorStopPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FilamentColorStop that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FilamentColorStopFindFirstOrThrowArgs} args - Arguments to find a FilamentColorStop
+     * @example
+     * // Get one FilamentColorStop
+     * const filamentColorStop = await prisma.filamentColorStop.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FilamentColorStopFindFirstOrThrowArgs>(args?: SelectSubset<T, FilamentColorStopFindFirstOrThrowArgs<ExtArgs>>): Prisma__FilamentColorStopClient<$Result.GetResult<Prisma.$FilamentColorStopPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FilamentColorStops that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FilamentColorStopFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FilamentColorStops
+     * const filamentColorStops = await prisma.filamentColorStop.findMany()
+     * 
+     * // Get first 10 FilamentColorStops
+     * const filamentColorStops = await prisma.filamentColorStop.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const filamentColorStopWithIdOnly = await prisma.filamentColorStop.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FilamentColorStopFindManyArgs>(args?: SelectSubset<T, FilamentColorStopFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FilamentColorStopPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FilamentColorStop.
+     * @param {FilamentColorStopCreateArgs} args - Arguments to create a FilamentColorStop.
+     * @example
+     * // Create one FilamentColorStop
+     * const FilamentColorStop = await prisma.filamentColorStop.create({
+     *   data: {
+     *     // ... data to create a FilamentColorStop
+     *   }
+     * })
+     * 
+     */
+    create<T extends FilamentColorStopCreateArgs>(args: SelectSubset<T, FilamentColorStopCreateArgs<ExtArgs>>): Prisma__FilamentColorStopClient<$Result.GetResult<Prisma.$FilamentColorStopPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FilamentColorStops.
+     * @param {FilamentColorStopCreateManyArgs} args - Arguments to create many FilamentColorStops.
+     * @example
+     * // Create many FilamentColorStops
+     * const filamentColorStop = await prisma.filamentColorStop.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FilamentColorStopCreateManyArgs>(args?: SelectSubset<T, FilamentColorStopCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FilamentColorStops and returns the data saved in the database.
+     * @param {FilamentColorStopCreateManyAndReturnArgs} args - Arguments to create many FilamentColorStops.
+     * @example
+     * // Create many FilamentColorStops
+     * const filamentColorStop = await prisma.filamentColorStop.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FilamentColorStops and only return the `id`
+     * const filamentColorStopWithIdOnly = await prisma.filamentColorStop.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FilamentColorStopCreateManyAndReturnArgs>(args?: SelectSubset<T, FilamentColorStopCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FilamentColorStopPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FilamentColorStop.
+     * @param {FilamentColorStopDeleteArgs} args - Arguments to delete one FilamentColorStop.
+     * @example
+     * // Delete one FilamentColorStop
+     * const FilamentColorStop = await prisma.filamentColorStop.delete({
+     *   where: {
+     *     // ... filter to delete one FilamentColorStop
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FilamentColorStopDeleteArgs>(args: SelectSubset<T, FilamentColorStopDeleteArgs<ExtArgs>>): Prisma__FilamentColorStopClient<$Result.GetResult<Prisma.$FilamentColorStopPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FilamentColorStop.
+     * @param {FilamentColorStopUpdateArgs} args - Arguments to update one FilamentColorStop.
+     * @example
+     * // Update one FilamentColorStop
+     * const filamentColorStop = await prisma.filamentColorStop.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FilamentColorStopUpdateArgs>(args: SelectSubset<T, FilamentColorStopUpdateArgs<ExtArgs>>): Prisma__FilamentColorStopClient<$Result.GetResult<Prisma.$FilamentColorStopPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FilamentColorStops.
+     * @param {FilamentColorStopDeleteManyArgs} args - Arguments to filter FilamentColorStops to delete.
+     * @example
+     * // Delete a few FilamentColorStops
+     * const { count } = await prisma.filamentColorStop.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FilamentColorStopDeleteManyArgs>(args?: SelectSubset<T, FilamentColorStopDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FilamentColorStops.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FilamentColorStopUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FilamentColorStops
+     * const filamentColorStop = await prisma.filamentColorStop.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FilamentColorStopUpdateManyArgs>(args: SelectSubset<T, FilamentColorStopUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FilamentColorStops and returns the data updated in the database.
+     * @param {FilamentColorStopUpdateManyAndReturnArgs} args - Arguments to update many FilamentColorStops.
+     * @example
+     * // Update many FilamentColorStops
+     * const filamentColorStop = await prisma.filamentColorStop.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FilamentColorStops and only return the `id`
+     * const filamentColorStopWithIdOnly = await prisma.filamentColorStop.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FilamentColorStopUpdateManyAndReturnArgs>(args: SelectSubset<T, FilamentColorStopUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FilamentColorStopPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FilamentColorStop.
+     * @param {FilamentColorStopUpsertArgs} args - Arguments to update or create a FilamentColorStop.
+     * @example
+     * // Update or create a FilamentColorStop
+     * const filamentColorStop = await prisma.filamentColorStop.upsert({
+     *   create: {
+     *     // ... data to create a FilamentColorStop
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FilamentColorStop we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FilamentColorStopUpsertArgs>(args: SelectSubset<T, FilamentColorStopUpsertArgs<ExtArgs>>): Prisma__FilamentColorStopClient<$Result.GetResult<Prisma.$FilamentColorStopPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FilamentColorStops.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FilamentColorStopCountArgs} args - Arguments to filter FilamentColorStops to count.
+     * @example
+     * // Count the number of FilamentColorStops
+     * const count = await prisma.filamentColorStop.count({
+     *   where: {
+     *     // ... the filter for the FilamentColorStops we want to count
+     *   }
+     * })
+    **/
+    count<T extends FilamentColorStopCountArgs>(
+      args?: Subset<T, FilamentColorStopCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FilamentColorStopCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FilamentColorStop.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FilamentColorStopAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FilamentColorStopAggregateArgs>(args: Subset<T, FilamentColorStopAggregateArgs>): Prisma.PrismaPromise<GetFilamentColorStopAggregateType<T>>
+
+    /**
+     * Group by FilamentColorStop.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FilamentColorStopGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FilamentColorStopGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FilamentColorStopGroupByArgs['orderBy'] }
+        : { orderBy?: FilamentColorStopGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FilamentColorStopGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFilamentColorStopGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FilamentColorStop model
+   */
+  readonly fields: FilamentColorStopFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FilamentColorStop.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FilamentColorStopClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    filament<T extends FilamentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FilamentDefaultArgs<ExtArgs>>): Prisma__FilamentClient<$Result.GetResult<Prisma.$FilamentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FilamentColorStop model
+   */
+  interface FilamentColorStopFieldRefs {
+    readonly id: FieldRef<"FilamentColorStop", 'String'>
+    readonly filamentId: FieldRef<"FilamentColorStop", 'String'>
+    readonly hex: FieldRef<"FilamentColorStop", 'String'>
+    readonly name: FieldRef<"FilamentColorStop", 'String'>
+    readonly position: FieldRef<"FilamentColorStop", 'Float'>
+    readonly weight: FieldRef<"FilamentColorStop", 'Float'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FilamentColorStop findUnique
+   */
+  export type FilamentColorStopFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilamentColorStop
+     */
+    select?: FilamentColorStopSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilamentColorStop
+     */
+    omit?: FilamentColorStopOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentColorStopInclude<ExtArgs> | null
+    /**
+     * Filter, which FilamentColorStop to fetch.
+     */
+    where: FilamentColorStopWhereUniqueInput
+  }
+
+  /**
+   * FilamentColorStop findUniqueOrThrow
+   */
+  export type FilamentColorStopFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilamentColorStop
+     */
+    select?: FilamentColorStopSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilamentColorStop
+     */
+    omit?: FilamentColorStopOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentColorStopInclude<ExtArgs> | null
+    /**
+     * Filter, which FilamentColorStop to fetch.
+     */
+    where: FilamentColorStopWhereUniqueInput
+  }
+
+  /**
+   * FilamentColorStop findFirst
+   */
+  export type FilamentColorStopFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilamentColorStop
+     */
+    select?: FilamentColorStopSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilamentColorStop
+     */
+    omit?: FilamentColorStopOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentColorStopInclude<ExtArgs> | null
+    /**
+     * Filter, which FilamentColorStop to fetch.
+     */
+    where?: FilamentColorStopWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FilamentColorStops to fetch.
+     */
+    orderBy?: FilamentColorStopOrderByWithRelationInput | FilamentColorStopOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FilamentColorStops.
+     */
+    cursor?: FilamentColorStopWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FilamentColorStops from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FilamentColorStops.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FilamentColorStops.
+     */
+    distinct?: FilamentColorStopScalarFieldEnum | FilamentColorStopScalarFieldEnum[]
+  }
+
+  /**
+   * FilamentColorStop findFirstOrThrow
+   */
+  export type FilamentColorStopFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilamentColorStop
+     */
+    select?: FilamentColorStopSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilamentColorStop
+     */
+    omit?: FilamentColorStopOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentColorStopInclude<ExtArgs> | null
+    /**
+     * Filter, which FilamentColorStop to fetch.
+     */
+    where?: FilamentColorStopWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FilamentColorStops to fetch.
+     */
+    orderBy?: FilamentColorStopOrderByWithRelationInput | FilamentColorStopOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FilamentColorStops.
+     */
+    cursor?: FilamentColorStopWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FilamentColorStops from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FilamentColorStops.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FilamentColorStops.
+     */
+    distinct?: FilamentColorStopScalarFieldEnum | FilamentColorStopScalarFieldEnum[]
+  }
+
+  /**
+   * FilamentColorStop findMany
+   */
+  export type FilamentColorStopFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilamentColorStop
+     */
+    select?: FilamentColorStopSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilamentColorStop
+     */
+    omit?: FilamentColorStopOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentColorStopInclude<ExtArgs> | null
+    /**
+     * Filter, which FilamentColorStops to fetch.
+     */
+    where?: FilamentColorStopWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FilamentColorStops to fetch.
+     */
+    orderBy?: FilamentColorStopOrderByWithRelationInput | FilamentColorStopOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FilamentColorStops.
+     */
+    cursor?: FilamentColorStopWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FilamentColorStops from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FilamentColorStops.
+     */
+    skip?: number
+    distinct?: FilamentColorStopScalarFieldEnum | FilamentColorStopScalarFieldEnum[]
+  }
+
+  /**
+   * FilamentColorStop create
+   */
+  export type FilamentColorStopCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilamentColorStop
+     */
+    select?: FilamentColorStopSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilamentColorStop
+     */
+    omit?: FilamentColorStopOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentColorStopInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FilamentColorStop.
+     */
+    data: XOR<FilamentColorStopCreateInput, FilamentColorStopUncheckedCreateInput>
+  }
+
+  /**
+   * FilamentColorStop createMany
+   */
+  export type FilamentColorStopCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FilamentColorStops.
+     */
+    data: FilamentColorStopCreateManyInput | FilamentColorStopCreateManyInput[]
+  }
+
+  /**
+   * FilamentColorStop createManyAndReturn
+   */
+  export type FilamentColorStopCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilamentColorStop
+     */
+    select?: FilamentColorStopSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilamentColorStop
+     */
+    omit?: FilamentColorStopOmit<ExtArgs> | null
+    /**
+     * The data used to create many FilamentColorStops.
+     */
+    data: FilamentColorStopCreateManyInput | FilamentColorStopCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentColorStopIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FilamentColorStop update
+   */
+  export type FilamentColorStopUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilamentColorStop
+     */
+    select?: FilamentColorStopSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilamentColorStop
+     */
+    omit?: FilamentColorStopOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentColorStopInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FilamentColorStop.
+     */
+    data: XOR<FilamentColorStopUpdateInput, FilamentColorStopUncheckedUpdateInput>
+    /**
+     * Choose, which FilamentColorStop to update.
+     */
+    where: FilamentColorStopWhereUniqueInput
+  }
+
+  /**
+   * FilamentColorStop updateMany
+   */
+  export type FilamentColorStopUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FilamentColorStops.
+     */
+    data: XOR<FilamentColorStopUpdateManyMutationInput, FilamentColorStopUncheckedUpdateManyInput>
+    /**
+     * Filter which FilamentColorStops to update
+     */
+    where?: FilamentColorStopWhereInput
+    /**
+     * Limit how many FilamentColorStops to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FilamentColorStop updateManyAndReturn
+   */
+  export type FilamentColorStopUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilamentColorStop
+     */
+    select?: FilamentColorStopSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilamentColorStop
+     */
+    omit?: FilamentColorStopOmit<ExtArgs> | null
+    /**
+     * The data used to update FilamentColorStops.
+     */
+    data: XOR<FilamentColorStopUpdateManyMutationInput, FilamentColorStopUncheckedUpdateManyInput>
+    /**
+     * Filter which FilamentColorStops to update
+     */
+    where?: FilamentColorStopWhereInput
+    /**
+     * Limit how many FilamentColorStops to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentColorStopIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FilamentColorStop upsert
+   */
+  export type FilamentColorStopUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilamentColorStop
+     */
+    select?: FilamentColorStopSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilamentColorStop
+     */
+    omit?: FilamentColorStopOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentColorStopInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FilamentColorStop to update in case it exists.
+     */
+    where: FilamentColorStopWhereUniqueInput
+    /**
+     * In case the FilamentColorStop found by the `where` argument doesn't exist, create a new FilamentColorStop with this data.
+     */
+    create: XOR<FilamentColorStopCreateInput, FilamentColorStopUncheckedCreateInput>
+    /**
+     * In case the FilamentColorStop was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FilamentColorStopUpdateInput, FilamentColorStopUncheckedUpdateInput>
+  }
+
+  /**
+   * FilamentColorStop delete
+   */
+  export type FilamentColorStopDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilamentColorStop
+     */
+    select?: FilamentColorStopSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilamentColorStop
+     */
+    omit?: FilamentColorStopOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentColorStopInclude<ExtArgs> | null
+    /**
+     * Filter which FilamentColorStop to delete.
+     */
+    where: FilamentColorStopWhereUniqueInput
+  }
+
+  /**
+   * FilamentColorStop deleteMany
+   */
+  export type FilamentColorStopDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FilamentColorStops to delete
+     */
+    where?: FilamentColorStopWhereInput
+    /**
+     * Limit how many FilamentColorStops to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FilamentColorStop without action
+   */
+  export type FilamentColorStopDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FilamentColorStop
+     */
+    select?: FilamentColorStopSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FilamentColorStop
+     */
+    omit?: FilamentColorStopOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FilamentColorStopInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Spool
    */
 
@@ -10083,14 +12643,12 @@ export namespace Prisma {
   }
 
   export type SpoolAvgAggregateOutputType = {
-    diameterMm: number | null
     initialWeightG: number | null
     remainingWeightG: number | null
     priceCents: number | null
   }
 
   export type SpoolSumAggregateOutputType = {
-    diameterMm: number | null
     initialWeightG: number | null
     remainingWeightG: number | null
     priceCents: number | null
@@ -10099,17 +12657,12 @@ export namespace Prisma {
   export type SpoolMinAggregateOutputType = {
     id: string | null
     userId: string | null
-    brandId: string | null
-    materialId: string | null
+    filamentId: string | null
     locationId: string | null
-    colorMode: string | null
-    colorName: string | null
-    diameterMm: number | null
     initialWeightG: number | null
     remainingWeightG: number | null
     status: string | null
     needsRepurchase: boolean | null
-    productUrl: string | null
     purchasedAt: Date | null
     priceCents: number | null
     notes: string | null
@@ -10121,17 +12674,12 @@ export namespace Prisma {
   export type SpoolMaxAggregateOutputType = {
     id: string | null
     userId: string | null
-    brandId: string | null
-    materialId: string | null
+    filamentId: string | null
     locationId: string | null
-    colorMode: string | null
-    colorName: string | null
-    diameterMm: number | null
     initialWeightG: number | null
     remainingWeightG: number | null
     status: string | null
     needsRepurchase: boolean | null
-    productUrl: string | null
     purchasedAt: Date | null
     priceCents: number | null
     notes: string | null
@@ -10143,17 +12691,12 @@ export namespace Prisma {
   export type SpoolCountAggregateOutputType = {
     id: number
     userId: number
-    brandId: number
-    materialId: number
+    filamentId: number
     locationId: number
-    colorMode: number
-    colorName: number
-    diameterMm: number
     initialWeightG: number
     remainingWeightG: number
     status: number
     needsRepurchase: number
-    productUrl: number
     purchasedAt: number
     priceCents: number
     notes: number
@@ -10165,14 +12708,12 @@ export namespace Prisma {
 
 
   export type SpoolAvgAggregateInputType = {
-    diameterMm?: true
     initialWeightG?: true
     remainingWeightG?: true
     priceCents?: true
   }
 
   export type SpoolSumAggregateInputType = {
-    diameterMm?: true
     initialWeightG?: true
     remainingWeightG?: true
     priceCents?: true
@@ -10181,17 +12722,12 @@ export namespace Prisma {
   export type SpoolMinAggregateInputType = {
     id?: true
     userId?: true
-    brandId?: true
-    materialId?: true
+    filamentId?: true
     locationId?: true
-    colorMode?: true
-    colorName?: true
-    diameterMm?: true
     initialWeightG?: true
     remainingWeightG?: true
     status?: true
     needsRepurchase?: true
-    productUrl?: true
     purchasedAt?: true
     priceCents?: true
     notes?: true
@@ -10203,17 +12739,12 @@ export namespace Prisma {
   export type SpoolMaxAggregateInputType = {
     id?: true
     userId?: true
-    brandId?: true
-    materialId?: true
+    filamentId?: true
     locationId?: true
-    colorMode?: true
-    colorName?: true
-    diameterMm?: true
     initialWeightG?: true
     remainingWeightG?: true
     status?: true
     needsRepurchase?: true
-    productUrl?: true
     purchasedAt?: true
     priceCents?: true
     notes?: true
@@ -10225,17 +12756,12 @@ export namespace Prisma {
   export type SpoolCountAggregateInputType = {
     id?: true
     userId?: true
-    brandId?: true
-    materialId?: true
+    filamentId?: true
     locationId?: true
-    colorMode?: true
-    colorName?: true
-    diameterMm?: true
     initialWeightG?: true
     remainingWeightG?: true
     status?: true
     needsRepurchase?: true
-    productUrl?: true
     purchasedAt?: true
     priceCents?: true
     notes?: true
@@ -10334,17 +12860,12 @@ export namespace Prisma {
   export type SpoolGroupByOutputType = {
     id: string
     userId: string
-    brandId: string
-    materialId: string
+    filamentId: string
     locationId: string | null
-    colorMode: string
-    colorName: string | null
-    diameterMm: number
     initialWeightG: number
     remainingWeightG: number
     status: string
     needsRepurchase: boolean
-    productUrl: string | null
     purchasedAt: Date | null
     priceCents: number | null
     notes: string | null
@@ -10375,17 +12896,12 @@ export namespace Prisma {
   export type SpoolSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
-    brandId?: boolean
-    materialId?: boolean
+    filamentId?: boolean
     locationId?: boolean
-    colorMode?: boolean
-    colorName?: boolean
-    diameterMm?: boolean
     initialWeightG?: boolean
     remainingWeightG?: boolean
     status?: boolean
     needsRepurchase?: boolean
-    productUrl?: boolean
     purchasedAt?: boolean
     priceCents?: boolean
     notes?: boolean
@@ -10393,29 +12909,21 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-    brand?: boolean | BrandDefaultArgs<ExtArgs>
-    material?: boolean | MaterialDefaultArgs<ExtArgs>
+    filament?: boolean | FilamentDefaultArgs<ExtArgs>
     location?: boolean | Spool$locationArgs<ExtArgs>
-    colors?: boolean | Spool$colorsArgs<ExtArgs>
     usages?: boolean | Spool$usagesArgs<ExtArgs>
-    customFieldValues?: boolean | Spool$customFieldValuesArgs<ExtArgs>
     _count?: boolean | SpoolCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["spool"]>
 
   export type SpoolSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
-    brandId?: boolean
-    materialId?: boolean
+    filamentId?: boolean
     locationId?: boolean
-    colorMode?: boolean
-    colorName?: boolean
-    diameterMm?: boolean
     initialWeightG?: boolean
     remainingWeightG?: boolean
     status?: boolean
     needsRepurchase?: boolean
-    productUrl?: boolean
     purchasedAt?: boolean
     priceCents?: boolean
     notes?: boolean
@@ -10423,25 +12931,19 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-    brand?: boolean | BrandDefaultArgs<ExtArgs>
-    material?: boolean | MaterialDefaultArgs<ExtArgs>
+    filament?: boolean | FilamentDefaultArgs<ExtArgs>
     location?: boolean | Spool$locationArgs<ExtArgs>
   }, ExtArgs["result"]["spool"]>
 
   export type SpoolSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
-    brandId?: boolean
-    materialId?: boolean
+    filamentId?: boolean
     locationId?: boolean
-    colorMode?: boolean
-    colorName?: boolean
-    diameterMm?: boolean
     initialWeightG?: boolean
     remainingWeightG?: boolean
     status?: boolean
     needsRepurchase?: boolean
-    productUrl?: boolean
     purchasedAt?: boolean
     priceCents?: boolean
     notes?: boolean
@@ -10449,25 +12951,19 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-    brand?: boolean | BrandDefaultArgs<ExtArgs>
-    material?: boolean | MaterialDefaultArgs<ExtArgs>
+    filament?: boolean | FilamentDefaultArgs<ExtArgs>
     location?: boolean | Spool$locationArgs<ExtArgs>
   }, ExtArgs["result"]["spool"]>
 
   export type SpoolSelectScalar = {
     id?: boolean
     userId?: boolean
-    brandId?: boolean
-    materialId?: boolean
+    filamentId?: boolean
     locationId?: boolean
-    colorMode?: boolean
-    colorName?: boolean
-    diameterMm?: boolean
     initialWeightG?: boolean
     remainingWeightG?: boolean
     status?: boolean
     needsRepurchase?: boolean
-    productUrl?: boolean
     purchasedAt?: boolean
     priceCents?: boolean
     notes?: boolean
@@ -10476,27 +12972,22 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type SpoolOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "brandId" | "materialId" | "locationId" | "colorMode" | "colorName" | "diameterMm" | "initialWeightG" | "remainingWeightG" | "status" | "needsRepurchase" | "productUrl" | "purchasedAt" | "priceCents" | "notes" | "lastDriedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["spool"]>
+  export type SpoolOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "filamentId" | "locationId" | "initialWeightG" | "remainingWeightG" | "status" | "needsRepurchase" | "purchasedAt" | "priceCents" | "notes" | "lastDriedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["spool"]>
   export type SpoolInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
-    brand?: boolean | BrandDefaultArgs<ExtArgs>
-    material?: boolean | MaterialDefaultArgs<ExtArgs>
+    filament?: boolean | FilamentDefaultArgs<ExtArgs>
     location?: boolean | Spool$locationArgs<ExtArgs>
-    colors?: boolean | Spool$colorsArgs<ExtArgs>
     usages?: boolean | Spool$usagesArgs<ExtArgs>
-    customFieldValues?: boolean | Spool$customFieldValuesArgs<ExtArgs>
     _count?: boolean | SpoolCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type SpoolIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
-    brand?: boolean | BrandDefaultArgs<ExtArgs>
-    material?: boolean | MaterialDefaultArgs<ExtArgs>
+    filament?: boolean | FilamentDefaultArgs<ExtArgs>
     location?: boolean | Spool$locationArgs<ExtArgs>
   }
   export type SpoolIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
-    brand?: boolean | BrandDefaultArgs<ExtArgs>
-    material?: boolean | MaterialDefaultArgs<ExtArgs>
+    filament?: boolean | FilamentDefaultArgs<ExtArgs>
     location?: boolean | Spool$locationArgs<ExtArgs>
   }
 
@@ -10504,36 +12995,22 @@ export namespace Prisma {
     name: "Spool"
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
-      brand: Prisma.$BrandPayload<ExtArgs>
-      material: Prisma.$MaterialPayload<ExtArgs>
+      filament: Prisma.$FilamentPayload<ExtArgs>
       location: Prisma.$LocationPayload<ExtArgs> | null
-      colors: Prisma.$SpoolColorStopPayload<ExtArgs>[]
       usages: Prisma.$UsagePayload<ExtArgs>[]
-      customFieldValues: Prisma.$CustomFieldValuePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       userId: string
-      brandId: string
-      materialId: string
+      filamentId: string
       locationId: string | null
-      colorMode: string
-      colorName: string | null
-      diameterMm: number
       initialWeightG: number
       remainingWeightG: number
       /**
        * sealed | open | empty | archived
        */
       status: string
-      /**
-       * Manually or auto flagged for repurchase list
-       */
       needsRepurchase: boolean
-      /**
-       * Product page / store listing for this spool
-       */
-      productUrl: string | null
       purchasedAt: Date | null
       priceCents: number | null
       notes: string | null
@@ -10935,12 +13412,9 @@ export namespace Prisma {
   export interface Prisma__SpoolClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    brand<T extends BrandDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BrandDefaultArgs<ExtArgs>>): Prisma__BrandClient<$Result.GetResult<Prisma.$BrandPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    material<T extends MaterialDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MaterialDefaultArgs<ExtArgs>>): Prisma__MaterialClient<$Result.GetResult<Prisma.$MaterialPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    filament<T extends FilamentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FilamentDefaultArgs<ExtArgs>>): Prisma__FilamentClient<$Result.GetResult<Prisma.$FilamentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     location<T extends Spool$locationArgs<ExtArgs> = {}>(args?: Subset<T, Spool$locationArgs<ExtArgs>>): Prisma__LocationClient<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    colors<T extends Spool$colorsArgs<ExtArgs> = {}>(args?: Subset<T, Spool$colorsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SpoolColorStopPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     usages<T extends Spool$usagesArgs<ExtArgs> = {}>(args?: Subset<T, Spool$usagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UsagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    customFieldValues<T extends Spool$customFieldValuesArgs<ExtArgs> = {}>(args?: Subset<T, Spool$customFieldValuesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomFieldValuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10972,17 +13446,12 @@ export namespace Prisma {
   interface SpoolFieldRefs {
     readonly id: FieldRef<"Spool", 'String'>
     readonly userId: FieldRef<"Spool", 'String'>
-    readonly brandId: FieldRef<"Spool", 'String'>
-    readonly materialId: FieldRef<"Spool", 'String'>
+    readonly filamentId: FieldRef<"Spool", 'String'>
     readonly locationId: FieldRef<"Spool", 'String'>
-    readonly colorMode: FieldRef<"Spool", 'String'>
-    readonly colorName: FieldRef<"Spool", 'String'>
-    readonly diameterMm: FieldRef<"Spool", 'Float'>
     readonly initialWeightG: FieldRef<"Spool", 'Int'>
     readonly remainingWeightG: FieldRef<"Spool", 'Int'>
     readonly status: FieldRef<"Spool", 'String'>
     readonly needsRepurchase: FieldRef<"Spool", 'Boolean'>
-    readonly productUrl: FieldRef<"Spool", 'String'>
     readonly purchasedAt: FieldRef<"Spool", 'DateTime'>
     readonly priceCents: FieldRef<"Spool", 'Int'>
     readonly notes: FieldRef<"Spool", 'String'>
@@ -11402,30 +13871,6 @@ export namespace Prisma {
   }
 
   /**
-   * Spool.colors
-   */
-  export type Spool$colorsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the SpoolColorStop
-     */
-    select?: SpoolColorStopSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the SpoolColorStop
-     */
-    omit?: SpoolColorStopOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SpoolColorStopInclude<ExtArgs> | null
-    where?: SpoolColorStopWhereInput
-    orderBy?: SpoolColorStopOrderByWithRelationInput | SpoolColorStopOrderByWithRelationInput[]
-    cursor?: SpoolColorStopWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: SpoolColorStopScalarFieldEnum | SpoolColorStopScalarFieldEnum[]
-  }
-
-  /**
    * Spool.usages
    */
   export type Spool$usagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11450,30 +13895,6 @@ export namespace Prisma {
   }
 
   /**
-   * Spool.customFieldValues
-   */
-  export type Spool$customFieldValuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CustomFieldValue
-     */
-    select?: CustomFieldValueSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CustomFieldValue
-     */
-    omit?: CustomFieldValueOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CustomFieldValueInclude<ExtArgs> | null
-    where?: CustomFieldValueWhereInput
-    orderBy?: CustomFieldValueOrderByWithRelationInput | CustomFieldValueOrderByWithRelationInput[]
-    cursor?: CustomFieldValueWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: CustomFieldValueScalarFieldEnum | CustomFieldValueScalarFieldEnum[]
-  }
-
-  /**
    * Spool without action
    */
   export type SpoolDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11489,1113 +13910,6 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: SpoolInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model SpoolColorStop
-   */
-
-  export type AggregateSpoolColorStop = {
-    _count: SpoolColorStopCountAggregateOutputType | null
-    _avg: SpoolColorStopAvgAggregateOutputType | null
-    _sum: SpoolColorStopSumAggregateOutputType | null
-    _min: SpoolColorStopMinAggregateOutputType | null
-    _max: SpoolColorStopMaxAggregateOutputType | null
-  }
-
-  export type SpoolColorStopAvgAggregateOutputType = {
-    position: number | null
-    weight: number | null
-  }
-
-  export type SpoolColorStopSumAggregateOutputType = {
-    position: number | null
-    weight: number | null
-  }
-
-  export type SpoolColorStopMinAggregateOutputType = {
-    id: string | null
-    spoolId: string | null
-    hex: string | null
-    name: string | null
-    position: number | null
-    weight: number | null
-  }
-
-  export type SpoolColorStopMaxAggregateOutputType = {
-    id: string | null
-    spoolId: string | null
-    hex: string | null
-    name: string | null
-    position: number | null
-    weight: number | null
-  }
-
-  export type SpoolColorStopCountAggregateOutputType = {
-    id: number
-    spoolId: number
-    hex: number
-    name: number
-    position: number
-    weight: number
-    _all: number
-  }
-
-
-  export type SpoolColorStopAvgAggregateInputType = {
-    position?: true
-    weight?: true
-  }
-
-  export type SpoolColorStopSumAggregateInputType = {
-    position?: true
-    weight?: true
-  }
-
-  export type SpoolColorStopMinAggregateInputType = {
-    id?: true
-    spoolId?: true
-    hex?: true
-    name?: true
-    position?: true
-    weight?: true
-  }
-
-  export type SpoolColorStopMaxAggregateInputType = {
-    id?: true
-    spoolId?: true
-    hex?: true
-    name?: true
-    position?: true
-    weight?: true
-  }
-
-  export type SpoolColorStopCountAggregateInputType = {
-    id?: true
-    spoolId?: true
-    hex?: true
-    name?: true
-    position?: true
-    weight?: true
-    _all?: true
-  }
-
-  export type SpoolColorStopAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which SpoolColorStop to aggregate.
-     */
-    where?: SpoolColorStopWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of SpoolColorStops to fetch.
-     */
-    orderBy?: SpoolColorStopOrderByWithRelationInput | SpoolColorStopOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: SpoolColorStopWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` SpoolColorStops from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` SpoolColorStops.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned SpoolColorStops
-    **/
-    _count?: true | SpoolColorStopCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: SpoolColorStopAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: SpoolColorStopSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: SpoolColorStopMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: SpoolColorStopMaxAggregateInputType
-  }
-
-  export type GetSpoolColorStopAggregateType<T extends SpoolColorStopAggregateArgs> = {
-        [P in keyof T & keyof AggregateSpoolColorStop]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateSpoolColorStop[P]>
-      : GetScalarType<T[P], AggregateSpoolColorStop[P]>
-  }
-
-
-
-
-  export type SpoolColorStopGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: SpoolColorStopWhereInput
-    orderBy?: SpoolColorStopOrderByWithAggregationInput | SpoolColorStopOrderByWithAggregationInput[]
-    by: SpoolColorStopScalarFieldEnum[] | SpoolColorStopScalarFieldEnum
-    having?: SpoolColorStopScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: SpoolColorStopCountAggregateInputType | true
-    _avg?: SpoolColorStopAvgAggregateInputType
-    _sum?: SpoolColorStopSumAggregateInputType
-    _min?: SpoolColorStopMinAggregateInputType
-    _max?: SpoolColorStopMaxAggregateInputType
-  }
-
-  export type SpoolColorStopGroupByOutputType = {
-    id: string
-    spoolId: string
-    hex: string
-    name: string | null
-    position: number
-    weight: number | null
-    _count: SpoolColorStopCountAggregateOutputType | null
-    _avg: SpoolColorStopAvgAggregateOutputType | null
-    _sum: SpoolColorStopSumAggregateOutputType | null
-    _min: SpoolColorStopMinAggregateOutputType | null
-    _max: SpoolColorStopMaxAggregateOutputType | null
-  }
-
-  type GetSpoolColorStopGroupByPayload<T extends SpoolColorStopGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<SpoolColorStopGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof SpoolColorStopGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], SpoolColorStopGroupByOutputType[P]>
-            : GetScalarType<T[P], SpoolColorStopGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type SpoolColorStopSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    spoolId?: boolean
-    hex?: boolean
-    name?: boolean
-    position?: boolean
-    weight?: boolean
-    spool?: boolean | SpoolDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["spoolColorStop"]>
-
-  export type SpoolColorStopSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    spoolId?: boolean
-    hex?: boolean
-    name?: boolean
-    position?: boolean
-    weight?: boolean
-    spool?: boolean | SpoolDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["spoolColorStop"]>
-
-  export type SpoolColorStopSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    spoolId?: boolean
-    hex?: boolean
-    name?: boolean
-    position?: boolean
-    weight?: boolean
-    spool?: boolean | SpoolDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["spoolColorStop"]>
-
-  export type SpoolColorStopSelectScalar = {
-    id?: boolean
-    spoolId?: boolean
-    hex?: boolean
-    name?: boolean
-    position?: boolean
-    weight?: boolean
-  }
-
-  export type SpoolColorStopOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "spoolId" | "hex" | "name" | "position" | "weight", ExtArgs["result"]["spoolColorStop"]>
-  export type SpoolColorStopInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    spool?: boolean | SpoolDefaultArgs<ExtArgs>
-  }
-  export type SpoolColorStopIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    spool?: boolean | SpoolDefaultArgs<ExtArgs>
-  }
-  export type SpoolColorStopIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    spool?: boolean | SpoolDefaultArgs<ExtArgs>
-  }
-
-  export type $SpoolColorStopPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "SpoolColorStop"
-    objects: {
-      spool: Prisma.$SpoolPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      spoolId: string
-      hex: string
-      name: string | null
-      position: number
-      weight: number | null
-    }, ExtArgs["result"]["spoolColorStop"]>
-    composites: {}
-  }
-
-  type SpoolColorStopGetPayload<S extends boolean | null | undefined | SpoolColorStopDefaultArgs> = $Result.GetResult<Prisma.$SpoolColorStopPayload, S>
-
-  type SpoolColorStopCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<SpoolColorStopFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: SpoolColorStopCountAggregateInputType | true
-    }
-
-  export interface SpoolColorStopDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SpoolColorStop'], meta: { name: 'SpoolColorStop' } }
-    /**
-     * Find zero or one SpoolColorStop that matches the filter.
-     * @param {SpoolColorStopFindUniqueArgs} args - Arguments to find a SpoolColorStop
-     * @example
-     * // Get one SpoolColorStop
-     * const spoolColorStop = await prisma.spoolColorStop.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends SpoolColorStopFindUniqueArgs>(args: SelectSubset<T, SpoolColorStopFindUniqueArgs<ExtArgs>>): Prisma__SpoolColorStopClient<$Result.GetResult<Prisma.$SpoolColorStopPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one SpoolColorStop that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {SpoolColorStopFindUniqueOrThrowArgs} args - Arguments to find a SpoolColorStop
-     * @example
-     * // Get one SpoolColorStop
-     * const spoolColorStop = await prisma.spoolColorStop.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends SpoolColorStopFindUniqueOrThrowArgs>(args: SelectSubset<T, SpoolColorStopFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SpoolColorStopClient<$Result.GetResult<Prisma.$SpoolColorStopPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first SpoolColorStop that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {SpoolColorStopFindFirstArgs} args - Arguments to find a SpoolColorStop
-     * @example
-     * // Get one SpoolColorStop
-     * const spoolColorStop = await prisma.spoolColorStop.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends SpoolColorStopFindFirstArgs>(args?: SelectSubset<T, SpoolColorStopFindFirstArgs<ExtArgs>>): Prisma__SpoolColorStopClient<$Result.GetResult<Prisma.$SpoolColorStopPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first SpoolColorStop that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {SpoolColorStopFindFirstOrThrowArgs} args - Arguments to find a SpoolColorStop
-     * @example
-     * // Get one SpoolColorStop
-     * const spoolColorStop = await prisma.spoolColorStop.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends SpoolColorStopFindFirstOrThrowArgs>(args?: SelectSubset<T, SpoolColorStopFindFirstOrThrowArgs<ExtArgs>>): Prisma__SpoolColorStopClient<$Result.GetResult<Prisma.$SpoolColorStopPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more SpoolColorStops that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {SpoolColorStopFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all SpoolColorStops
-     * const spoolColorStops = await prisma.spoolColorStop.findMany()
-     * 
-     * // Get first 10 SpoolColorStops
-     * const spoolColorStops = await prisma.spoolColorStop.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const spoolColorStopWithIdOnly = await prisma.spoolColorStop.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends SpoolColorStopFindManyArgs>(args?: SelectSubset<T, SpoolColorStopFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SpoolColorStopPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a SpoolColorStop.
-     * @param {SpoolColorStopCreateArgs} args - Arguments to create a SpoolColorStop.
-     * @example
-     * // Create one SpoolColorStop
-     * const SpoolColorStop = await prisma.spoolColorStop.create({
-     *   data: {
-     *     // ... data to create a SpoolColorStop
-     *   }
-     * })
-     * 
-     */
-    create<T extends SpoolColorStopCreateArgs>(args: SelectSubset<T, SpoolColorStopCreateArgs<ExtArgs>>): Prisma__SpoolColorStopClient<$Result.GetResult<Prisma.$SpoolColorStopPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many SpoolColorStops.
-     * @param {SpoolColorStopCreateManyArgs} args - Arguments to create many SpoolColorStops.
-     * @example
-     * // Create many SpoolColorStops
-     * const spoolColorStop = await prisma.spoolColorStop.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends SpoolColorStopCreateManyArgs>(args?: SelectSubset<T, SpoolColorStopCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many SpoolColorStops and returns the data saved in the database.
-     * @param {SpoolColorStopCreateManyAndReturnArgs} args - Arguments to create many SpoolColorStops.
-     * @example
-     * // Create many SpoolColorStops
-     * const spoolColorStop = await prisma.spoolColorStop.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many SpoolColorStops and only return the `id`
-     * const spoolColorStopWithIdOnly = await prisma.spoolColorStop.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends SpoolColorStopCreateManyAndReturnArgs>(args?: SelectSubset<T, SpoolColorStopCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SpoolColorStopPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a SpoolColorStop.
-     * @param {SpoolColorStopDeleteArgs} args - Arguments to delete one SpoolColorStop.
-     * @example
-     * // Delete one SpoolColorStop
-     * const SpoolColorStop = await prisma.spoolColorStop.delete({
-     *   where: {
-     *     // ... filter to delete one SpoolColorStop
-     *   }
-     * })
-     * 
-     */
-    delete<T extends SpoolColorStopDeleteArgs>(args: SelectSubset<T, SpoolColorStopDeleteArgs<ExtArgs>>): Prisma__SpoolColorStopClient<$Result.GetResult<Prisma.$SpoolColorStopPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one SpoolColorStop.
-     * @param {SpoolColorStopUpdateArgs} args - Arguments to update one SpoolColorStop.
-     * @example
-     * // Update one SpoolColorStop
-     * const spoolColorStop = await prisma.spoolColorStop.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends SpoolColorStopUpdateArgs>(args: SelectSubset<T, SpoolColorStopUpdateArgs<ExtArgs>>): Prisma__SpoolColorStopClient<$Result.GetResult<Prisma.$SpoolColorStopPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more SpoolColorStops.
-     * @param {SpoolColorStopDeleteManyArgs} args - Arguments to filter SpoolColorStops to delete.
-     * @example
-     * // Delete a few SpoolColorStops
-     * const { count } = await prisma.spoolColorStop.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends SpoolColorStopDeleteManyArgs>(args?: SelectSubset<T, SpoolColorStopDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more SpoolColorStops.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {SpoolColorStopUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many SpoolColorStops
-     * const spoolColorStop = await prisma.spoolColorStop.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends SpoolColorStopUpdateManyArgs>(args: SelectSubset<T, SpoolColorStopUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more SpoolColorStops and returns the data updated in the database.
-     * @param {SpoolColorStopUpdateManyAndReturnArgs} args - Arguments to update many SpoolColorStops.
-     * @example
-     * // Update many SpoolColorStops
-     * const spoolColorStop = await prisma.spoolColorStop.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more SpoolColorStops and only return the `id`
-     * const spoolColorStopWithIdOnly = await prisma.spoolColorStop.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends SpoolColorStopUpdateManyAndReturnArgs>(args: SelectSubset<T, SpoolColorStopUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SpoolColorStopPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one SpoolColorStop.
-     * @param {SpoolColorStopUpsertArgs} args - Arguments to update or create a SpoolColorStop.
-     * @example
-     * // Update or create a SpoolColorStop
-     * const spoolColorStop = await prisma.spoolColorStop.upsert({
-     *   create: {
-     *     // ... data to create a SpoolColorStop
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the SpoolColorStop we want to update
-     *   }
-     * })
-     */
-    upsert<T extends SpoolColorStopUpsertArgs>(args: SelectSubset<T, SpoolColorStopUpsertArgs<ExtArgs>>): Prisma__SpoolColorStopClient<$Result.GetResult<Prisma.$SpoolColorStopPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of SpoolColorStops.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {SpoolColorStopCountArgs} args - Arguments to filter SpoolColorStops to count.
-     * @example
-     * // Count the number of SpoolColorStops
-     * const count = await prisma.spoolColorStop.count({
-     *   where: {
-     *     // ... the filter for the SpoolColorStops we want to count
-     *   }
-     * })
-    **/
-    count<T extends SpoolColorStopCountArgs>(
-      args?: Subset<T, SpoolColorStopCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], SpoolColorStopCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a SpoolColorStop.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {SpoolColorStopAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends SpoolColorStopAggregateArgs>(args: Subset<T, SpoolColorStopAggregateArgs>): Prisma.PrismaPromise<GetSpoolColorStopAggregateType<T>>
-
-    /**
-     * Group by SpoolColorStop.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {SpoolColorStopGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends SpoolColorStopGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: SpoolColorStopGroupByArgs['orderBy'] }
-        : { orderBy?: SpoolColorStopGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, SpoolColorStopGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSpoolColorStopGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the SpoolColorStop model
-   */
-  readonly fields: SpoolColorStopFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for SpoolColorStop.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__SpoolColorStopClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    spool<T extends SpoolDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SpoolDefaultArgs<ExtArgs>>): Prisma__SpoolClient<$Result.GetResult<Prisma.$SpoolPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the SpoolColorStop model
-   */
-  interface SpoolColorStopFieldRefs {
-    readonly id: FieldRef<"SpoolColorStop", 'String'>
-    readonly spoolId: FieldRef<"SpoolColorStop", 'String'>
-    readonly hex: FieldRef<"SpoolColorStop", 'String'>
-    readonly name: FieldRef<"SpoolColorStop", 'String'>
-    readonly position: FieldRef<"SpoolColorStop", 'Float'>
-    readonly weight: FieldRef<"SpoolColorStop", 'Float'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * SpoolColorStop findUnique
-   */
-  export type SpoolColorStopFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the SpoolColorStop
-     */
-    select?: SpoolColorStopSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the SpoolColorStop
-     */
-    omit?: SpoolColorStopOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SpoolColorStopInclude<ExtArgs> | null
-    /**
-     * Filter, which SpoolColorStop to fetch.
-     */
-    where: SpoolColorStopWhereUniqueInput
-  }
-
-  /**
-   * SpoolColorStop findUniqueOrThrow
-   */
-  export type SpoolColorStopFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the SpoolColorStop
-     */
-    select?: SpoolColorStopSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the SpoolColorStop
-     */
-    omit?: SpoolColorStopOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SpoolColorStopInclude<ExtArgs> | null
-    /**
-     * Filter, which SpoolColorStop to fetch.
-     */
-    where: SpoolColorStopWhereUniqueInput
-  }
-
-  /**
-   * SpoolColorStop findFirst
-   */
-  export type SpoolColorStopFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the SpoolColorStop
-     */
-    select?: SpoolColorStopSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the SpoolColorStop
-     */
-    omit?: SpoolColorStopOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SpoolColorStopInclude<ExtArgs> | null
-    /**
-     * Filter, which SpoolColorStop to fetch.
-     */
-    where?: SpoolColorStopWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of SpoolColorStops to fetch.
-     */
-    orderBy?: SpoolColorStopOrderByWithRelationInput | SpoolColorStopOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for SpoolColorStops.
-     */
-    cursor?: SpoolColorStopWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` SpoolColorStops from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` SpoolColorStops.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of SpoolColorStops.
-     */
-    distinct?: SpoolColorStopScalarFieldEnum | SpoolColorStopScalarFieldEnum[]
-  }
-
-  /**
-   * SpoolColorStop findFirstOrThrow
-   */
-  export type SpoolColorStopFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the SpoolColorStop
-     */
-    select?: SpoolColorStopSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the SpoolColorStop
-     */
-    omit?: SpoolColorStopOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SpoolColorStopInclude<ExtArgs> | null
-    /**
-     * Filter, which SpoolColorStop to fetch.
-     */
-    where?: SpoolColorStopWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of SpoolColorStops to fetch.
-     */
-    orderBy?: SpoolColorStopOrderByWithRelationInput | SpoolColorStopOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for SpoolColorStops.
-     */
-    cursor?: SpoolColorStopWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` SpoolColorStops from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` SpoolColorStops.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of SpoolColorStops.
-     */
-    distinct?: SpoolColorStopScalarFieldEnum | SpoolColorStopScalarFieldEnum[]
-  }
-
-  /**
-   * SpoolColorStop findMany
-   */
-  export type SpoolColorStopFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the SpoolColorStop
-     */
-    select?: SpoolColorStopSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the SpoolColorStop
-     */
-    omit?: SpoolColorStopOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SpoolColorStopInclude<ExtArgs> | null
-    /**
-     * Filter, which SpoolColorStops to fetch.
-     */
-    where?: SpoolColorStopWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of SpoolColorStops to fetch.
-     */
-    orderBy?: SpoolColorStopOrderByWithRelationInput | SpoolColorStopOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing SpoolColorStops.
-     */
-    cursor?: SpoolColorStopWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` SpoolColorStops from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` SpoolColorStops.
-     */
-    skip?: number
-    distinct?: SpoolColorStopScalarFieldEnum | SpoolColorStopScalarFieldEnum[]
-  }
-
-  /**
-   * SpoolColorStop create
-   */
-  export type SpoolColorStopCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the SpoolColorStop
-     */
-    select?: SpoolColorStopSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the SpoolColorStop
-     */
-    omit?: SpoolColorStopOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SpoolColorStopInclude<ExtArgs> | null
-    /**
-     * The data needed to create a SpoolColorStop.
-     */
-    data: XOR<SpoolColorStopCreateInput, SpoolColorStopUncheckedCreateInput>
-  }
-
-  /**
-   * SpoolColorStop createMany
-   */
-  export type SpoolColorStopCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many SpoolColorStops.
-     */
-    data: SpoolColorStopCreateManyInput | SpoolColorStopCreateManyInput[]
-  }
-
-  /**
-   * SpoolColorStop createManyAndReturn
-   */
-  export type SpoolColorStopCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the SpoolColorStop
-     */
-    select?: SpoolColorStopSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the SpoolColorStop
-     */
-    omit?: SpoolColorStopOmit<ExtArgs> | null
-    /**
-     * The data used to create many SpoolColorStops.
-     */
-    data: SpoolColorStopCreateManyInput | SpoolColorStopCreateManyInput[]
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SpoolColorStopIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * SpoolColorStop update
-   */
-  export type SpoolColorStopUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the SpoolColorStop
-     */
-    select?: SpoolColorStopSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the SpoolColorStop
-     */
-    omit?: SpoolColorStopOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SpoolColorStopInclude<ExtArgs> | null
-    /**
-     * The data needed to update a SpoolColorStop.
-     */
-    data: XOR<SpoolColorStopUpdateInput, SpoolColorStopUncheckedUpdateInput>
-    /**
-     * Choose, which SpoolColorStop to update.
-     */
-    where: SpoolColorStopWhereUniqueInput
-  }
-
-  /**
-   * SpoolColorStop updateMany
-   */
-  export type SpoolColorStopUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update SpoolColorStops.
-     */
-    data: XOR<SpoolColorStopUpdateManyMutationInput, SpoolColorStopUncheckedUpdateManyInput>
-    /**
-     * Filter which SpoolColorStops to update
-     */
-    where?: SpoolColorStopWhereInput
-    /**
-     * Limit how many SpoolColorStops to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * SpoolColorStop updateManyAndReturn
-   */
-  export type SpoolColorStopUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the SpoolColorStop
-     */
-    select?: SpoolColorStopSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the SpoolColorStop
-     */
-    omit?: SpoolColorStopOmit<ExtArgs> | null
-    /**
-     * The data used to update SpoolColorStops.
-     */
-    data: XOR<SpoolColorStopUpdateManyMutationInput, SpoolColorStopUncheckedUpdateManyInput>
-    /**
-     * Filter which SpoolColorStops to update
-     */
-    where?: SpoolColorStopWhereInput
-    /**
-     * Limit how many SpoolColorStops to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SpoolColorStopIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * SpoolColorStop upsert
-   */
-  export type SpoolColorStopUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the SpoolColorStop
-     */
-    select?: SpoolColorStopSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the SpoolColorStop
-     */
-    omit?: SpoolColorStopOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SpoolColorStopInclude<ExtArgs> | null
-    /**
-     * The filter to search for the SpoolColorStop to update in case it exists.
-     */
-    where: SpoolColorStopWhereUniqueInput
-    /**
-     * In case the SpoolColorStop found by the `where` argument doesn't exist, create a new SpoolColorStop with this data.
-     */
-    create: XOR<SpoolColorStopCreateInput, SpoolColorStopUncheckedCreateInput>
-    /**
-     * In case the SpoolColorStop was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<SpoolColorStopUpdateInput, SpoolColorStopUncheckedUpdateInput>
-  }
-
-  /**
-   * SpoolColorStop delete
-   */
-  export type SpoolColorStopDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the SpoolColorStop
-     */
-    select?: SpoolColorStopSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the SpoolColorStop
-     */
-    omit?: SpoolColorStopOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SpoolColorStopInclude<ExtArgs> | null
-    /**
-     * Filter which SpoolColorStop to delete.
-     */
-    where: SpoolColorStopWhereUniqueInput
-  }
-
-  /**
-   * SpoolColorStop deleteMany
-   */
-  export type SpoolColorStopDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which SpoolColorStops to delete
-     */
-    where?: SpoolColorStopWhereInput
-    /**
-     * Limit how many SpoolColorStops to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * SpoolColorStop without action
-   */
-  export type SpoolColorStopDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the SpoolColorStop
-     */
-    select?: SpoolColorStopSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the SpoolColorStop
-     */
-    omit?: SpoolColorStopOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SpoolColorStopInclude<ExtArgs> | null
   }
 
 
@@ -14018,7 +15332,7 @@ export namespace Prisma {
       id: string
       userId: string
       /**
-       * SPOOL for now
+       * FILAMENT
        */
       entity: string
       key: string
@@ -14929,7 +16243,7 @@ export namespace Prisma {
   export type CustomFieldValueMinAggregateOutputType = {
     id: string | null
     fieldId: string | null
-    spoolId: string | null
+    filamentId: string | null
     valueText: string | null
     valueNumber: number | null
     valueBoolean: boolean | null
@@ -14939,7 +16253,7 @@ export namespace Prisma {
   export type CustomFieldValueMaxAggregateOutputType = {
     id: string | null
     fieldId: string | null
-    spoolId: string | null
+    filamentId: string | null
     valueText: string | null
     valueNumber: number | null
     valueBoolean: boolean | null
@@ -14949,7 +16263,7 @@ export namespace Prisma {
   export type CustomFieldValueCountAggregateOutputType = {
     id: number
     fieldId: number
-    spoolId: number
+    filamentId: number
     valueText: number
     valueNumber: number
     valueBoolean: number
@@ -14969,7 +16283,7 @@ export namespace Prisma {
   export type CustomFieldValueMinAggregateInputType = {
     id?: true
     fieldId?: true
-    spoolId?: true
+    filamentId?: true
     valueText?: true
     valueNumber?: true
     valueBoolean?: true
@@ -14979,7 +16293,7 @@ export namespace Prisma {
   export type CustomFieldValueMaxAggregateInputType = {
     id?: true
     fieldId?: true
-    spoolId?: true
+    filamentId?: true
     valueText?: true
     valueNumber?: true
     valueBoolean?: true
@@ -14989,7 +16303,7 @@ export namespace Prisma {
   export type CustomFieldValueCountAggregateInputType = {
     id?: true
     fieldId?: true
-    spoolId?: true
+    filamentId?: true
     valueText?: true
     valueNumber?: true
     valueBoolean?: true
@@ -15086,7 +16400,7 @@ export namespace Prisma {
   export type CustomFieldValueGroupByOutputType = {
     id: string
     fieldId: string
-    spoolId: string
+    filamentId: string
     valueText: string | null
     valueNumber: number | null
     valueBoolean: boolean | null
@@ -15115,73 +16429,73 @@ export namespace Prisma {
   export type CustomFieldValueSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     fieldId?: boolean
-    spoolId?: boolean
+    filamentId?: boolean
     valueText?: boolean
     valueNumber?: boolean
     valueBoolean?: boolean
     valueDate?: boolean
     field?: boolean | CustomFieldDefaultArgs<ExtArgs>
-    spool?: boolean | SpoolDefaultArgs<ExtArgs>
+    filament?: boolean | FilamentDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["customFieldValue"]>
 
   export type CustomFieldValueSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     fieldId?: boolean
-    spoolId?: boolean
+    filamentId?: boolean
     valueText?: boolean
     valueNumber?: boolean
     valueBoolean?: boolean
     valueDate?: boolean
     field?: boolean | CustomFieldDefaultArgs<ExtArgs>
-    spool?: boolean | SpoolDefaultArgs<ExtArgs>
+    filament?: boolean | FilamentDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["customFieldValue"]>
 
   export type CustomFieldValueSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     fieldId?: boolean
-    spoolId?: boolean
+    filamentId?: boolean
     valueText?: boolean
     valueNumber?: boolean
     valueBoolean?: boolean
     valueDate?: boolean
     field?: boolean | CustomFieldDefaultArgs<ExtArgs>
-    spool?: boolean | SpoolDefaultArgs<ExtArgs>
+    filament?: boolean | FilamentDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["customFieldValue"]>
 
   export type CustomFieldValueSelectScalar = {
     id?: boolean
     fieldId?: boolean
-    spoolId?: boolean
+    filamentId?: boolean
     valueText?: boolean
     valueNumber?: boolean
     valueBoolean?: boolean
     valueDate?: boolean
   }
 
-  export type CustomFieldValueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "fieldId" | "spoolId" | "valueText" | "valueNumber" | "valueBoolean" | "valueDate", ExtArgs["result"]["customFieldValue"]>
+  export type CustomFieldValueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "fieldId" | "filamentId" | "valueText" | "valueNumber" | "valueBoolean" | "valueDate", ExtArgs["result"]["customFieldValue"]>
   export type CustomFieldValueInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     field?: boolean | CustomFieldDefaultArgs<ExtArgs>
-    spool?: boolean | SpoolDefaultArgs<ExtArgs>
+    filament?: boolean | FilamentDefaultArgs<ExtArgs>
   }
   export type CustomFieldValueIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     field?: boolean | CustomFieldDefaultArgs<ExtArgs>
-    spool?: boolean | SpoolDefaultArgs<ExtArgs>
+    filament?: boolean | FilamentDefaultArgs<ExtArgs>
   }
   export type CustomFieldValueIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     field?: boolean | CustomFieldDefaultArgs<ExtArgs>
-    spool?: boolean | SpoolDefaultArgs<ExtArgs>
+    filament?: boolean | FilamentDefaultArgs<ExtArgs>
   }
 
   export type $CustomFieldValuePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "CustomFieldValue"
     objects: {
       field: Prisma.$CustomFieldPayload<ExtArgs>
-      spool: Prisma.$SpoolPayload<ExtArgs>
+      filament: Prisma.$FilamentPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       fieldId: string
-      spoolId: string
+      filamentId: string
       valueText: string | null
       valueNumber: number | null
       valueBoolean: boolean | null
@@ -15581,7 +16895,7 @@ export namespace Prisma {
   export interface Prisma__CustomFieldValueClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     field<T extends CustomFieldDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CustomFieldDefaultArgs<ExtArgs>>): Prisma__CustomFieldClient<$Result.GetResult<Prisma.$CustomFieldPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    spool<T extends SpoolDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SpoolDefaultArgs<ExtArgs>>): Prisma__SpoolClient<$Result.GetResult<Prisma.$SpoolPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    filament<T extends FilamentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FilamentDefaultArgs<ExtArgs>>): Prisma__FilamentClient<$Result.GetResult<Prisma.$FilamentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -15613,7 +16927,7 @@ export namespace Prisma {
   interface CustomFieldValueFieldRefs {
     readonly id: FieldRef<"CustomFieldValue", 'String'>
     readonly fieldId: FieldRef<"CustomFieldValue", 'String'>
-    readonly spoolId: FieldRef<"CustomFieldValue", 'String'>
+    readonly filamentId: FieldRef<"CustomFieldValue", 'String'>
     readonly valueText: FieldRef<"CustomFieldValue", 'String'>
     readonly valueNumber: FieldRef<"CustomFieldValue", 'Float'>
     readonly valueBoolean: FieldRef<"CustomFieldValue", 'Boolean'>
@@ -17178,20 +18492,45 @@ export namespace Prisma {
   export type LocationScalarFieldEnum = (typeof LocationScalarFieldEnum)[keyof typeof LocationScalarFieldEnum]
 
 
-  export const SpoolScalarFieldEnum: {
+  export const FilamentScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
     brandId: 'brandId',
     materialId: 'materialId',
-    locationId: 'locationId',
     colorMode: 'colorMode',
     colorName: 'colorName',
     diameterMm: 'diameterMm',
+    defaultWeightG: 'defaultWeightG',
+    productUrl: 'productUrl',
+    notes: 'notes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type FilamentScalarFieldEnum = (typeof FilamentScalarFieldEnum)[keyof typeof FilamentScalarFieldEnum]
+
+
+  export const FilamentColorStopScalarFieldEnum: {
+    id: 'id',
+    filamentId: 'filamentId',
+    hex: 'hex',
+    name: 'name',
+    position: 'position',
+    weight: 'weight'
+  };
+
+  export type FilamentColorStopScalarFieldEnum = (typeof FilamentColorStopScalarFieldEnum)[keyof typeof FilamentColorStopScalarFieldEnum]
+
+
+  export const SpoolScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    filamentId: 'filamentId',
+    locationId: 'locationId',
     initialWeightG: 'initialWeightG',
     remainingWeightG: 'remainingWeightG',
     status: 'status',
     needsRepurchase: 'needsRepurchase',
-    productUrl: 'productUrl',
     purchasedAt: 'purchasedAt',
     priceCents: 'priceCents',
     notes: 'notes',
@@ -17201,18 +18540,6 @@ export namespace Prisma {
   };
 
   export type SpoolScalarFieldEnum = (typeof SpoolScalarFieldEnum)[keyof typeof SpoolScalarFieldEnum]
-
-
-  export const SpoolColorStopScalarFieldEnum: {
-    id: 'id',
-    spoolId: 'spoolId',
-    hex: 'hex',
-    name: 'name',
-    position: 'position',
-    weight: 'weight'
-  };
-
-  export type SpoolColorStopScalarFieldEnum = (typeof SpoolColorStopScalarFieldEnum)[keyof typeof SpoolColorStopScalarFieldEnum]
 
 
   export const UsageScalarFieldEnum: {
@@ -17247,7 +18574,7 @@ export namespace Prisma {
   export const CustomFieldValueScalarFieldEnum: {
     id: 'id',
     fieldId: 'fieldId',
-    spoolId: 'spoolId',
+    filamentId: 'filamentId',
     valueText: 'valueText',
     valueNumber: 'valueNumber',
     valueBoolean: 'valueBoolean',
@@ -17344,6 +18671,7 @@ export namespace Prisma {
     accounts?: AccountListRelationFilter
     brands?: BrandListRelationFilter
     locations?: LocationListRelationFilter
+    filaments?: FilamentListRelationFilter
     spools?: SpoolListRelationFilter
     customFields?: CustomFieldListRelationFilter
   }
@@ -17361,6 +18689,7 @@ export namespace Prisma {
     accounts?: AccountOrderByRelationAggregateInput
     brands?: BrandOrderByRelationAggregateInput
     locations?: LocationOrderByRelationAggregateInput
+    filaments?: FilamentOrderByRelationAggregateInput
     spools?: SpoolOrderByRelationAggregateInput
     customFields?: CustomFieldOrderByRelationAggregateInput
   }
@@ -17381,6 +18710,7 @@ export namespace Prisma {
     accounts?: AccountListRelationFilter
     brands?: BrandListRelationFilter
     locations?: LocationListRelationFilter
+    filaments?: FilamentListRelationFilter
     spools?: SpoolListRelationFilter
     customFields?: CustomFieldListRelationFilter
   }, "id" | "email">
@@ -17646,7 +18976,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Brand"> | Date | string
     updatedAt?: DateTimeFilter<"Brand"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    spools?: SpoolListRelationFilter
+    filaments?: FilamentListRelationFilter
   }
 
   export type BrandOrderByWithRelationInput = {
@@ -17657,7 +18987,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
-    spools?: SpoolOrderByRelationAggregateInput
+    filaments?: FilamentOrderByRelationAggregateInput
   }
 
   export type BrandWhereUniqueInput = Prisma.AtLeast<{
@@ -17672,7 +19002,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Brand"> | Date | string
     updatedAt?: DateTimeFilter<"Brand"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    spools?: SpoolListRelationFilter
+    filaments?: FilamentListRelationFilter
   }, "id" | "userId_name">
 
   export type BrandOrderByWithAggregationInput = {
@@ -17712,7 +19042,7 @@ export namespace Prisma {
     minBedC?: IntNullableFilter<"Material"> | number | null
     createdAt?: DateTimeFilter<"Material"> | Date | string
     updatedAt?: DateTimeFilter<"Material"> | Date | string
-    spools?: SpoolListRelationFilter
+    filaments?: FilamentListRelationFilter
   }
 
   export type MaterialOrderByWithRelationInput = {
@@ -17725,7 +19055,7 @@ export namespace Prisma {
     minBedC?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    spools?: SpoolOrderByRelationAggregateInput
+    filaments?: FilamentOrderByRelationAggregateInput
   }
 
   export type MaterialWhereUniqueInput = Prisma.AtLeast<{
@@ -17741,7 +19071,7 @@ export namespace Prisma {
     minBedC?: IntNullableFilter<"Material"> | number | null
     createdAt?: DateTimeFilter<"Material"> | Date | string
     updatedAt?: DateTimeFilter<"Material"> | Date | string
-    spools?: SpoolListRelationFilter
+    filaments?: FilamentListRelationFilter
   }, "id" | "name">
 
   export type MaterialOrderByWithAggregationInput = {
@@ -17835,23 +19165,187 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Location"> | Date | string
   }
 
+  export type FilamentWhereInput = {
+    AND?: FilamentWhereInput | FilamentWhereInput[]
+    OR?: FilamentWhereInput[]
+    NOT?: FilamentWhereInput | FilamentWhereInput[]
+    id?: StringFilter<"Filament"> | string
+    userId?: StringFilter<"Filament"> | string
+    brandId?: StringFilter<"Filament"> | string
+    materialId?: StringFilter<"Filament"> | string
+    colorMode?: StringFilter<"Filament"> | string
+    colorName?: StringNullableFilter<"Filament"> | string | null
+    diameterMm?: FloatFilter<"Filament"> | number
+    defaultWeightG?: IntFilter<"Filament"> | number
+    productUrl?: StringNullableFilter<"Filament"> | string | null
+    notes?: StringNullableFilter<"Filament"> | string | null
+    createdAt?: DateTimeFilter<"Filament"> | Date | string
+    updatedAt?: DateTimeFilter<"Filament"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    brand?: XOR<BrandScalarRelationFilter, BrandWhereInput>
+    material?: XOR<MaterialScalarRelationFilter, MaterialWhereInput>
+    colors?: FilamentColorStopListRelationFilter
+    spools?: SpoolListRelationFilter
+    customFieldValues?: CustomFieldValueListRelationFilter
+  }
+
+  export type FilamentOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    brandId?: SortOrder
+    materialId?: SortOrder
+    colorMode?: SortOrder
+    colorName?: SortOrderInput | SortOrder
+    diameterMm?: SortOrder
+    defaultWeightG?: SortOrder
+    productUrl?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    brand?: BrandOrderByWithRelationInput
+    material?: MaterialOrderByWithRelationInput
+    colors?: FilamentColorStopOrderByRelationAggregateInput
+    spools?: SpoolOrderByRelationAggregateInput
+    customFieldValues?: CustomFieldValueOrderByRelationAggregateInput
+  }
+
+  export type FilamentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: FilamentWhereInput | FilamentWhereInput[]
+    OR?: FilamentWhereInput[]
+    NOT?: FilamentWhereInput | FilamentWhereInput[]
+    userId?: StringFilter<"Filament"> | string
+    brandId?: StringFilter<"Filament"> | string
+    materialId?: StringFilter<"Filament"> | string
+    colorMode?: StringFilter<"Filament"> | string
+    colorName?: StringNullableFilter<"Filament"> | string | null
+    diameterMm?: FloatFilter<"Filament"> | number
+    defaultWeightG?: IntFilter<"Filament"> | number
+    productUrl?: StringNullableFilter<"Filament"> | string | null
+    notes?: StringNullableFilter<"Filament"> | string | null
+    createdAt?: DateTimeFilter<"Filament"> | Date | string
+    updatedAt?: DateTimeFilter<"Filament"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    brand?: XOR<BrandScalarRelationFilter, BrandWhereInput>
+    material?: XOR<MaterialScalarRelationFilter, MaterialWhereInput>
+    colors?: FilamentColorStopListRelationFilter
+    spools?: SpoolListRelationFilter
+    customFieldValues?: CustomFieldValueListRelationFilter
+  }, "id">
+
+  export type FilamentOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    brandId?: SortOrder
+    materialId?: SortOrder
+    colorMode?: SortOrder
+    colorName?: SortOrderInput | SortOrder
+    diameterMm?: SortOrder
+    defaultWeightG?: SortOrder
+    productUrl?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: FilamentCountOrderByAggregateInput
+    _avg?: FilamentAvgOrderByAggregateInput
+    _max?: FilamentMaxOrderByAggregateInput
+    _min?: FilamentMinOrderByAggregateInput
+    _sum?: FilamentSumOrderByAggregateInput
+  }
+
+  export type FilamentScalarWhereWithAggregatesInput = {
+    AND?: FilamentScalarWhereWithAggregatesInput | FilamentScalarWhereWithAggregatesInput[]
+    OR?: FilamentScalarWhereWithAggregatesInput[]
+    NOT?: FilamentScalarWhereWithAggregatesInput | FilamentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Filament"> | string
+    userId?: StringWithAggregatesFilter<"Filament"> | string
+    brandId?: StringWithAggregatesFilter<"Filament"> | string
+    materialId?: StringWithAggregatesFilter<"Filament"> | string
+    colorMode?: StringWithAggregatesFilter<"Filament"> | string
+    colorName?: StringNullableWithAggregatesFilter<"Filament"> | string | null
+    diameterMm?: FloatWithAggregatesFilter<"Filament"> | number
+    defaultWeightG?: IntWithAggregatesFilter<"Filament"> | number
+    productUrl?: StringNullableWithAggregatesFilter<"Filament"> | string | null
+    notes?: StringNullableWithAggregatesFilter<"Filament"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Filament"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Filament"> | Date | string
+  }
+
+  export type FilamentColorStopWhereInput = {
+    AND?: FilamentColorStopWhereInput | FilamentColorStopWhereInput[]
+    OR?: FilamentColorStopWhereInput[]
+    NOT?: FilamentColorStopWhereInput | FilamentColorStopWhereInput[]
+    id?: StringFilter<"FilamentColorStop"> | string
+    filamentId?: StringFilter<"FilamentColorStop"> | string
+    hex?: StringFilter<"FilamentColorStop"> | string
+    name?: StringNullableFilter<"FilamentColorStop"> | string | null
+    position?: FloatFilter<"FilamentColorStop"> | number
+    weight?: FloatNullableFilter<"FilamentColorStop"> | number | null
+    filament?: XOR<FilamentScalarRelationFilter, FilamentWhereInput>
+  }
+
+  export type FilamentColorStopOrderByWithRelationInput = {
+    id?: SortOrder
+    filamentId?: SortOrder
+    hex?: SortOrder
+    name?: SortOrderInput | SortOrder
+    position?: SortOrder
+    weight?: SortOrderInput | SortOrder
+    filament?: FilamentOrderByWithRelationInput
+  }
+
+  export type FilamentColorStopWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: FilamentColorStopWhereInput | FilamentColorStopWhereInput[]
+    OR?: FilamentColorStopWhereInput[]
+    NOT?: FilamentColorStopWhereInput | FilamentColorStopWhereInput[]
+    filamentId?: StringFilter<"FilamentColorStop"> | string
+    hex?: StringFilter<"FilamentColorStop"> | string
+    name?: StringNullableFilter<"FilamentColorStop"> | string | null
+    position?: FloatFilter<"FilamentColorStop"> | number
+    weight?: FloatNullableFilter<"FilamentColorStop"> | number | null
+    filament?: XOR<FilamentScalarRelationFilter, FilamentWhereInput>
+  }, "id">
+
+  export type FilamentColorStopOrderByWithAggregationInput = {
+    id?: SortOrder
+    filamentId?: SortOrder
+    hex?: SortOrder
+    name?: SortOrderInput | SortOrder
+    position?: SortOrder
+    weight?: SortOrderInput | SortOrder
+    _count?: FilamentColorStopCountOrderByAggregateInput
+    _avg?: FilamentColorStopAvgOrderByAggregateInput
+    _max?: FilamentColorStopMaxOrderByAggregateInput
+    _min?: FilamentColorStopMinOrderByAggregateInput
+    _sum?: FilamentColorStopSumOrderByAggregateInput
+  }
+
+  export type FilamentColorStopScalarWhereWithAggregatesInput = {
+    AND?: FilamentColorStopScalarWhereWithAggregatesInput | FilamentColorStopScalarWhereWithAggregatesInput[]
+    OR?: FilamentColorStopScalarWhereWithAggregatesInput[]
+    NOT?: FilamentColorStopScalarWhereWithAggregatesInput | FilamentColorStopScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FilamentColorStop"> | string
+    filamentId?: StringWithAggregatesFilter<"FilamentColorStop"> | string
+    hex?: StringWithAggregatesFilter<"FilamentColorStop"> | string
+    name?: StringNullableWithAggregatesFilter<"FilamentColorStop"> | string | null
+    position?: FloatWithAggregatesFilter<"FilamentColorStop"> | number
+    weight?: FloatNullableWithAggregatesFilter<"FilamentColorStop"> | number | null
+  }
+
   export type SpoolWhereInput = {
     AND?: SpoolWhereInput | SpoolWhereInput[]
     OR?: SpoolWhereInput[]
     NOT?: SpoolWhereInput | SpoolWhereInput[]
     id?: StringFilter<"Spool"> | string
     userId?: StringFilter<"Spool"> | string
-    brandId?: StringFilter<"Spool"> | string
-    materialId?: StringFilter<"Spool"> | string
+    filamentId?: StringFilter<"Spool"> | string
     locationId?: StringNullableFilter<"Spool"> | string | null
-    colorMode?: StringFilter<"Spool"> | string
-    colorName?: StringNullableFilter<"Spool"> | string | null
-    diameterMm?: FloatFilter<"Spool"> | number
     initialWeightG?: IntFilter<"Spool"> | number
     remainingWeightG?: IntFilter<"Spool"> | number
     status?: StringFilter<"Spool"> | string
     needsRepurchase?: BoolFilter<"Spool"> | boolean
-    productUrl?: StringNullableFilter<"Spool"> | string | null
     purchasedAt?: DateTimeNullableFilter<"Spool"> | Date | string | null
     priceCents?: IntNullableFilter<"Spool"> | number | null
     notes?: StringNullableFilter<"Spool"> | string | null
@@ -17859,28 +19353,20 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Spool"> | Date | string
     updatedAt?: DateTimeFilter<"Spool"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    brand?: XOR<BrandScalarRelationFilter, BrandWhereInput>
-    material?: XOR<MaterialScalarRelationFilter, MaterialWhereInput>
+    filament?: XOR<FilamentScalarRelationFilter, FilamentWhereInput>
     location?: XOR<LocationNullableScalarRelationFilter, LocationWhereInput> | null
-    colors?: SpoolColorStopListRelationFilter
     usages?: UsageListRelationFilter
-    customFieldValues?: CustomFieldValueListRelationFilter
   }
 
   export type SpoolOrderByWithRelationInput = {
     id?: SortOrder
     userId?: SortOrder
-    brandId?: SortOrder
-    materialId?: SortOrder
+    filamentId?: SortOrder
     locationId?: SortOrderInput | SortOrder
-    colorMode?: SortOrder
-    colorName?: SortOrderInput | SortOrder
-    diameterMm?: SortOrder
     initialWeightG?: SortOrder
     remainingWeightG?: SortOrder
     status?: SortOrder
     needsRepurchase?: SortOrder
-    productUrl?: SortOrderInput | SortOrder
     purchasedAt?: SortOrderInput | SortOrder
     priceCents?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
@@ -17888,12 +19374,9 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
-    brand?: BrandOrderByWithRelationInput
-    material?: MaterialOrderByWithRelationInput
+    filament?: FilamentOrderByWithRelationInput
     location?: LocationOrderByWithRelationInput
-    colors?: SpoolColorStopOrderByRelationAggregateInput
     usages?: UsageOrderByRelationAggregateInput
-    customFieldValues?: CustomFieldValueOrderByRelationAggregateInput
   }
 
   export type SpoolWhereUniqueInput = Prisma.AtLeast<{
@@ -17902,17 +19385,12 @@ export namespace Prisma {
     OR?: SpoolWhereInput[]
     NOT?: SpoolWhereInput | SpoolWhereInput[]
     userId?: StringFilter<"Spool"> | string
-    brandId?: StringFilter<"Spool"> | string
-    materialId?: StringFilter<"Spool"> | string
+    filamentId?: StringFilter<"Spool"> | string
     locationId?: StringNullableFilter<"Spool"> | string | null
-    colorMode?: StringFilter<"Spool"> | string
-    colorName?: StringNullableFilter<"Spool"> | string | null
-    diameterMm?: FloatFilter<"Spool"> | number
     initialWeightG?: IntFilter<"Spool"> | number
     remainingWeightG?: IntFilter<"Spool"> | number
     status?: StringFilter<"Spool"> | string
     needsRepurchase?: BoolFilter<"Spool"> | boolean
-    productUrl?: StringNullableFilter<"Spool"> | string | null
     purchasedAt?: DateTimeNullableFilter<"Spool"> | Date | string | null
     priceCents?: IntNullableFilter<"Spool"> | number | null
     notes?: StringNullableFilter<"Spool"> | string | null
@@ -17920,28 +19398,20 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Spool"> | Date | string
     updatedAt?: DateTimeFilter<"Spool"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    brand?: XOR<BrandScalarRelationFilter, BrandWhereInput>
-    material?: XOR<MaterialScalarRelationFilter, MaterialWhereInput>
+    filament?: XOR<FilamentScalarRelationFilter, FilamentWhereInput>
     location?: XOR<LocationNullableScalarRelationFilter, LocationWhereInput> | null
-    colors?: SpoolColorStopListRelationFilter
     usages?: UsageListRelationFilter
-    customFieldValues?: CustomFieldValueListRelationFilter
   }, "id">
 
   export type SpoolOrderByWithAggregationInput = {
     id?: SortOrder
     userId?: SortOrder
-    brandId?: SortOrder
-    materialId?: SortOrder
+    filamentId?: SortOrder
     locationId?: SortOrderInput | SortOrder
-    colorMode?: SortOrder
-    colorName?: SortOrderInput | SortOrder
-    diameterMm?: SortOrder
     initialWeightG?: SortOrder
     remainingWeightG?: SortOrder
     status?: SortOrder
     needsRepurchase?: SortOrder
-    productUrl?: SortOrderInput | SortOrder
     purchasedAt?: SortOrderInput | SortOrder
     priceCents?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
@@ -17961,85 +19431,18 @@ export namespace Prisma {
     NOT?: SpoolScalarWhereWithAggregatesInput | SpoolScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Spool"> | string
     userId?: StringWithAggregatesFilter<"Spool"> | string
-    brandId?: StringWithAggregatesFilter<"Spool"> | string
-    materialId?: StringWithAggregatesFilter<"Spool"> | string
+    filamentId?: StringWithAggregatesFilter<"Spool"> | string
     locationId?: StringNullableWithAggregatesFilter<"Spool"> | string | null
-    colorMode?: StringWithAggregatesFilter<"Spool"> | string
-    colorName?: StringNullableWithAggregatesFilter<"Spool"> | string | null
-    diameterMm?: FloatWithAggregatesFilter<"Spool"> | number
     initialWeightG?: IntWithAggregatesFilter<"Spool"> | number
     remainingWeightG?: IntWithAggregatesFilter<"Spool"> | number
     status?: StringWithAggregatesFilter<"Spool"> | string
     needsRepurchase?: BoolWithAggregatesFilter<"Spool"> | boolean
-    productUrl?: StringNullableWithAggregatesFilter<"Spool"> | string | null
     purchasedAt?: DateTimeNullableWithAggregatesFilter<"Spool"> | Date | string | null
     priceCents?: IntNullableWithAggregatesFilter<"Spool"> | number | null
     notes?: StringNullableWithAggregatesFilter<"Spool"> | string | null
     lastDriedAt?: DateTimeNullableWithAggregatesFilter<"Spool"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Spool"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Spool"> | Date | string
-  }
-
-  export type SpoolColorStopWhereInput = {
-    AND?: SpoolColorStopWhereInput | SpoolColorStopWhereInput[]
-    OR?: SpoolColorStopWhereInput[]
-    NOT?: SpoolColorStopWhereInput | SpoolColorStopWhereInput[]
-    id?: StringFilter<"SpoolColorStop"> | string
-    spoolId?: StringFilter<"SpoolColorStop"> | string
-    hex?: StringFilter<"SpoolColorStop"> | string
-    name?: StringNullableFilter<"SpoolColorStop"> | string | null
-    position?: FloatFilter<"SpoolColorStop"> | number
-    weight?: FloatNullableFilter<"SpoolColorStop"> | number | null
-    spool?: XOR<SpoolScalarRelationFilter, SpoolWhereInput>
-  }
-
-  export type SpoolColorStopOrderByWithRelationInput = {
-    id?: SortOrder
-    spoolId?: SortOrder
-    hex?: SortOrder
-    name?: SortOrderInput | SortOrder
-    position?: SortOrder
-    weight?: SortOrderInput | SortOrder
-    spool?: SpoolOrderByWithRelationInput
-  }
-
-  export type SpoolColorStopWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: SpoolColorStopWhereInput | SpoolColorStopWhereInput[]
-    OR?: SpoolColorStopWhereInput[]
-    NOT?: SpoolColorStopWhereInput | SpoolColorStopWhereInput[]
-    spoolId?: StringFilter<"SpoolColorStop"> | string
-    hex?: StringFilter<"SpoolColorStop"> | string
-    name?: StringNullableFilter<"SpoolColorStop"> | string | null
-    position?: FloatFilter<"SpoolColorStop"> | number
-    weight?: FloatNullableFilter<"SpoolColorStop"> | number | null
-    spool?: XOR<SpoolScalarRelationFilter, SpoolWhereInput>
-  }, "id">
-
-  export type SpoolColorStopOrderByWithAggregationInput = {
-    id?: SortOrder
-    spoolId?: SortOrder
-    hex?: SortOrder
-    name?: SortOrderInput | SortOrder
-    position?: SortOrder
-    weight?: SortOrderInput | SortOrder
-    _count?: SpoolColorStopCountOrderByAggregateInput
-    _avg?: SpoolColorStopAvgOrderByAggregateInput
-    _max?: SpoolColorStopMaxOrderByAggregateInput
-    _min?: SpoolColorStopMinOrderByAggregateInput
-    _sum?: SpoolColorStopSumOrderByAggregateInput
-  }
-
-  export type SpoolColorStopScalarWhereWithAggregatesInput = {
-    AND?: SpoolColorStopScalarWhereWithAggregatesInput | SpoolColorStopScalarWhereWithAggregatesInput[]
-    OR?: SpoolColorStopScalarWhereWithAggregatesInput[]
-    NOT?: SpoolColorStopScalarWhereWithAggregatesInput | SpoolColorStopScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"SpoolColorStop"> | string
-    spoolId?: StringWithAggregatesFilter<"SpoolColorStop"> | string
-    hex?: StringWithAggregatesFilter<"SpoolColorStop"> | string
-    name?: StringNullableWithAggregatesFilter<"SpoolColorStop"> | string | null
-    position?: FloatWithAggregatesFilter<"SpoolColorStop"> | number
-    weight?: FloatNullableWithAggregatesFilter<"SpoolColorStop"> | number | null
   }
 
   export type UsageWhereInput = {
@@ -18201,47 +19604,47 @@ export namespace Prisma {
     NOT?: CustomFieldValueWhereInput | CustomFieldValueWhereInput[]
     id?: StringFilter<"CustomFieldValue"> | string
     fieldId?: StringFilter<"CustomFieldValue"> | string
-    spoolId?: StringFilter<"CustomFieldValue"> | string
+    filamentId?: StringFilter<"CustomFieldValue"> | string
     valueText?: StringNullableFilter<"CustomFieldValue"> | string | null
     valueNumber?: FloatNullableFilter<"CustomFieldValue"> | number | null
     valueBoolean?: BoolNullableFilter<"CustomFieldValue"> | boolean | null
     valueDate?: DateTimeNullableFilter<"CustomFieldValue"> | Date | string | null
     field?: XOR<CustomFieldScalarRelationFilter, CustomFieldWhereInput>
-    spool?: XOR<SpoolScalarRelationFilter, SpoolWhereInput>
+    filament?: XOR<FilamentScalarRelationFilter, FilamentWhereInput>
   }
 
   export type CustomFieldValueOrderByWithRelationInput = {
     id?: SortOrder
     fieldId?: SortOrder
-    spoolId?: SortOrder
+    filamentId?: SortOrder
     valueText?: SortOrderInput | SortOrder
     valueNumber?: SortOrderInput | SortOrder
     valueBoolean?: SortOrderInput | SortOrder
     valueDate?: SortOrderInput | SortOrder
     field?: CustomFieldOrderByWithRelationInput
-    spool?: SpoolOrderByWithRelationInput
+    filament?: FilamentOrderByWithRelationInput
   }
 
   export type CustomFieldValueWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    fieldId_spoolId?: CustomFieldValueFieldIdSpoolIdCompoundUniqueInput
+    fieldId_filamentId?: CustomFieldValueFieldIdFilamentIdCompoundUniqueInput
     AND?: CustomFieldValueWhereInput | CustomFieldValueWhereInput[]
     OR?: CustomFieldValueWhereInput[]
     NOT?: CustomFieldValueWhereInput | CustomFieldValueWhereInput[]
     fieldId?: StringFilter<"CustomFieldValue"> | string
-    spoolId?: StringFilter<"CustomFieldValue"> | string
+    filamentId?: StringFilter<"CustomFieldValue"> | string
     valueText?: StringNullableFilter<"CustomFieldValue"> | string | null
     valueNumber?: FloatNullableFilter<"CustomFieldValue"> | number | null
     valueBoolean?: BoolNullableFilter<"CustomFieldValue"> | boolean | null
     valueDate?: DateTimeNullableFilter<"CustomFieldValue"> | Date | string | null
     field?: XOR<CustomFieldScalarRelationFilter, CustomFieldWhereInput>
-    spool?: XOR<SpoolScalarRelationFilter, SpoolWhereInput>
-  }, "id" | "fieldId_spoolId">
+    filament?: XOR<FilamentScalarRelationFilter, FilamentWhereInput>
+  }, "id" | "fieldId_filamentId">
 
   export type CustomFieldValueOrderByWithAggregationInput = {
     id?: SortOrder
     fieldId?: SortOrder
-    spoolId?: SortOrder
+    filamentId?: SortOrder
     valueText?: SortOrderInput | SortOrder
     valueNumber?: SortOrderInput | SortOrder
     valueBoolean?: SortOrderInput | SortOrder
@@ -18259,7 +19662,7 @@ export namespace Prisma {
     NOT?: CustomFieldValueScalarWhereWithAggregatesInput | CustomFieldValueScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"CustomFieldValue"> | string
     fieldId?: StringWithAggregatesFilter<"CustomFieldValue"> | string
-    spoolId?: StringWithAggregatesFilter<"CustomFieldValue"> | string
+    filamentId?: StringWithAggregatesFilter<"CustomFieldValue"> | string
     valueText?: StringNullableWithAggregatesFilter<"CustomFieldValue"> | string | null
     valueNumber?: FloatNullableWithAggregatesFilter<"CustomFieldValue"> | number | null
     valueBoolean?: BoolNullableWithAggregatesFilter<"CustomFieldValue"> | boolean | null
@@ -18338,6 +19741,7 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     brands?: BrandCreateNestedManyWithoutUserInput
     locations?: LocationCreateNestedManyWithoutUserInput
+    filaments?: FilamentCreateNestedManyWithoutUserInput
     spools?: SpoolCreateNestedManyWithoutUserInput
     customFields?: CustomFieldCreateNestedManyWithoutUserInput
   }
@@ -18355,6 +19759,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     brands?: BrandUncheckedCreateNestedManyWithoutUserInput
     locations?: LocationUncheckedCreateNestedManyWithoutUserInput
+    filaments?: FilamentUncheckedCreateNestedManyWithoutUserInput
     spools?: SpoolUncheckedCreateNestedManyWithoutUserInput
     customFields?: CustomFieldUncheckedCreateNestedManyWithoutUserInput
   }
@@ -18372,6 +19777,7 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     brands?: BrandUpdateManyWithoutUserNestedInput
     locations?: LocationUpdateManyWithoutUserNestedInput
+    filaments?: FilamentUpdateManyWithoutUserNestedInput
     spools?: SpoolUpdateManyWithoutUserNestedInput
     customFields?: CustomFieldUpdateManyWithoutUserNestedInput
   }
@@ -18389,6 +19795,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     brands?: BrandUncheckedUpdateManyWithoutUserNestedInput
     locations?: LocationUncheckedUpdateManyWithoutUserNestedInput
+    filaments?: FilamentUncheckedUpdateManyWithoutUserNestedInput
     spools?: SpoolUncheckedUpdateManyWithoutUserNestedInput
     customFields?: CustomFieldUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -18683,7 +20090,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutBrandsInput
-    spools?: SpoolCreateNestedManyWithoutBrandInput
+    filaments?: FilamentCreateNestedManyWithoutBrandInput
   }
 
   export type BrandUncheckedCreateInput = {
@@ -18693,7 +20100,7 @@ export namespace Prisma {
     userId: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    spools?: SpoolUncheckedCreateNestedManyWithoutBrandInput
+    filaments?: FilamentUncheckedCreateNestedManyWithoutBrandInput
   }
 
   export type BrandUpdateInput = {
@@ -18703,7 +20110,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutBrandsNestedInput
-    spools?: SpoolUpdateManyWithoutBrandNestedInput
+    filaments?: FilamentUpdateManyWithoutBrandNestedInput
   }
 
   export type BrandUncheckedUpdateInput = {
@@ -18713,7 +20120,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    spools?: SpoolUncheckedUpdateManyWithoutBrandNestedInput
+    filaments?: FilamentUncheckedUpdateManyWithoutBrandNestedInput
   }
 
   export type BrandCreateManyInput = {
@@ -18752,7 +20159,7 @@ export namespace Prisma {
     minBedC?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    spools?: SpoolCreateNestedManyWithoutMaterialInput
+    filaments?: FilamentCreateNestedManyWithoutMaterialInput
   }
 
   export type MaterialUncheckedCreateInput = {
@@ -18765,7 +20172,7 @@ export namespace Prisma {
     minBedC?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    spools?: SpoolUncheckedCreateNestedManyWithoutMaterialInput
+    filaments?: FilamentUncheckedCreateNestedManyWithoutMaterialInput
   }
 
   export type MaterialUpdateInput = {
@@ -18778,7 +20185,7 @@ export namespace Prisma {
     minBedC?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    spools?: SpoolUpdateManyWithoutMaterialNestedInput
+    filaments?: FilamentUpdateManyWithoutMaterialNestedInput
   }
 
   export type MaterialUncheckedUpdateInput = {
@@ -18791,7 +20198,7 @@ export namespace Prisma {
     minBedC?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    spools?: SpoolUncheckedUpdateManyWithoutMaterialNestedInput
+    filaments?: FilamentUncheckedUpdateManyWithoutMaterialNestedInput
   }
 
   export type MaterialCreateManyInput = {
@@ -18889,16 +20296,188 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type SpoolCreateInput = {
+  export type FilamentCreateInput = {
     id?: string
     colorMode?: string
     colorName?: string | null
     diameterMm?: number
+    defaultWeightG?: number
+    productUrl?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutFilamentsInput
+    brand: BrandCreateNestedOneWithoutFilamentsInput
+    material: MaterialCreateNestedOneWithoutFilamentsInput
+    colors?: FilamentColorStopCreateNestedManyWithoutFilamentInput
+    spools?: SpoolCreateNestedManyWithoutFilamentInput
+    customFieldValues?: CustomFieldValueCreateNestedManyWithoutFilamentInput
+  }
+
+  export type FilamentUncheckedCreateInput = {
+    id?: string
+    userId: string
+    brandId: string
+    materialId: string
+    colorMode?: string
+    colorName?: string | null
+    diameterMm?: number
+    defaultWeightG?: number
+    productUrl?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    colors?: FilamentColorStopUncheckedCreateNestedManyWithoutFilamentInput
+    spools?: SpoolUncheckedCreateNestedManyWithoutFilamentInput
+    customFieldValues?: CustomFieldValueUncheckedCreateNestedManyWithoutFilamentInput
+  }
+
+  export type FilamentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    colorMode?: StringFieldUpdateOperationsInput | string
+    colorName?: NullableStringFieldUpdateOperationsInput | string | null
+    diameterMm?: FloatFieldUpdateOperationsInput | number
+    defaultWeightG?: IntFieldUpdateOperationsInput | number
+    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutFilamentsNestedInput
+    brand?: BrandUpdateOneRequiredWithoutFilamentsNestedInput
+    material?: MaterialUpdateOneRequiredWithoutFilamentsNestedInput
+    colors?: FilamentColorStopUpdateManyWithoutFilamentNestedInput
+    spools?: SpoolUpdateManyWithoutFilamentNestedInput
+    customFieldValues?: CustomFieldValueUpdateManyWithoutFilamentNestedInput
+  }
+
+  export type FilamentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    brandId?: StringFieldUpdateOperationsInput | string
+    materialId?: StringFieldUpdateOperationsInput | string
+    colorMode?: StringFieldUpdateOperationsInput | string
+    colorName?: NullableStringFieldUpdateOperationsInput | string | null
+    diameterMm?: FloatFieldUpdateOperationsInput | number
+    defaultWeightG?: IntFieldUpdateOperationsInput | number
+    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    colors?: FilamentColorStopUncheckedUpdateManyWithoutFilamentNestedInput
+    spools?: SpoolUncheckedUpdateManyWithoutFilamentNestedInput
+    customFieldValues?: CustomFieldValueUncheckedUpdateManyWithoutFilamentNestedInput
+  }
+
+  export type FilamentCreateManyInput = {
+    id?: string
+    userId: string
+    brandId: string
+    materialId: string
+    colorMode?: string
+    colorName?: string | null
+    diameterMm?: number
+    defaultWeightG?: number
+    productUrl?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FilamentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    colorMode?: StringFieldUpdateOperationsInput | string
+    colorName?: NullableStringFieldUpdateOperationsInput | string | null
+    diameterMm?: FloatFieldUpdateOperationsInput | number
+    defaultWeightG?: IntFieldUpdateOperationsInput | number
+    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FilamentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    brandId?: StringFieldUpdateOperationsInput | string
+    materialId?: StringFieldUpdateOperationsInput | string
+    colorMode?: StringFieldUpdateOperationsInput | string
+    colorName?: NullableStringFieldUpdateOperationsInput | string | null
+    diameterMm?: FloatFieldUpdateOperationsInput | number
+    defaultWeightG?: IntFieldUpdateOperationsInput | number
+    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FilamentColorStopCreateInput = {
+    id?: string
+    hex: string
+    name?: string | null
+    position: number
+    weight?: number | null
+    filament: FilamentCreateNestedOneWithoutColorsInput
+  }
+
+  export type FilamentColorStopUncheckedCreateInput = {
+    id?: string
+    filamentId: string
+    hex: string
+    name?: string | null
+    position: number
+    weight?: number | null
+  }
+
+  export type FilamentColorStopUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    hex?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: FloatFieldUpdateOperationsInput | number
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    filament?: FilamentUpdateOneRequiredWithoutColorsNestedInput
+  }
+
+  export type FilamentColorStopUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filamentId?: StringFieldUpdateOperationsInput | string
+    hex?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: FloatFieldUpdateOperationsInput | number
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type FilamentColorStopCreateManyInput = {
+    id?: string
+    filamentId: string
+    hex: string
+    name?: string | null
+    position: number
+    weight?: number | null
+  }
+
+  export type FilamentColorStopUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    hex?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: FloatFieldUpdateOperationsInput | number
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type FilamentColorStopUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filamentId?: StringFieldUpdateOperationsInput | string
+    hex?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: FloatFieldUpdateOperationsInput | number
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type SpoolCreateInput = {
+    id?: string
     initialWeightG: number
     remainingWeightG: number
     status?: string
     needsRepurchase?: boolean
-    productUrl?: string | null
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
@@ -18906,49 +20485,35 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutSpoolsInput
-    brand: BrandCreateNestedOneWithoutSpoolsInput
-    material: MaterialCreateNestedOneWithoutSpoolsInput
+    filament: FilamentCreateNestedOneWithoutSpoolsInput
     location?: LocationCreateNestedOneWithoutSpoolsInput
-    colors?: SpoolColorStopCreateNestedManyWithoutSpoolInput
     usages?: UsageCreateNestedManyWithoutSpoolInput
-    customFieldValues?: CustomFieldValueCreateNestedManyWithoutSpoolInput
   }
 
   export type SpoolUncheckedCreateInput = {
     id?: string
     userId: string
-    brandId: string
-    materialId: string
+    filamentId: string
     locationId?: string | null
-    colorMode?: string
-    colorName?: string | null
-    diameterMm?: number
     initialWeightG: number
     remainingWeightG: number
     status?: string
     needsRepurchase?: boolean
-    productUrl?: string | null
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
     lastDriedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    colors?: SpoolColorStopUncheckedCreateNestedManyWithoutSpoolInput
     usages?: UsageUncheckedCreateNestedManyWithoutSpoolInput
-    customFieldValues?: CustomFieldValueUncheckedCreateNestedManyWithoutSpoolInput
   }
 
   export type SpoolUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    colorMode?: StringFieldUpdateOperationsInput | string
-    colorName?: NullableStringFieldUpdateOperationsInput | string | null
-    diameterMm?: FloatFieldUpdateOperationsInput | number
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
-    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18956,53 +20521,38 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutSpoolsNestedInput
-    brand?: BrandUpdateOneRequiredWithoutSpoolsNestedInput
-    material?: MaterialUpdateOneRequiredWithoutSpoolsNestedInput
+    filament?: FilamentUpdateOneRequiredWithoutSpoolsNestedInput
     location?: LocationUpdateOneWithoutSpoolsNestedInput
-    colors?: SpoolColorStopUpdateManyWithoutSpoolNestedInput
     usages?: UsageUpdateManyWithoutSpoolNestedInput
-    customFieldValues?: CustomFieldValueUpdateManyWithoutSpoolNestedInput
   }
 
   export type SpoolUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    brandId?: StringFieldUpdateOperationsInput | string
-    materialId?: StringFieldUpdateOperationsInput | string
+    filamentId?: StringFieldUpdateOperationsInput | string
     locationId?: NullableStringFieldUpdateOperationsInput | string | null
-    colorMode?: StringFieldUpdateOperationsInput | string
-    colorName?: NullableStringFieldUpdateOperationsInput | string | null
-    diameterMm?: FloatFieldUpdateOperationsInput | number
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
-    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     lastDriedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    colors?: SpoolColorStopUncheckedUpdateManyWithoutSpoolNestedInput
     usages?: UsageUncheckedUpdateManyWithoutSpoolNestedInput
-    customFieldValues?: CustomFieldValueUncheckedUpdateManyWithoutSpoolNestedInput
   }
 
   export type SpoolCreateManyInput = {
     id?: string
     userId: string
-    brandId: string
-    materialId: string
+    filamentId: string
     locationId?: string | null
-    colorMode?: string
-    colorName?: string | null
-    diameterMm?: number
     initialWeightG: number
     remainingWeightG: number
     status?: string
     needsRepurchase?: boolean
-    productUrl?: string | null
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
@@ -19013,14 +20563,10 @@ export namespace Prisma {
 
   export type SpoolUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    colorMode?: StringFieldUpdateOperationsInput | string
-    colorName?: NullableStringFieldUpdateOperationsInput | string | null
-    diameterMm?: FloatFieldUpdateOperationsInput | number
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
-    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19032,85 +20578,18 @@ export namespace Prisma {
   export type SpoolUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    brandId?: StringFieldUpdateOperationsInput | string
-    materialId?: StringFieldUpdateOperationsInput | string
+    filamentId?: StringFieldUpdateOperationsInput | string
     locationId?: NullableStringFieldUpdateOperationsInput | string | null
-    colorMode?: StringFieldUpdateOperationsInput | string
-    colorName?: NullableStringFieldUpdateOperationsInput | string | null
-    diameterMm?: FloatFieldUpdateOperationsInput | number
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
-    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     lastDriedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type SpoolColorStopCreateInput = {
-    id?: string
-    hex: string
-    name?: string | null
-    position: number
-    weight?: number | null
-    spool: SpoolCreateNestedOneWithoutColorsInput
-  }
-
-  export type SpoolColorStopUncheckedCreateInput = {
-    id?: string
-    spoolId: string
-    hex: string
-    name?: string | null
-    position: number
-    weight?: number | null
-  }
-
-  export type SpoolColorStopUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    hex?: StringFieldUpdateOperationsInput | string
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: FloatFieldUpdateOperationsInput | number
-    weight?: NullableFloatFieldUpdateOperationsInput | number | null
-    spool?: SpoolUpdateOneRequiredWithoutColorsNestedInput
-  }
-
-  export type SpoolColorStopUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    spoolId?: StringFieldUpdateOperationsInput | string
-    hex?: StringFieldUpdateOperationsInput | string
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: FloatFieldUpdateOperationsInput | number
-    weight?: NullableFloatFieldUpdateOperationsInput | number | null
-  }
-
-  export type SpoolColorStopCreateManyInput = {
-    id?: string
-    spoolId: string
-    hex: string
-    name?: string | null
-    position: number
-    weight?: number | null
-  }
-
-  export type SpoolColorStopUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    hex?: StringFieldUpdateOperationsInput | string
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: FloatFieldUpdateOperationsInput | number
-    weight?: NullableFloatFieldUpdateOperationsInput | number | null
-  }
-
-  export type SpoolColorStopUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    spoolId?: StringFieldUpdateOperationsInput | string
-    hex?: StringFieldUpdateOperationsInput | string
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: FloatFieldUpdateOperationsInput | number
-    weight?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type UsageCreateInput = {
@@ -19283,13 +20762,13 @@ export namespace Prisma {
     valueBoolean?: boolean | null
     valueDate?: Date | string | null
     field: CustomFieldCreateNestedOneWithoutValuesInput
-    spool: SpoolCreateNestedOneWithoutCustomFieldValuesInput
+    filament: FilamentCreateNestedOneWithoutCustomFieldValuesInput
   }
 
   export type CustomFieldValueUncheckedCreateInput = {
     id?: string
     fieldId: string
-    spoolId: string
+    filamentId: string
     valueText?: string | null
     valueNumber?: number | null
     valueBoolean?: boolean | null
@@ -19303,13 +20782,13 @@ export namespace Prisma {
     valueBoolean?: NullableBoolFieldUpdateOperationsInput | boolean | null
     valueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     field?: CustomFieldUpdateOneRequiredWithoutValuesNestedInput
-    spool?: SpoolUpdateOneRequiredWithoutCustomFieldValuesNestedInput
+    filament?: FilamentUpdateOneRequiredWithoutCustomFieldValuesNestedInput
   }
 
   export type CustomFieldValueUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     fieldId?: StringFieldUpdateOperationsInput | string
-    spoolId?: StringFieldUpdateOperationsInput | string
+    filamentId?: StringFieldUpdateOperationsInput | string
     valueText?: NullableStringFieldUpdateOperationsInput | string | null
     valueNumber?: NullableFloatFieldUpdateOperationsInput | number | null
     valueBoolean?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -19319,7 +20798,7 @@ export namespace Prisma {
   export type CustomFieldValueCreateManyInput = {
     id?: string
     fieldId: string
-    spoolId: string
+    filamentId: string
     valueText?: string | null
     valueNumber?: number | null
     valueBoolean?: boolean | null
@@ -19337,7 +20816,7 @@ export namespace Prisma {
   export type CustomFieldValueUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     fieldId?: StringFieldUpdateOperationsInput | string
-    spoolId?: StringFieldUpdateOperationsInput | string
+    filamentId?: StringFieldUpdateOperationsInput | string
     valueText?: NullableStringFieldUpdateOperationsInput | string | null
     valueNumber?: NullableFloatFieldUpdateOperationsInput | number | null
     valueBoolean?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -19475,6 +20954,12 @@ export namespace Prisma {
     none?: LocationWhereInput
   }
 
+  export type FilamentListRelationFilter = {
+    every?: FilamentWhereInput
+    some?: FilamentWhereInput
+    none?: FilamentWhereInput
+  }
+
   export type SpoolListRelationFilter = {
     every?: SpoolWhereInput
     some?: SpoolWhereInput
@@ -19505,6 +20990,10 @@ export namespace Prisma {
   }
 
   export type LocationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FilamentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -19942,21 +21431,10 @@ export namespace Prisma {
     isNot?: MaterialWhereInput
   }
 
-  export type LocationNullableScalarRelationFilter = {
-    is?: LocationWhereInput | null
-    isNot?: LocationWhereInput | null
-  }
-
-  export type SpoolColorStopListRelationFilter = {
-    every?: SpoolColorStopWhereInput
-    some?: SpoolColorStopWhereInput
-    none?: SpoolColorStopWhereInput
-  }
-
-  export type UsageListRelationFilter = {
-    every?: UsageWhereInput
-    some?: UsageWhereInput
-    none?: UsageWhereInput
+  export type FilamentColorStopListRelationFilter = {
+    every?: FilamentColorStopWhereInput
+    some?: FilamentColorStopWhereInput
+    none?: FilamentColorStopWhereInput
   }
 
   export type CustomFieldValueListRelationFilter = {
@@ -19965,11 +21443,7 @@ export namespace Prisma {
     none?: CustomFieldValueWhereInput
   }
 
-  export type SpoolColorStopOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type UsageOrderByRelationAggregateInput = {
+  export type FilamentColorStopOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -19977,84 +21451,59 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type SpoolCountOrderByAggregateInput = {
+  export type FilamentCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     brandId?: SortOrder
     materialId?: SortOrder
-    locationId?: SortOrder
     colorMode?: SortOrder
     colorName?: SortOrder
     diameterMm?: SortOrder
-    initialWeightG?: SortOrder
-    remainingWeightG?: SortOrder
-    status?: SortOrder
-    needsRepurchase?: SortOrder
+    defaultWeightG?: SortOrder
     productUrl?: SortOrder
-    purchasedAt?: SortOrder
-    priceCents?: SortOrder
     notes?: SortOrder
-    lastDriedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type SpoolAvgOrderByAggregateInput = {
+  export type FilamentAvgOrderByAggregateInput = {
     diameterMm?: SortOrder
-    initialWeightG?: SortOrder
-    remainingWeightG?: SortOrder
-    priceCents?: SortOrder
+    defaultWeightG?: SortOrder
   }
 
-  export type SpoolMaxOrderByAggregateInput = {
+  export type FilamentMaxOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     brandId?: SortOrder
     materialId?: SortOrder
-    locationId?: SortOrder
     colorMode?: SortOrder
     colorName?: SortOrder
     diameterMm?: SortOrder
-    initialWeightG?: SortOrder
-    remainingWeightG?: SortOrder
-    status?: SortOrder
-    needsRepurchase?: SortOrder
+    defaultWeightG?: SortOrder
     productUrl?: SortOrder
-    purchasedAt?: SortOrder
-    priceCents?: SortOrder
     notes?: SortOrder
-    lastDriedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type SpoolMinOrderByAggregateInput = {
+  export type FilamentMinOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     brandId?: SortOrder
     materialId?: SortOrder
-    locationId?: SortOrder
     colorMode?: SortOrder
     colorName?: SortOrder
     diameterMm?: SortOrder
-    initialWeightG?: SortOrder
-    remainingWeightG?: SortOrder
-    status?: SortOrder
-    needsRepurchase?: SortOrder
+    defaultWeightG?: SortOrder
     productUrl?: SortOrder
-    purchasedAt?: SortOrder
-    priceCents?: SortOrder
     notes?: SortOrder
-    lastDriedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type SpoolSumOrderByAggregateInput = {
+  export type FilamentSumOrderByAggregateInput = {
     diameterMm?: SortOrder
-    initialWeightG?: SortOrder
-    remainingWeightG?: SortOrder
-    priceCents?: SortOrder
+    defaultWeightG?: SortOrder
   }
 
   export type FloatWithAggregatesFilter<$PrismaModel = never> = {
@@ -20089,46 +21538,129 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
+  export type FilamentScalarRelationFilter = {
+    is?: FilamentWhereInput
+    isNot?: FilamentWhereInput
+  }
+
+  export type FilamentColorStopCountOrderByAggregateInput = {
+    id?: SortOrder
+    filamentId?: SortOrder
+    hex?: SortOrder
+    name?: SortOrder
+    position?: SortOrder
+    weight?: SortOrder
+  }
+
+  export type FilamentColorStopAvgOrderByAggregateInput = {
+    position?: SortOrder
+    weight?: SortOrder
+  }
+
+  export type FilamentColorStopMaxOrderByAggregateInput = {
+    id?: SortOrder
+    filamentId?: SortOrder
+    hex?: SortOrder
+    name?: SortOrder
+    position?: SortOrder
+    weight?: SortOrder
+  }
+
+  export type FilamentColorStopMinOrderByAggregateInput = {
+    id?: SortOrder
+    filamentId?: SortOrder
+    hex?: SortOrder
+    name?: SortOrder
+    position?: SortOrder
+    weight?: SortOrder
+  }
+
+  export type FilamentColorStopSumOrderByAggregateInput = {
+    position?: SortOrder
+    weight?: SortOrder
+  }
+
+  export type LocationNullableScalarRelationFilter = {
+    is?: LocationWhereInput | null
+    isNot?: LocationWhereInput | null
+  }
+
+  export type UsageListRelationFilter = {
+    every?: UsageWhereInput
+    some?: UsageWhereInput
+    none?: UsageWhereInput
+  }
+
+  export type UsageOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SpoolCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    filamentId?: SortOrder
+    locationId?: SortOrder
+    initialWeightG?: SortOrder
+    remainingWeightG?: SortOrder
+    status?: SortOrder
+    needsRepurchase?: SortOrder
+    purchasedAt?: SortOrder
+    priceCents?: SortOrder
+    notes?: SortOrder
+    lastDriedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SpoolAvgOrderByAggregateInput = {
+    initialWeightG?: SortOrder
+    remainingWeightG?: SortOrder
+    priceCents?: SortOrder
+  }
+
+  export type SpoolMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    filamentId?: SortOrder
+    locationId?: SortOrder
+    initialWeightG?: SortOrder
+    remainingWeightG?: SortOrder
+    status?: SortOrder
+    needsRepurchase?: SortOrder
+    purchasedAt?: SortOrder
+    priceCents?: SortOrder
+    notes?: SortOrder
+    lastDriedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SpoolMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    filamentId?: SortOrder
+    locationId?: SortOrder
+    initialWeightG?: SortOrder
+    remainingWeightG?: SortOrder
+    status?: SortOrder
+    needsRepurchase?: SortOrder
+    purchasedAt?: SortOrder
+    priceCents?: SortOrder
+    notes?: SortOrder
+    lastDriedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SpoolSumOrderByAggregateInput = {
+    initialWeightG?: SortOrder
+    remainingWeightG?: SortOrder
+    priceCents?: SortOrder
+  }
+
   export type SpoolScalarRelationFilter = {
     is?: SpoolWhereInput
     isNot?: SpoolWhereInput
-  }
-
-  export type SpoolColorStopCountOrderByAggregateInput = {
-    id?: SortOrder
-    spoolId?: SortOrder
-    hex?: SortOrder
-    name?: SortOrder
-    position?: SortOrder
-    weight?: SortOrder
-  }
-
-  export type SpoolColorStopAvgOrderByAggregateInput = {
-    position?: SortOrder
-    weight?: SortOrder
-  }
-
-  export type SpoolColorStopMaxOrderByAggregateInput = {
-    id?: SortOrder
-    spoolId?: SortOrder
-    hex?: SortOrder
-    name?: SortOrder
-    position?: SortOrder
-    weight?: SortOrder
-  }
-
-  export type SpoolColorStopMinOrderByAggregateInput = {
-    id?: SortOrder
-    spoolId?: SortOrder
-    hex?: SortOrder
-    name?: SortOrder
-    position?: SortOrder
-    weight?: SortOrder
-  }
-
-  export type SpoolColorStopSumOrderByAggregateInput = {
-    position?: SortOrder
-    weight?: SortOrder
   }
 
   export type UsageCountOrderByAggregateInput = {
@@ -20232,15 +21764,15 @@ export namespace Prisma {
     isNot?: CustomFieldWhereInput
   }
 
-  export type CustomFieldValueFieldIdSpoolIdCompoundUniqueInput = {
+  export type CustomFieldValueFieldIdFilamentIdCompoundUniqueInput = {
     fieldId: string
-    spoolId: string
+    filamentId: string
   }
 
   export type CustomFieldValueCountOrderByAggregateInput = {
     id?: SortOrder
     fieldId?: SortOrder
-    spoolId?: SortOrder
+    filamentId?: SortOrder
     valueText?: SortOrder
     valueNumber?: SortOrder
     valueBoolean?: SortOrder
@@ -20254,7 +21786,7 @@ export namespace Prisma {
   export type CustomFieldValueMaxOrderByAggregateInput = {
     id?: SortOrder
     fieldId?: SortOrder
-    spoolId?: SortOrder
+    filamentId?: SortOrder
     valueText?: SortOrder
     valueNumber?: SortOrder
     valueBoolean?: SortOrder
@@ -20264,7 +21796,7 @@ export namespace Prisma {
   export type CustomFieldValueMinOrderByAggregateInput = {
     id?: SortOrder
     fieldId?: SortOrder
-    spoolId?: SortOrder
+    filamentId?: SortOrder
     valueText?: SortOrder
     valueNumber?: SortOrder
     valueBoolean?: SortOrder
@@ -20346,6 +21878,13 @@ export namespace Prisma {
     connect?: LocationWhereUniqueInput | LocationWhereUniqueInput[]
   }
 
+  export type FilamentCreateNestedManyWithoutUserInput = {
+    create?: XOR<FilamentCreateWithoutUserInput, FilamentUncheckedCreateWithoutUserInput> | FilamentCreateWithoutUserInput[] | FilamentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FilamentCreateOrConnectWithoutUserInput | FilamentCreateOrConnectWithoutUserInput[]
+    createMany?: FilamentCreateManyUserInputEnvelope
+    connect?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+  }
+
   export type SpoolCreateNestedManyWithoutUserInput = {
     create?: XOR<SpoolCreateWithoutUserInput, SpoolUncheckedCreateWithoutUserInput> | SpoolCreateWithoutUserInput[] | SpoolUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SpoolCreateOrConnectWithoutUserInput | SpoolCreateOrConnectWithoutUserInput[]
@@ -20386,6 +21925,13 @@ export namespace Prisma {
     connectOrCreate?: LocationCreateOrConnectWithoutUserInput | LocationCreateOrConnectWithoutUserInput[]
     createMany?: LocationCreateManyUserInputEnvelope
     connect?: LocationWhereUniqueInput | LocationWhereUniqueInput[]
+  }
+
+  export type FilamentUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<FilamentCreateWithoutUserInput, FilamentUncheckedCreateWithoutUserInput> | FilamentCreateWithoutUserInput[] | FilamentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FilamentCreateOrConnectWithoutUserInput | FilamentCreateOrConnectWithoutUserInput[]
+    createMany?: FilamentCreateManyUserInputEnvelope
+    connect?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
   }
 
   export type SpoolUncheckedCreateNestedManyWithoutUserInput = {
@@ -20474,6 +22020,20 @@ export namespace Prisma {
     deleteMany?: LocationScalarWhereInput | LocationScalarWhereInput[]
   }
 
+  export type FilamentUpdateManyWithoutUserNestedInput = {
+    create?: XOR<FilamentCreateWithoutUserInput, FilamentUncheckedCreateWithoutUserInput> | FilamentCreateWithoutUserInput[] | FilamentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FilamentCreateOrConnectWithoutUserInput | FilamentCreateOrConnectWithoutUserInput[]
+    upsert?: FilamentUpsertWithWhereUniqueWithoutUserInput | FilamentUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: FilamentCreateManyUserInputEnvelope
+    set?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+    disconnect?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+    delete?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+    connect?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+    update?: FilamentUpdateWithWhereUniqueWithoutUserInput | FilamentUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: FilamentUpdateManyWithWhereWithoutUserInput | FilamentUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: FilamentScalarWhereInput | FilamentScalarWhereInput[]
+  }
+
   export type SpoolUpdateManyWithoutUserNestedInput = {
     create?: XOR<SpoolCreateWithoutUserInput, SpoolUncheckedCreateWithoutUserInput> | SpoolCreateWithoutUserInput[] | SpoolUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SpoolCreateOrConnectWithoutUserInput | SpoolCreateOrConnectWithoutUserInput[]
@@ -20558,6 +22118,20 @@ export namespace Prisma {
     deleteMany?: LocationScalarWhereInput | LocationScalarWhereInput[]
   }
 
+  export type FilamentUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<FilamentCreateWithoutUserInput, FilamentUncheckedCreateWithoutUserInput> | FilamentCreateWithoutUserInput[] | FilamentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FilamentCreateOrConnectWithoutUserInput | FilamentCreateOrConnectWithoutUserInput[]
+    upsert?: FilamentUpsertWithWhereUniqueWithoutUserInput | FilamentUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: FilamentCreateManyUserInputEnvelope
+    set?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+    disconnect?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+    delete?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+    connect?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+    update?: FilamentUpdateWithWhereUniqueWithoutUserInput | FilamentUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: FilamentUpdateManyWithWhereWithoutUserInput | FilamentUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: FilamentScalarWhereInput | FilamentScalarWhereInput[]
+  }
+
   export type SpoolUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<SpoolCreateWithoutUserInput, SpoolUncheckedCreateWithoutUserInput> | SpoolCreateWithoutUserInput[] | SpoolUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SpoolCreateOrConnectWithoutUserInput | SpoolCreateOrConnectWithoutUserInput[]
@@ -20624,18 +22198,18 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
-  export type SpoolCreateNestedManyWithoutBrandInput = {
-    create?: XOR<SpoolCreateWithoutBrandInput, SpoolUncheckedCreateWithoutBrandInput> | SpoolCreateWithoutBrandInput[] | SpoolUncheckedCreateWithoutBrandInput[]
-    connectOrCreate?: SpoolCreateOrConnectWithoutBrandInput | SpoolCreateOrConnectWithoutBrandInput[]
-    createMany?: SpoolCreateManyBrandInputEnvelope
-    connect?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
+  export type FilamentCreateNestedManyWithoutBrandInput = {
+    create?: XOR<FilamentCreateWithoutBrandInput, FilamentUncheckedCreateWithoutBrandInput> | FilamentCreateWithoutBrandInput[] | FilamentUncheckedCreateWithoutBrandInput[]
+    connectOrCreate?: FilamentCreateOrConnectWithoutBrandInput | FilamentCreateOrConnectWithoutBrandInput[]
+    createMany?: FilamentCreateManyBrandInputEnvelope
+    connect?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
   }
 
-  export type SpoolUncheckedCreateNestedManyWithoutBrandInput = {
-    create?: XOR<SpoolCreateWithoutBrandInput, SpoolUncheckedCreateWithoutBrandInput> | SpoolCreateWithoutBrandInput[] | SpoolUncheckedCreateWithoutBrandInput[]
-    connectOrCreate?: SpoolCreateOrConnectWithoutBrandInput | SpoolCreateOrConnectWithoutBrandInput[]
-    createMany?: SpoolCreateManyBrandInputEnvelope
-    connect?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
+  export type FilamentUncheckedCreateNestedManyWithoutBrandInput = {
+    create?: XOR<FilamentCreateWithoutBrandInput, FilamentUncheckedCreateWithoutBrandInput> | FilamentCreateWithoutBrandInput[] | FilamentUncheckedCreateWithoutBrandInput[]
+    connectOrCreate?: FilamentCreateOrConnectWithoutBrandInput | FilamentCreateOrConnectWithoutBrandInput[]
+    createMany?: FilamentCreateManyBrandInputEnvelope
+    connect?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
   }
 
   export type UserUpdateOneRequiredWithoutBrandsNestedInput = {
@@ -20646,46 +22220,46 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBrandsInput, UserUpdateWithoutBrandsInput>, UserUncheckedUpdateWithoutBrandsInput>
   }
 
-  export type SpoolUpdateManyWithoutBrandNestedInput = {
-    create?: XOR<SpoolCreateWithoutBrandInput, SpoolUncheckedCreateWithoutBrandInput> | SpoolCreateWithoutBrandInput[] | SpoolUncheckedCreateWithoutBrandInput[]
-    connectOrCreate?: SpoolCreateOrConnectWithoutBrandInput | SpoolCreateOrConnectWithoutBrandInput[]
-    upsert?: SpoolUpsertWithWhereUniqueWithoutBrandInput | SpoolUpsertWithWhereUniqueWithoutBrandInput[]
-    createMany?: SpoolCreateManyBrandInputEnvelope
-    set?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
-    disconnect?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
-    delete?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
-    connect?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
-    update?: SpoolUpdateWithWhereUniqueWithoutBrandInput | SpoolUpdateWithWhereUniqueWithoutBrandInput[]
-    updateMany?: SpoolUpdateManyWithWhereWithoutBrandInput | SpoolUpdateManyWithWhereWithoutBrandInput[]
-    deleteMany?: SpoolScalarWhereInput | SpoolScalarWhereInput[]
+  export type FilamentUpdateManyWithoutBrandNestedInput = {
+    create?: XOR<FilamentCreateWithoutBrandInput, FilamentUncheckedCreateWithoutBrandInput> | FilamentCreateWithoutBrandInput[] | FilamentUncheckedCreateWithoutBrandInput[]
+    connectOrCreate?: FilamentCreateOrConnectWithoutBrandInput | FilamentCreateOrConnectWithoutBrandInput[]
+    upsert?: FilamentUpsertWithWhereUniqueWithoutBrandInput | FilamentUpsertWithWhereUniqueWithoutBrandInput[]
+    createMany?: FilamentCreateManyBrandInputEnvelope
+    set?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+    disconnect?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+    delete?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+    connect?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+    update?: FilamentUpdateWithWhereUniqueWithoutBrandInput | FilamentUpdateWithWhereUniqueWithoutBrandInput[]
+    updateMany?: FilamentUpdateManyWithWhereWithoutBrandInput | FilamentUpdateManyWithWhereWithoutBrandInput[]
+    deleteMany?: FilamentScalarWhereInput | FilamentScalarWhereInput[]
   }
 
-  export type SpoolUncheckedUpdateManyWithoutBrandNestedInput = {
-    create?: XOR<SpoolCreateWithoutBrandInput, SpoolUncheckedCreateWithoutBrandInput> | SpoolCreateWithoutBrandInput[] | SpoolUncheckedCreateWithoutBrandInput[]
-    connectOrCreate?: SpoolCreateOrConnectWithoutBrandInput | SpoolCreateOrConnectWithoutBrandInput[]
-    upsert?: SpoolUpsertWithWhereUniqueWithoutBrandInput | SpoolUpsertWithWhereUniqueWithoutBrandInput[]
-    createMany?: SpoolCreateManyBrandInputEnvelope
-    set?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
-    disconnect?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
-    delete?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
-    connect?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
-    update?: SpoolUpdateWithWhereUniqueWithoutBrandInput | SpoolUpdateWithWhereUniqueWithoutBrandInput[]
-    updateMany?: SpoolUpdateManyWithWhereWithoutBrandInput | SpoolUpdateManyWithWhereWithoutBrandInput[]
-    deleteMany?: SpoolScalarWhereInput | SpoolScalarWhereInput[]
+  export type FilamentUncheckedUpdateManyWithoutBrandNestedInput = {
+    create?: XOR<FilamentCreateWithoutBrandInput, FilamentUncheckedCreateWithoutBrandInput> | FilamentCreateWithoutBrandInput[] | FilamentUncheckedCreateWithoutBrandInput[]
+    connectOrCreate?: FilamentCreateOrConnectWithoutBrandInput | FilamentCreateOrConnectWithoutBrandInput[]
+    upsert?: FilamentUpsertWithWhereUniqueWithoutBrandInput | FilamentUpsertWithWhereUniqueWithoutBrandInput[]
+    createMany?: FilamentCreateManyBrandInputEnvelope
+    set?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+    disconnect?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+    delete?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+    connect?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+    update?: FilamentUpdateWithWhereUniqueWithoutBrandInput | FilamentUpdateWithWhereUniqueWithoutBrandInput[]
+    updateMany?: FilamentUpdateManyWithWhereWithoutBrandInput | FilamentUpdateManyWithWhereWithoutBrandInput[]
+    deleteMany?: FilamentScalarWhereInput | FilamentScalarWhereInput[]
   }
 
-  export type SpoolCreateNestedManyWithoutMaterialInput = {
-    create?: XOR<SpoolCreateWithoutMaterialInput, SpoolUncheckedCreateWithoutMaterialInput> | SpoolCreateWithoutMaterialInput[] | SpoolUncheckedCreateWithoutMaterialInput[]
-    connectOrCreate?: SpoolCreateOrConnectWithoutMaterialInput | SpoolCreateOrConnectWithoutMaterialInput[]
-    createMany?: SpoolCreateManyMaterialInputEnvelope
-    connect?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
+  export type FilamentCreateNestedManyWithoutMaterialInput = {
+    create?: XOR<FilamentCreateWithoutMaterialInput, FilamentUncheckedCreateWithoutMaterialInput> | FilamentCreateWithoutMaterialInput[] | FilamentUncheckedCreateWithoutMaterialInput[]
+    connectOrCreate?: FilamentCreateOrConnectWithoutMaterialInput | FilamentCreateOrConnectWithoutMaterialInput[]
+    createMany?: FilamentCreateManyMaterialInputEnvelope
+    connect?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
   }
 
-  export type SpoolUncheckedCreateNestedManyWithoutMaterialInput = {
-    create?: XOR<SpoolCreateWithoutMaterialInput, SpoolUncheckedCreateWithoutMaterialInput> | SpoolCreateWithoutMaterialInput[] | SpoolUncheckedCreateWithoutMaterialInput[]
-    connectOrCreate?: SpoolCreateOrConnectWithoutMaterialInput | SpoolCreateOrConnectWithoutMaterialInput[]
-    createMany?: SpoolCreateManyMaterialInputEnvelope
-    connect?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
+  export type FilamentUncheckedCreateNestedManyWithoutMaterialInput = {
+    create?: XOR<FilamentCreateWithoutMaterialInput, FilamentUncheckedCreateWithoutMaterialInput> | FilamentCreateWithoutMaterialInput[] | FilamentUncheckedCreateWithoutMaterialInput[]
+    connectOrCreate?: FilamentCreateOrConnectWithoutMaterialInput | FilamentCreateOrConnectWithoutMaterialInput[]
+    createMany?: FilamentCreateManyMaterialInputEnvelope
+    connect?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
   }
 
   export type NullableFloatFieldUpdateOperationsInput = {
@@ -20704,32 +22278,32 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type SpoolUpdateManyWithoutMaterialNestedInput = {
-    create?: XOR<SpoolCreateWithoutMaterialInput, SpoolUncheckedCreateWithoutMaterialInput> | SpoolCreateWithoutMaterialInput[] | SpoolUncheckedCreateWithoutMaterialInput[]
-    connectOrCreate?: SpoolCreateOrConnectWithoutMaterialInput | SpoolCreateOrConnectWithoutMaterialInput[]
-    upsert?: SpoolUpsertWithWhereUniqueWithoutMaterialInput | SpoolUpsertWithWhereUniqueWithoutMaterialInput[]
-    createMany?: SpoolCreateManyMaterialInputEnvelope
-    set?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
-    disconnect?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
-    delete?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
-    connect?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
-    update?: SpoolUpdateWithWhereUniqueWithoutMaterialInput | SpoolUpdateWithWhereUniqueWithoutMaterialInput[]
-    updateMany?: SpoolUpdateManyWithWhereWithoutMaterialInput | SpoolUpdateManyWithWhereWithoutMaterialInput[]
-    deleteMany?: SpoolScalarWhereInput | SpoolScalarWhereInput[]
+  export type FilamentUpdateManyWithoutMaterialNestedInput = {
+    create?: XOR<FilamentCreateWithoutMaterialInput, FilamentUncheckedCreateWithoutMaterialInput> | FilamentCreateWithoutMaterialInput[] | FilamentUncheckedCreateWithoutMaterialInput[]
+    connectOrCreate?: FilamentCreateOrConnectWithoutMaterialInput | FilamentCreateOrConnectWithoutMaterialInput[]
+    upsert?: FilamentUpsertWithWhereUniqueWithoutMaterialInput | FilamentUpsertWithWhereUniqueWithoutMaterialInput[]
+    createMany?: FilamentCreateManyMaterialInputEnvelope
+    set?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+    disconnect?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+    delete?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+    connect?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+    update?: FilamentUpdateWithWhereUniqueWithoutMaterialInput | FilamentUpdateWithWhereUniqueWithoutMaterialInput[]
+    updateMany?: FilamentUpdateManyWithWhereWithoutMaterialInput | FilamentUpdateManyWithWhereWithoutMaterialInput[]
+    deleteMany?: FilamentScalarWhereInput | FilamentScalarWhereInput[]
   }
 
-  export type SpoolUncheckedUpdateManyWithoutMaterialNestedInput = {
-    create?: XOR<SpoolCreateWithoutMaterialInput, SpoolUncheckedCreateWithoutMaterialInput> | SpoolCreateWithoutMaterialInput[] | SpoolUncheckedCreateWithoutMaterialInput[]
-    connectOrCreate?: SpoolCreateOrConnectWithoutMaterialInput | SpoolCreateOrConnectWithoutMaterialInput[]
-    upsert?: SpoolUpsertWithWhereUniqueWithoutMaterialInput | SpoolUpsertWithWhereUniqueWithoutMaterialInput[]
-    createMany?: SpoolCreateManyMaterialInputEnvelope
-    set?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
-    disconnect?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
-    delete?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
-    connect?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
-    update?: SpoolUpdateWithWhereUniqueWithoutMaterialInput | SpoolUpdateWithWhereUniqueWithoutMaterialInput[]
-    updateMany?: SpoolUpdateManyWithWhereWithoutMaterialInput | SpoolUpdateManyWithWhereWithoutMaterialInput[]
-    deleteMany?: SpoolScalarWhereInput | SpoolScalarWhereInput[]
+  export type FilamentUncheckedUpdateManyWithoutMaterialNestedInput = {
+    create?: XOR<FilamentCreateWithoutMaterialInput, FilamentUncheckedCreateWithoutMaterialInput> | FilamentCreateWithoutMaterialInput[] | FilamentUncheckedCreateWithoutMaterialInput[]
+    connectOrCreate?: FilamentCreateOrConnectWithoutMaterialInput | FilamentCreateOrConnectWithoutMaterialInput[]
+    upsert?: FilamentUpsertWithWhereUniqueWithoutMaterialInput | FilamentUpsertWithWhereUniqueWithoutMaterialInput[]
+    createMany?: FilamentCreateManyMaterialInputEnvelope
+    set?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+    disconnect?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+    delete?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+    connect?: FilamentWhereUniqueInput | FilamentWhereUniqueInput[]
+    update?: FilamentUpdateWithWhereUniqueWithoutMaterialInput | FilamentUpdateWithWhereUniqueWithoutMaterialInput[]
+    updateMany?: FilamentUpdateManyWithWhereWithoutMaterialInput | FilamentUpdateManyWithWhereWithoutMaterialInput[]
+    deleteMany?: FilamentScalarWhereInput | FilamentScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutLocationsInput = {
@@ -20788,69 +22362,63 @@ export namespace Prisma {
     deleteMany?: SpoolScalarWhereInput | SpoolScalarWhereInput[]
   }
 
-  export type UserCreateNestedOneWithoutSpoolsInput = {
-    create?: XOR<UserCreateWithoutSpoolsInput, UserUncheckedCreateWithoutSpoolsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutSpoolsInput
+  export type UserCreateNestedOneWithoutFilamentsInput = {
+    create?: XOR<UserCreateWithoutFilamentsInput, UserUncheckedCreateWithoutFilamentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFilamentsInput
     connect?: UserWhereUniqueInput
   }
 
-  export type BrandCreateNestedOneWithoutSpoolsInput = {
-    create?: XOR<BrandCreateWithoutSpoolsInput, BrandUncheckedCreateWithoutSpoolsInput>
-    connectOrCreate?: BrandCreateOrConnectWithoutSpoolsInput
+  export type BrandCreateNestedOneWithoutFilamentsInput = {
+    create?: XOR<BrandCreateWithoutFilamentsInput, BrandUncheckedCreateWithoutFilamentsInput>
+    connectOrCreate?: BrandCreateOrConnectWithoutFilamentsInput
     connect?: BrandWhereUniqueInput
   }
 
-  export type MaterialCreateNestedOneWithoutSpoolsInput = {
-    create?: XOR<MaterialCreateWithoutSpoolsInput, MaterialUncheckedCreateWithoutSpoolsInput>
-    connectOrCreate?: MaterialCreateOrConnectWithoutSpoolsInput
+  export type MaterialCreateNestedOneWithoutFilamentsInput = {
+    create?: XOR<MaterialCreateWithoutFilamentsInput, MaterialUncheckedCreateWithoutFilamentsInput>
+    connectOrCreate?: MaterialCreateOrConnectWithoutFilamentsInput
     connect?: MaterialWhereUniqueInput
   }
 
-  export type LocationCreateNestedOneWithoutSpoolsInput = {
-    create?: XOR<LocationCreateWithoutSpoolsInput, LocationUncheckedCreateWithoutSpoolsInput>
-    connectOrCreate?: LocationCreateOrConnectWithoutSpoolsInput
-    connect?: LocationWhereUniqueInput
+  export type FilamentColorStopCreateNestedManyWithoutFilamentInput = {
+    create?: XOR<FilamentColorStopCreateWithoutFilamentInput, FilamentColorStopUncheckedCreateWithoutFilamentInput> | FilamentColorStopCreateWithoutFilamentInput[] | FilamentColorStopUncheckedCreateWithoutFilamentInput[]
+    connectOrCreate?: FilamentColorStopCreateOrConnectWithoutFilamentInput | FilamentColorStopCreateOrConnectWithoutFilamentInput[]
+    createMany?: FilamentColorStopCreateManyFilamentInputEnvelope
+    connect?: FilamentColorStopWhereUniqueInput | FilamentColorStopWhereUniqueInput[]
   }
 
-  export type SpoolColorStopCreateNestedManyWithoutSpoolInput = {
-    create?: XOR<SpoolColorStopCreateWithoutSpoolInput, SpoolColorStopUncheckedCreateWithoutSpoolInput> | SpoolColorStopCreateWithoutSpoolInput[] | SpoolColorStopUncheckedCreateWithoutSpoolInput[]
-    connectOrCreate?: SpoolColorStopCreateOrConnectWithoutSpoolInput | SpoolColorStopCreateOrConnectWithoutSpoolInput[]
-    createMany?: SpoolColorStopCreateManySpoolInputEnvelope
-    connect?: SpoolColorStopWhereUniqueInput | SpoolColorStopWhereUniqueInput[]
+  export type SpoolCreateNestedManyWithoutFilamentInput = {
+    create?: XOR<SpoolCreateWithoutFilamentInput, SpoolUncheckedCreateWithoutFilamentInput> | SpoolCreateWithoutFilamentInput[] | SpoolUncheckedCreateWithoutFilamentInput[]
+    connectOrCreate?: SpoolCreateOrConnectWithoutFilamentInput | SpoolCreateOrConnectWithoutFilamentInput[]
+    createMany?: SpoolCreateManyFilamentInputEnvelope
+    connect?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
   }
 
-  export type UsageCreateNestedManyWithoutSpoolInput = {
-    create?: XOR<UsageCreateWithoutSpoolInput, UsageUncheckedCreateWithoutSpoolInput> | UsageCreateWithoutSpoolInput[] | UsageUncheckedCreateWithoutSpoolInput[]
-    connectOrCreate?: UsageCreateOrConnectWithoutSpoolInput | UsageCreateOrConnectWithoutSpoolInput[]
-    createMany?: UsageCreateManySpoolInputEnvelope
-    connect?: UsageWhereUniqueInput | UsageWhereUniqueInput[]
-  }
-
-  export type CustomFieldValueCreateNestedManyWithoutSpoolInput = {
-    create?: XOR<CustomFieldValueCreateWithoutSpoolInput, CustomFieldValueUncheckedCreateWithoutSpoolInput> | CustomFieldValueCreateWithoutSpoolInput[] | CustomFieldValueUncheckedCreateWithoutSpoolInput[]
-    connectOrCreate?: CustomFieldValueCreateOrConnectWithoutSpoolInput | CustomFieldValueCreateOrConnectWithoutSpoolInput[]
-    createMany?: CustomFieldValueCreateManySpoolInputEnvelope
+  export type CustomFieldValueCreateNestedManyWithoutFilamentInput = {
+    create?: XOR<CustomFieldValueCreateWithoutFilamentInput, CustomFieldValueUncheckedCreateWithoutFilamentInput> | CustomFieldValueCreateWithoutFilamentInput[] | CustomFieldValueUncheckedCreateWithoutFilamentInput[]
+    connectOrCreate?: CustomFieldValueCreateOrConnectWithoutFilamentInput | CustomFieldValueCreateOrConnectWithoutFilamentInput[]
+    createMany?: CustomFieldValueCreateManyFilamentInputEnvelope
     connect?: CustomFieldValueWhereUniqueInput | CustomFieldValueWhereUniqueInput[]
   }
 
-  export type SpoolColorStopUncheckedCreateNestedManyWithoutSpoolInput = {
-    create?: XOR<SpoolColorStopCreateWithoutSpoolInput, SpoolColorStopUncheckedCreateWithoutSpoolInput> | SpoolColorStopCreateWithoutSpoolInput[] | SpoolColorStopUncheckedCreateWithoutSpoolInput[]
-    connectOrCreate?: SpoolColorStopCreateOrConnectWithoutSpoolInput | SpoolColorStopCreateOrConnectWithoutSpoolInput[]
-    createMany?: SpoolColorStopCreateManySpoolInputEnvelope
-    connect?: SpoolColorStopWhereUniqueInput | SpoolColorStopWhereUniqueInput[]
+  export type FilamentColorStopUncheckedCreateNestedManyWithoutFilamentInput = {
+    create?: XOR<FilamentColorStopCreateWithoutFilamentInput, FilamentColorStopUncheckedCreateWithoutFilamentInput> | FilamentColorStopCreateWithoutFilamentInput[] | FilamentColorStopUncheckedCreateWithoutFilamentInput[]
+    connectOrCreate?: FilamentColorStopCreateOrConnectWithoutFilamentInput | FilamentColorStopCreateOrConnectWithoutFilamentInput[]
+    createMany?: FilamentColorStopCreateManyFilamentInputEnvelope
+    connect?: FilamentColorStopWhereUniqueInput | FilamentColorStopWhereUniqueInput[]
   }
 
-  export type UsageUncheckedCreateNestedManyWithoutSpoolInput = {
-    create?: XOR<UsageCreateWithoutSpoolInput, UsageUncheckedCreateWithoutSpoolInput> | UsageCreateWithoutSpoolInput[] | UsageUncheckedCreateWithoutSpoolInput[]
-    connectOrCreate?: UsageCreateOrConnectWithoutSpoolInput | UsageCreateOrConnectWithoutSpoolInput[]
-    createMany?: UsageCreateManySpoolInputEnvelope
-    connect?: UsageWhereUniqueInput | UsageWhereUniqueInput[]
+  export type SpoolUncheckedCreateNestedManyWithoutFilamentInput = {
+    create?: XOR<SpoolCreateWithoutFilamentInput, SpoolUncheckedCreateWithoutFilamentInput> | SpoolCreateWithoutFilamentInput[] | SpoolUncheckedCreateWithoutFilamentInput[]
+    connectOrCreate?: SpoolCreateOrConnectWithoutFilamentInput | SpoolCreateOrConnectWithoutFilamentInput[]
+    createMany?: SpoolCreateManyFilamentInputEnvelope
+    connect?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
   }
 
-  export type CustomFieldValueUncheckedCreateNestedManyWithoutSpoolInput = {
-    create?: XOR<CustomFieldValueCreateWithoutSpoolInput, CustomFieldValueUncheckedCreateWithoutSpoolInput> | CustomFieldValueCreateWithoutSpoolInput[] | CustomFieldValueUncheckedCreateWithoutSpoolInput[]
-    connectOrCreate?: CustomFieldValueCreateOrConnectWithoutSpoolInput | CustomFieldValueCreateOrConnectWithoutSpoolInput[]
-    createMany?: CustomFieldValueCreateManySpoolInputEnvelope
+  export type CustomFieldValueUncheckedCreateNestedManyWithoutFilamentInput = {
+    create?: XOR<CustomFieldValueCreateWithoutFilamentInput, CustomFieldValueUncheckedCreateWithoutFilamentInput> | CustomFieldValueCreateWithoutFilamentInput[] | CustomFieldValueUncheckedCreateWithoutFilamentInput[]
+    connectOrCreate?: CustomFieldValueCreateOrConnectWithoutFilamentInput | CustomFieldValueCreateOrConnectWithoutFilamentInput[]
+    createMany?: CustomFieldValueCreateManyFilamentInputEnvelope
     connect?: CustomFieldValueWhereUniqueInput | CustomFieldValueWhereUniqueInput[]
   }
 
@@ -20870,6 +22438,160 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type UserUpdateOneRequiredWithoutFilamentsNestedInput = {
+    create?: XOR<UserCreateWithoutFilamentsInput, UserUncheckedCreateWithoutFilamentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFilamentsInput
+    upsert?: UserUpsertWithoutFilamentsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFilamentsInput, UserUpdateWithoutFilamentsInput>, UserUncheckedUpdateWithoutFilamentsInput>
+  }
+
+  export type BrandUpdateOneRequiredWithoutFilamentsNestedInput = {
+    create?: XOR<BrandCreateWithoutFilamentsInput, BrandUncheckedCreateWithoutFilamentsInput>
+    connectOrCreate?: BrandCreateOrConnectWithoutFilamentsInput
+    upsert?: BrandUpsertWithoutFilamentsInput
+    connect?: BrandWhereUniqueInput
+    update?: XOR<XOR<BrandUpdateToOneWithWhereWithoutFilamentsInput, BrandUpdateWithoutFilamentsInput>, BrandUncheckedUpdateWithoutFilamentsInput>
+  }
+
+  export type MaterialUpdateOneRequiredWithoutFilamentsNestedInput = {
+    create?: XOR<MaterialCreateWithoutFilamentsInput, MaterialUncheckedCreateWithoutFilamentsInput>
+    connectOrCreate?: MaterialCreateOrConnectWithoutFilamentsInput
+    upsert?: MaterialUpsertWithoutFilamentsInput
+    connect?: MaterialWhereUniqueInput
+    update?: XOR<XOR<MaterialUpdateToOneWithWhereWithoutFilamentsInput, MaterialUpdateWithoutFilamentsInput>, MaterialUncheckedUpdateWithoutFilamentsInput>
+  }
+
+  export type FilamentColorStopUpdateManyWithoutFilamentNestedInput = {
+    create?: XOR<FilamentColorStopCreateWithoutFilamentInput, FilamentColorStopUncheckedCreateWithoutFilamentInput> | FilamentColorStopCreateWithoutFilamentInput[] | FilamentColorStopUncheckedCreateWithoutFilamentInput[]
+    connectOrCreate?: FilamentColorStopCreateOrConnectWithoutFilamentInput | FilamentColorStopCreateOrConnectWithoutFilamentInput[]
+    upsert?: FilamentColorStopUpsertWithWhereUniqueWithoutFilamentInput | FilamentColorStopUpsertWithWhereUniqueWithoutFilamentInput[]
+    createMany?: FilamentColorStopCreateManyFilamentInputEnvelope
+    set?: FilamentColorStopWhereUniqueInput | FilamentColorStopWhereUniqueInput[]
+    disconnect?: FilamentColorStopWhereUniqueInput | FilamentColorStopWhereUniqueInput[]
+    delete?: FilamentColorStopWhereUniqueInput | FilamentColorStopWhereUniqueInput[]
+    connect?: FilamentColorStopWhereUniqueInput | FilamentColorStopWhereUniqueInput[]
+    update?: FilamentColorStopUpdateWithWhereUniqueWithoutFilamentInput | FilamentColorStopUpdateWithWhereUniqueWithoutFilamentInput[]
+    updateMany?: FilamentColorStopUpdateManyWithWhereWithoutFilamentInput | FilamentColorStopUpdateManyWithWhereWithoutFilamentInput[]
+    deleteMany?: FilamentColorStopScalarWhereInput | FilamentColorStopScalarWhereInput[]
+  }
+
+  export type SpoolUpdateManyWithoutFilamentNestedInput = {
+    create?: XOR<SpoolCreateWithoutFilamentInput, SpoolUncheckedCreateWithoutFilamentInput> | SpoolCreateWithoutFilamentInput[] | SpoolUncheckedCreateWithoutFilamentInput[]
+    connectOrCreate?: SpoolCreateOrConnectWithoutFilamentInput | SpoolCreateOrConnectWithoutFilamentInput[]
+    upsert?: SpoolUpsertWithWhereUniqueWithoutFilamentInput | SpoolUpsertWithWhereUniqueWithoutFilamentInput[]
+    createMany?: SpoolCreateManyFilamentInputEnvelope
+    set?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
+    disconnect?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
+    delete?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
+    connect?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
+    update?: SpoolUpdateWithWhereUniqueWithoutFilamentInput | SpoolUpdateWithWhereUniqueWithoutFilamentInput[]
+    updateMany?: SpoolUpdateManyWithWhereWithoutFilamentInput | SpoolUpdateManyWithWhereWithoutFilamentInput[]
+    deleteMany?: SpoolScalarWhereInput | SpoolScalarWhereInput[]
+  }
+
+  export type CustomFieldValueUpdateManyWithoutFilamentNestedInput = {
+    create?: XOR<CustomFieldValueCreateWithoutFilamentInput, CustomFieldValueUncheckedCreateWithoutFilamentInput> | CustomFieldValueCreateWithoutFilamentInput[] | CustomFieldValueUncheckedCreateWithoutFilamentInput[]
+    connectOrCreate?: CustomFieldValueCreateOrConnectWithoutFilamentInput | CustomFieldValueCreateOrConnectWithoutFilamentInput[]
+    upsert?: CustomFieldValueUpsertWithWhereUniqueWithoutFilamentInput | CustomFieldValueUpsertWithWhereUniqueWithoutFilamentInput[]
+    createMany?: CustomFieldValueCreateManyFilamentInputEnvelope
+    set?: CustomFieldValueWhereUniqueInput | CustomFieldValueWhereUniqueInput[]
+    disconnect?: CustomFieldValueWhereUniqueInput | CustomFieldValueWhereUniqueInput[]
+    delete?: CustomFieldValueWhereUniqueInput | CustomFieldValueWhereUniqueInput[]
+    connect?: CustomFieldValueWhereUniqueInput | CustomFieldValueWhereUniqueInput[]
+    update?: CustomFieldValueUpdateWithWhereUniqueWithoutFilamentInput | CustomFieldValueUpdateWithWhereUniqueWithoutFilamentInput[]
+    updateMany?: CustomFieldValueUpdateManyWithWhereWithoutFilamentInput | CustomFieldValueUpdateManyWithWhereWithoutFilamentInput[]
+    deleteMany?: CustomFieldValueScalarWhereInput | CustomFieldValueScalarWhereInput[]
+  }
+
+  export type FilamentColorStopUncheckedUpdateManyWithoutFilamentNestedInput = {
+    create?: XOR<FilamentColorStopCreateWithoutFilamentInput, FilamentColorStopUncheckedCreateWithoutFilamentInput> | FilamentColorStopCreateWithoutFilamentInput[] | FilamentColorStopUncheckedCreateWithoutFilamentInput[]
+    connectOrCreate?: FilamentColorStopCreateOrConnectWithoutFilamentInput | FilamentColorStopCreateOrConnectWithoutFilamentInput[]
+    upsert?: FilamentColorStopUpsertWithWhereUniqueWithoutFilamentInput | FilamentColorStopUpsertWithWhereUniqueWithoutFilamentInput[]
+    createMany?: FilamentColorStopCreateManyFilamentInputEnvelope
+    set?: FilamentColorStopWhereUniqueInput | FilamentColorStopWhereUniqueInput[]
+    disconnect?: FilamentColorStopWhereUniqueInput | FilamentColorStopWhereUniqueInput[]
+    delete?: FilamentColorStopWhereUniqueInput | FilamentColorStopWhereUniqueInput[]
+    connect?: FilamentColorStopWhereUniqueInput | FilamentColorStopWhereUniqueInput[]
+    update?: FilamentColorStopUpdateWithWhereUniqueWithoutFilamentInput | FilamentColorStopUpdateWithWhereUniqueWithoutFilamentInput[]
+    updateMany?: FilamentColorStopUpdateManyWithWhereWithoutFilamentInput | FilamentColorStopUpdateManyWithWhereWithoutFilamentInput[]
+    deleteMany?: FilamentColorStopScalarWhereInput | FilamentColorStopScalarWhereInput[]
+  }
+
+  export type SpoolUncheckedUpdateManyWithoutFilamentNestedInput = {
+    create?: XOR<SpoolCreateWithoutFilamentInput, SpoolUncheckedCreateWithoutFilamentInput> | SpoolCreateWithoutFilamentInput[] | SpoolUncheckedCreateWithoutFilamentInput[]
+    connectOrCreate?: SpoolCreateOrConnectWithoutFilamentInput | SpoolCreateOrConnectWithoutFilamentInput[]
+    upsert?: SpoolUpsertWithWhereUniqueWithoutFilamentInput | SpoolUpsertWithWhereUniqueWithoutFilamentInput[]
+    createMany?: SpoolCreateManyFilamentInputEnvelope
+    set?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
+    disconnect?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
+    delete?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
+    connect?: SpoolWhereUniqueInput | SpoolWhereUniqueInput[]
+    update?: SpoolUpdateWithWhereUniqueWithoutFilamentInput | SpoolUpdateWithWhereUniqueWithoutFilamentInput[]
+    updateMany?: SpoolUpdateManyWithWhereWithoutFilamentInput | SpoolUpdateManyWithWhereWithoutFilamentInput[]
+    deleteMany?: SpoolScalarWhereInput | SpoolScalarWhereInput[]
+  }
+
+  export type CustomFieldValueUncheckedUpdateManyWithoutFilamentNestedInput = {
+    create?: XOR<CustomFieldValueCreateWithoutFilamentInput, CustomFieldValueUncheckedCreateWithoutFilamentInput> | CustomFieldValueCreateWithoutFilamentInput[] | CustomFieldValueUncheckedCreateWithoutFilamentInput[]
+    connectOrCreate?: CustomFieldValueCreateOrConnectWithoutFilamentInput | CustomFieldValueCreateOrConnectWithoutFilamentInput[]
+    upsert?: CustomFieldValueUpsertWithWhereUniqueWithoutFilamentInput | CustomFieldValueUpsertWithWhereUniqueWithoutFilamentInput[]
+    createMany?: CustomFieldValueCreateManyFilamentInputEnvelope
+    set?: CustomFieldValueWhereUniqueInput | CustomFieldValueWhereUniqueInput[]
+    disconnect?: CustomFieldValueWhereUniqueInput | CustomFieldValueWhereUniqueInput[]
+    delete?: CustomFieldValueWhereUniqueInput | CustomFieldValueWhereUniqueInput[]
+    connect?: CustomFieldValueWhereUniqueInput | CustomFieldValueWhereUniqueInput[]
+    update?: CustomFieldValueUpdateWithWhereUniqueWithoutFilamentInput | CustomFieldValueUpdateWithWhereUniqueWithoutFilamentInput[]
+    updateMany?: CustomFieldValueUpdateManyWithWhereWithoutFilamentInput | CustomFieldValueUpdateManyWithWhereWithoutFilamentInput[]
+    deleteMany?: CustomFieldValueScalarWhereInput | CustomFieldValueScalarWhereInput[]
+  }
+
+  export type FilamentCreateNestedOneWithoutColorsInput = {
+    create?: XOR<FilamentCreateWithoutColorsInput, FilamentUncheckedCreateWithoutColorsInput>
+    connectOrCreate?: FilamentCreateOrConnectWithoutColorsInput
+    connect?: FilamentWhereUniqueInput
+  }
+
+  export type FilamentUpdateOneRequiredWithoutColorsNestedInput = {
+    create?: XOR<FilamentCreateWithoutColorsInput, FilamentUncheckedCreateWithoutColorsInput>
+    connectOrCreate?: FilamentCreateOrConnectWithoutColorsInput
+    upsert?: FilamentUpsertWithoutColorsInput
+    connect?: FilamentWhereUniqueInput
+    update?: XOR<XOR<FilamentUpdateToOneWithWhereWithoutColorsInput, FilamentUpdateWithoutColorsInput>, FilamentUncheckedUpdateWithoutColorsInput>
+  }
+
+  export type UserCreateNestedOneWithoutSpoolsInput = {
+    create?: XOR<UserCreateWithoutSpoolsInput, UserUncheckedCreateWithoutSpoolsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSpoolsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type FilamentCreateNestedOneWithoutSpoolsInput = {
+    create?: XOR<FilamentCreateWithoutSpoolsInput, FilamentUncheckedCreateWithoutSpoolsInput>
+    connectOrCreate?: FilamentCreateOrConnectWithoutSpoolsInput
+    connect?: FilamentWhereUniqueInput
+  }
+
+  export type LocationCreateNestedOneWithoutSpoolsInput = {
+    create?: XOR<LocationCreateWithoutSpoolsInput, LocationUncheckedCreateWithoutSpoolsInput>
+    connectOrCreate?: LocationCreateOrConnectWithoutSpoolsInput
+    connect?: LocationWhereUniqueInput
+  }
+
+  export type UsageCreateNestedManyWithoutSpoolInput = {
+    create?: XOR<UsageCreateWithoutSpoolInput, UsageUncheckedCreateWithoutSpoolInput> | UsageCreateWithoutSpoolInput[] | UsageUncheckedCreateWithoutSpoolInput[]
+    connectOrCreate?: UsageCreateOrConnectWithoutSpoolInput | UsageCreateOrConnectWithoutSpoolInput[]
+    createMany?: UsageCreateManySpoolInputEnvelope
+    connect?: UsageWhereUniqueInput | UsageWhereUniqueInput[]
+  }
+
+  export type UsageUncheckedCreateNestedManyWithoutSpoolInput = {
+    create?: XOR<UsageCreateWithoutSpoolInput, UsageUncheckedCreateWithoutSpoolInput> | UsageCreateWithoutSpoolInput[] | UsageUncheckedCreateWithoutSpoolInput[]
+    connectOrCreate?: UsageCreateOrConnectWithoutSpoolInput | UsageCreateOrConnectWithoutSpoolInput[]
+    createMany?: UsageCreateManySpoolInputEnvelope
+    connect?: UsageWhereUniqueInput | UsageWhereUniqueInput[]
+  }
+
   export type UserUpdateOneRequiredWithoutSpoolsNestedInput = {
     create?: XOR<UserCreateWithoutSpoolsInput, UserUncheckedCreateWithoutSpoolsInput>
     connectOrCreate?: UserCreateOrConnectWithoutSpoolsInput
@@ -20878,20 +22600,12 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSpoolsInput, UserUpdateWithoutSpoolsInput>, UserUncheckedUpdateWithoutSpoolsInput>
   }
 
-  export type BrandUpdateOneRequiredWithoutSpoolsNestedInput = {
-    create?: XOR<BrandCreateWithoutSpoolsInput, BrandUncheckedCreateWithoutSpoolsInput>
-    connectOrCreate?: BrandCreateOrConnectWithoutSpoolsInput
-    upsert?: BrandUpsertWithoutSpoolsInput
-    connect?: BrandWhereUniqueInput
-    update?: XOR<XOR<BrandUpdateToOneWithWhereWithoutSpoolsInput, BrandUpdateWithoutSpoolsInput>, BrandUncheckedUpdateWithoutSpoolsInput>
-  }
-
-  export type MaterialUpdateOneRequiredWithoutSpoolsNestedInput = {
-    create?: XOR<MaterialCreateWithoutSpoolsInput, MaterialUncheckedCreateWithoutSpoolsInput>
-    connectOrCreate?: MaterialCreateOrConnectWithoutSpoolsInput
-    upsert?: MaterialUpsertWithoutSpoolsInput
-    connect?: MaterialWhereUniqueInput
-    update?: XOR<XOR<MaterialUpdateToOneWithWhereWithoutSpoolsInput, MaterialUpdateWithoutSpoolsInput>, MaterialUncheckedUpdateWithoutSpoolsInput>
+  export type FilamentUpdateOneRequiredWithoutSpoolsNestedInput = {
+    create?: XOR<FilamentCreateWithoutSpoolsInput, FilamentUncheckedCreateWithoutSpoolsInput>
+    connectOrCreate?: FilamentCreateOrConnectWithoutSpoolsInput
+    upsert?: FilamentUpsertWithoutSpoolsInput
+    connect?: FilamentWhereUniqueInput
+    update?: XOR<XOR<FilamentUpdateToOneWithWhereWithoutSpoolsInput, FilamentUpdateWithoutSpoolsInput>, FilamentUncheckedUpdateWithoutSpoolsInput>
   }
 
   export type LocationUpdateOneWithoutSpoolsNestedInput = {
@@ -20902,20 +22616,6 @@ export namespace Prisma {
     delete?: LocationWhereInput | boolean
     connect?: LocationWhereUniqueInput
     update?: XOR<XOR<LocationUpdateToOneWithWhereWithoutSpoolsInput, LocationUpdateWithoutSpoolsInput>, LocationUncheckedUpdateWithoutSpoolsInput>
-  }
-
-  export type SpoolColorStopUpdateManyWithoutSpoolNestedInput = {
-    create?: XOR<SpoolColorStopCreateWithoutSpoolInput, SpoolColorStopUncheckedCreateWithoutSpoolInput> | SpoolColorStopCreateWithoutSpoolInput[] | SpoolColorStopUncheckedCreateWithoutSpoolInput[]
-    connectOrCreate?: SpoolColorStopCreateOrConnectWithoutSpoolInput | SpoolColorStopCreateOrConnectWithoutSpoolInput[]
-    upsert?: SpoolColorStopUpsertWithWhereUniqueWithoutSpoolInput | SpoolColorStopUpsertWithWhereUniqueWithoutSpoolInput[]
-    createMany?: SpoolColorStopCreateManySpoolInputEnvelope
-    set?: SpoolColorStopWhereUniqueInput | SpoolColorStopWhereUniqueInput[]
-    disconnect?: SpoolColorStopWhereUniqueInput | SpoolColorStopWhereUniqueInput[]
-    delete?: SpoolColorStopWhereUniqueInput | SpoolColorStopWhereUniqueInput[]
-    connect?: SpoolColorStopWhereUniqueInput | SpoolColorStopWhereUniqueInput[]
-    update?: SpoolColorStopUpdateWithWhereUniqueWithoutSpoolInput | SpoolColorStopUpdateWithWhereUniqueWithoutSpoolInput[]
-    updateMany?: SpoolColorStopUpdateManyWithWhereWithoutSpoolInput | SpoolColorStopUpdateManyWithWhereWithoutSpoolInput[]
-    deleteMany?: SpoolColorStopScalarWhereInput | SpoolColorStopScalarWhereInput[]
   }
 
   export type UsageUpdateManyWithoutSpoolNestedInput = {
@@ -20932,34 +22632,6 @@ export namespace Prisma {
     deleteMany?: UsageScalarWhereInput | UsageScalarWhereInput[]
   }
 
-  export type CustomFieldValueUpdateManyWithoutSpoolNestedInput = {
-    create?: XOR<CustomFieldValueCreateWithoutSpoolInput, CustomFieldValueUncheckedCreateWithoutSpoolInput> | CustomFieldValueCreateWithoutSpoolInput[] | CustomFieldValueUncheckedCreateWithoutSpoolInput[]
-    connectOrCreate?: CustomFieldValueCreateOrConnectWithoutSpoolInput | CustomFieldValueCreateOrConnectWithoutSpoolInput[]
-    upsert?: CustomFieldValueUpsertWithWhereUniqueWithoutSpoolInput | CustomFieldValueUpsertWithWhereUniqueWithoutSpoolInput[]
-    createMany?: CustomFieldValueCreateManySpoolInputEnvelope
-    set?: CustomFieldValueWhereUniqueInput | CustomFieldValueWhereUniqueInput[]
-    disconnect?: CustomFieldValueWhereUniqueInput | CustomFieldValueWhereUniqueInput[]
-    delete?: CustomFieldValueWhereUniqueInput | CustomFieldValueWhereUniqueInput[]
-    connect?: CustomFieldValueWhereUniqueInput | CustomFieldValueWhereUniqueInput[]
-    update?: CustomFieldValueUpdateWithWhereUniqueWithoutSpoolInput | CustomFieldValueUpdateWithWhereUniqueWithoutSpoolInput[]
-    updateMany?: CustomFieldValueUpdateManyWithWhereWithoutSpoolInput | CustomFieldValueUpdateManyWithWhereWithoutSpoolInput[]
-    deleteMany?: CustomFieldValueScalarWhereInput | CustomFieldValueScalarWhereInput[]
-  }
-
-  export type SpoolColorStopUncheckedUpdateManyWithoutSpoolNestedInput = {
-    create?: XOR<SpoolColorStopCreateWithoutSpoolInput, SpoolColorStopUncheckedCreateWithoutSpoolInput> | SpoolColorStopCreateWithoutSpoolInput[] | SpoolColorStopUncheckedCreateWithoutSpoolInput[]
-    connectOrCreate?: SpoolColorStopCreateOrConnectWithoutSpoolInput | SpoolColorStopCreateOrConnectWithoutSpoolInput[]
-    upsert?: SpoolColorStopUpsertWithWhereUniqueWithoutSpoolInput | SpoolColorStopUpsertWithWhereUniqueWithoutSpoolInput[]
-    createMany?: SpoolColorStopCreateManySpoolInputEnvelope
-    set?: SpoolColorStopWhereUniqueInput | SpoolColorStopWhereUniqueInput[]
-    disconnect?: SpoolColorStopWhereUniqueInput | SpoolColorStopWhereUniqueInput[]
-    delete?: SpoolColorStopWhereUniqueInput | SpoolColorStopWhereUniqueInput[]
-    connect?: SpoolColorStopWhereUniqueInput | SpoolColorStopWhereUniqueInput[]
-    update?: SpoolColorStopUpdateWithWhereUniqueWithoutSpoolInput | SpoolColorStopUpdateWithWhereUniqueWithoutSpoolInput[]
-    updateMany?: SpoolColorStopUpdateManyWithWhereWithoutSpoolInput | SpoolColorStopUpdateManyWithWhereWithoutSpoolInput[]
-    deleteMany?: SpoolColorStopScalarWhereInput | SpoolColorStopScalarWhereInput[]
-  }
-
   export type UsageUncheckedUpdateManyWithoutSpoolNestedInput = {
     create?: XOR<UsageCreateWithoutSpoolInput, UsageUncheckedCreateWithoutSpoolInput> | UsageCreateWithoutSpoolInput[] | UsageUncheckedCreateWithoutSpoolInput[]
     connectOrCreate?: UsageCreateOrConnectWithoutSpoolInput | UsageCreateOrConnectWithoutSpoolInput[]
@@ -20972,34 +22644,6 @@ export namespace Prisma {
     update?: UsageUpdateWithWhereUniqueWithoutSpoolInput | UsageUpdateWithWhereUniqueWithoutSpoolInput[]
     updateMany?: UsageUpdateManyWithWhereWithoutSpoolInput | UsageUpdateManyWithWhereWithoutSpoolInput[]
     deleteMany?: UsageScalarWhereInput | UsageScalarWhereInput[]
-  }
-
-  export type CustomFieldValueUncheckedUpdateManyWithoutSpoolNestedInput = {
-    create?: XOR<CustomFieldValueCreateWithoutSpoolInput, CustomFieldValueUncheckedCreateWithoutSpoolInput> | CustomFieldValueCreateWithoutSpoolInput[] | CustomFieldValueUncheckedCreateWithoutSpoolInput[]
-    connectOrCreate?: CustomFieldValueCreateOrConnectWithoutSpoolInput | CustomFieldValueCreateOrConnectWithoutSpoolInput[]
-    upsert?: CustomFieldValueUpsertWithWhereUniqueWithoutSpoolInput | CustomFieldValueUpsertWithWhereUniqueWithoutSpoolInput[]
-    createMany?: CustomFieldValueCreateManySpoolInputEnvelope
-    set?: CustomFieldValueWhereUniqueInput | CustomFieldValueWhereUniqueInput[]
-    disconnect?: CustomFieldValueWhereUniqueInput | CustomFieldValueWhereUniqueInput[]
-    delete?: CustomFieldValueWhereUniqueInput | CustomFieldValueWhereUniqueInput[]
-    connect?: CustomFieldValueWhereUniqueInput | CustomFieldValueWhereUniqueInput[]
-    update?: CustomFieldValueUpdateWithWhereUniqueWithoutSpoolInput | CustomFieldValueUpdateWithWhereUniqueWithoutSpoolInput[]
-    updateMany?: CustomFieldValueUpdateManyWithWhereWithoutSpoolInput | CustomFieldValueUpdateManyWithWhereWithoutSpoolInput[]
-    deleteMany?: CustomFieldValueScalarWhereInput | CustomFieldValueScalarWhereInput[]
-  }
-
-  export type SpoolCreateNestedOneWithoutColorsInput = {
-    create?: XOR<SpoolCreateWithoutColorsInput, SpoolUncheckedCreateWithoutColorsInput>
-    connectOrCreate?: SpoolCreateOrConnectWithoutColorsInput
-    connect?: SpoolWhereUniqueInput
-  }
-
-  export type SpoolUpdateOneRequiredWithoutColorsNestedInput = {
-    create?: XOR<SpoolCreateWithoutColorsInput, SpoolUncheckedCreateWithoutColorsInput>
-    connectOrCreate?: SpoolCreateOrConnectWithoutColorsInput
-    upsert?: SpoolUpsertWithoutColorsInput
-    connect?: SpoolWhereUniqueInput
-    update?: XOR<XOR<SpoolUpdateToOneWithWhereWithoutColorsInput, SpoolUpdateWithoutColorsInput>, SpoolUncheckedUpdateWithoutColorsInput>
   }
 
   export type SpoolCreateNestedOneWithoutUsagesInput = {
@@ -21078,10 +22722,10 @@ export namespace Prisma {
     connect?: CustomFieldWhereUniqueInput
   }
 
-  export type SpoolCreateNestedOneWithoutCustomFieldValuesInput = {
-    create?: XOR<SpoolCreateWithoutCustomFieldValuesInput, SpoolUncheckedCreateWithoutCustomFieldValuesInput>
-    connectOrCreate?: SpoolCreateOrConnectWithoutCustomFieldValuesInput
-    connect?: SpoolWhereUniqueInput
+  export type FilamentCreateNestedOneWithoutCustomFieldValuesInput = {
+    create?: XOR<FilamentCreateWithoutCustomFieldValuesInput, FilamentUncheckedCreateWithoutCustomFieldValuesInput>
+    connectOrCreate?: FilamentCreateOrConnectWithoutCustomFieldValuesInput
+    connect?: FilamentWhereUniqueInput
   }
 
   export type NullableBoolFieldUpdateOperationsInput = {
@@ -21096,12 +22740,12 @@ export namespace Prisma {
     update?: XOR<XOR<CustomFieldUpdateToOneWithWhereWithoutValuesInput, CustomFieldUpdateWithoutValuesInput>, CustomFieldUncheckedUpdateWithoutValuesInput>
   }
 
-  export type SpoolUpdateOneRequiredWithoutCustomFieldValuesNestedInput = {
-    create?: XOR<SpoolCreateWithoutCustomFieldValuesInput, SpoolUncheckedCreateWithoutCustomFieldValuesInput>
-    connectOrCreate?: SpoolCreateOrConnectWithoutCustomFieldValuesInput
-    upsert?: SpoolUpsertWithoutCustomFieldValuesInput
-    connect?: SpoolWhereUniqueInput
-    update?: XOR<XOR<SpoolUpdateToOneWithWhereWithoutCustomFieldValuesInput, SpoolUpdateWithoutCustomFieldValuesInput>, SpoolUncheckedUpdateWithoutCustomFieldValuesInput>
+  export type FilamentUpdateOneRequiredWithoutCustomFieldValuesNestedInput = {
+    create?: XOR<FilamentCreateWithoutCustomFieldValuesInput, FilamentUncheckedCreateWithoutCustomFieldValuesInput>
+    connectOrCreate?: FilamentCreateOrConnectWithoutCustomFieldValuesInput
+    upsert?: FilamentUpsertWithoutCustomFieldValuesInput
+    connect?: FilamentWhereUniqueInput
+    update?: XOR<XOR<FilamentUpdateToOneWithWhereWithoutCustomFieldValuesInput, FilamentUpdateWithoutCustomFieldValuesInput>, FilamentUncheckedUpdateWithoutCustomFieldValuesInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -21424,7 +23068,7 @@ export namespace Prisma {
     websiteUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    spools?: SpoolCreateNestedManyWithoutBrandInput
+    filaments?: FilamentCreateNestedManyWithoutBrandInput
   }
 
   export type BrandUncheckedCreateWithoutUserInput = {
@@ -21433,7 +23077,7 @@ export namespace Prisma {
     websiteUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    spools?: SpoolUncheckedCreateNestedManyWithoutBrandInput
+    filaments?: FilamentUncheckedCreateNestedManyWithoutBrandInput
   }
 
   export type BrandCreateOrConnectWithoutUserInput = {
@@ -21470,52 +23114,81 @@ export namespace Prisma {
     data: LocationCreateManyUserInput | LocationCreateManyUserInput[]
   }
 
-  export type SpoolCreateWithoutUserInput = {
+  export type FilamentCreateWithoutUserInput = {
     id?: string
     colorMode?: string
     colorName?: string | null
     diameterMm?: number
+    defaultWeightG?: number
+    productUrl?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    brand: BrandCreateNestedOneWithoutFilamentsInput
+    material: MaterialCreateNestedOneWithoutFilamentsInput
+    colors?: FilamentColorStopCreateNestedManyWithoutFilamentInput
+    spools?: SpoolCreateNestedManyWithoutFilamentInput
+    customFieldValues?: CustomFieldValueCreateNestedManyWithoutFilamentInput
+  }
+
+  export type FilamentUncheckedCreateWithoutUserInput = {
+    id?: string
+    brandId: string
+    materialId: string
+    colorMode?: string
+    colorName?: string | null
+    diameterMm?: number
+    defaultWeightG?: number
+    productUrl?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    colors?: FilamentColorStopUncheckedCreateNestedManyWithoutFilamentInput
+    spools?: SpoolUncheckedCreateNestedManyWithoutFilamentInput
+    customFieldValues?: CustomFieldValueUncheckedCreateNestedManyWithoutFilamentInput
+  }
+
+  export type FilamentCreateOrConnectWithoutUserInput = {
+    where: FilamentWhereUniqueInput
+    create: XOR<FilamentCreateWithoutUserInput, FilamentUncheckedCreateWithoutUserInput>
+  }
+
+  export type FilamentCreateManyUserInputEnvelope = {
+    data: FilamentCreateManyUserInput | FilamentCreateManyUserInput[]
+  }
+
+  export type SpoolCreateWithoutUserInput = {
+    id?: string
     initialWeightG: number
     remainingWeightG: number
     status?: string
     needsRepurchase?: boolean
-    productUrl?: string | null
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
     lastDriedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    brand: BrandCreateNestedOneWithoutSpoolsInput
-    material: MaterialCreateNestedOneWithoutSpoolsInput
+    filament: FilamentCreateNestedOneWithoutSpoolsInput
     location?: LocationCreateNestedOneWithoutSpoolsInput
-    colors?: SpoolColorStopCreateNestedManyWithoutSpoolInput
     usages?: UsageCreateNestedManyWithoutSpoolInput
-    customFieldValues?: CustomFieldValueCreateNestedManyWithoutSpoolInput
   }
 
   export type SpoolUncheckedCreateWithoutUserInput = {
     id?: string
-    brandId: string
-    materialId: string
+    filamentId: string
     locationId?: string | null
-    colorMode?: string
-    colorName?: string | null
-    diameterMm?: number
     initialWeightG: number
     remainingWeightG: number
     status?: string
     needsRepurchase?: boolean
-    productUrl?: string | null
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
     lastDriedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    colors?: SpoolColorStopUncheckedCreateNestedManyWithoutSpoolInput
     usages?: UsageUncheckedCreateNestedManyWithoutSpoolInput
-    customFieldValues?: CustomFieldValueUncheckedCreateNestedManyWithoutSpoolInput
   }
 
   export type SpoolCreateOrConnectWithoutUserInput = {
@@ -21686,6 +23359,40 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Location"> | Date | string
   }
 
+  export type FilamentUpsertWithWhereUniqueWithoutUserInput = {
+    where: FilamentWhereUniqueInput
+    update: XOR<FilamentUpdateWithoutUserInput, FilamentUncheckedUpdateWithoutUserInput>
+    create: XOR<FilamentCreateWithoutUserInput, FilamentUncheckedCreateWithoutUserInput>
+  }
+
+  export type FilamentUpdateWithWhereUniqueWithoutUserInput = {
+    where: FilamentWhereUniqueInput
+    data: XOR<FilamentUpdateWithoutUserInput, FilamentUncheckedUpdateWithoutUserInput>
+  }
+
+  export type FilamentUpdateManyWithWhereWithoutUserInput = {
+    where: FilamentScalarWhereInput
+    data: XOR<FilamentUpdateManyMutationInput, FilamentUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type FilamentScalarWhereInput = {
+    AND?: FilamentScalarWhereInput | FilamentScalarWhereInput[]
+    OR?: FilamentScalarWhereInput[]
+    NOT?: FilamentScalarWhereInput | FilamentScalarWhereInput[]
+    id?: StringFilter<"Filament"> | string
+    userId?: StringFilter<"Filament"> | string
+    brandId?: StringFilter<"Filament"> | string
+    materialId?: StringFilter<"Filament"> | string
+    colorMode?: StringFilter<"Filament"> | string
+    colorName?: StringNullableFilter<"Filament"> | string | null
+    diameterMm?: FloatFilter<"Filament"> | number
+    defaultWeightG?: IntFilter<"Filament"> | number
+    productUrl?: StringNullableFilter<"Filament"> | string | null
+    notes?: StringNullableFilter<"Filament"> | string | null
+    createdAt?: DateTimeFilter<"Filament"> | Date | string
+    updatedAt?: DateTimeFilter<"Filament"> | Date | string
+  }
+
   export type SpoolUpsertWithWhereUniqueWithoutUserInput = {
     where: SpoolWhereUniqueInput
     update: XOR<SpoolUpdateWithoutUserInput, SpoolUncheckedUpdateWithoutUserInput>
@@ -21708,17 +23415,12 @@ export namespace Prisma {
     NOT?: SpoolScalarWhereInput | SpoolScalarWhereInput[]
     id?: StringFilter<"Spool"> | string
     userId?: StringFilter<"Spool"> | string
-    brandId?: StringFilter<"Spool"> | string
-    materialId?: StringFilter<"Spool"> | string
+    filamentId?: StringFilter<"Spool"> | string
     locationId?: StringNullableFilter<"Spool"> | string | null
-    colorMode?: StringFilter<"Spool"> | string
-    colorName?: StringNullableFilter<"Spool"> | string | null
-    diameterMm?: FloatFilter<"Spool"> | number
     initialWeightG?: IntFilter<"Spool"> | number
     remainingWeightG?: IntFilter<"Spool"> | number
     status?: StringFilter<"Spool"> | string
     needsRepurchase?: BoolFilter<"Spool"> | boolean
-    productUrl?: StringNullableFilter<"Spool"> | string | null
     purchasedAt?: DateTimeNullableFilter<"Spool"> | Date | string | null
     priceCents?: IntNullableFilter<"Spool"> | number | null
     notes?: StringNullableFilter<"Spool"> | string | null
@@ -21773,6 +23475,7 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     brands?: BrandCreateNestedManyWithoutUserInput
     locations?: LocationCreateNestedManyWithoutUserInput
+    filaments?: FilamentCreateNestedManyWithoutUserInput
     spools?: SpoolCreateNestedManyWithoutUserInput
     customFields?: CustomFieldCreateNestedManyWithoutUserInput
   }
@@ -21789,6 +23492,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     brands?: BrandUncheckedCreateNestedManyWithoutUserInput
     locations?: LocationUncheckedCreateNestedManyWithoutUserInput
+    filaments?: FilamentUncheckedCreateNestedManyWithoutUserInput
     spools?: SpoolUncheckedCreateNestedManyWithoutUserInput
     customFields?: CustomFieldUncheckedCreateNestedManyWithoutUserInput
   }
@@ -21821,6 +23525,7 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     brands?: BrandUpdateManyWithoutUserNestedInput
     locations?: LocationUpdateManyWithoutUserNestedInput
+    filaments?: FilamentUpdateManyWithoutUserNestedInput
     spools?: SpoolUpdateManyWithoutUserNestedInput
     customFields?: CustomFieldUpdateManyWithoutUserNestedInput
   }
@@ -21837,6 +23542,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     brands?: BrandUncheckedUpdateManyWithoutUserNestedInput
     locations?: LocationUncheckedUpdateManyWithoutUserNestedInput
+    filaments?: FilamentUncheckedUpdateManyWithoutUserNestedInput
     spools?: SpoolUncheckedUpdateManyWithoutUserNestedInput
     customFields?: CustomFieldUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -21853,6 +23559,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     brands?: BrandCreateNestedManyWithoutUserInput
     locations?: LocationCreateNestedManyWithoutUserInput
+    filaments?: FilamentCreateNestedManyWithoutUserInput
     spools?: SpoolCreateNestedManyWithoutUserInput
     customFields?: CustomFieldCreateNestedManyWithoutUserInput
   }
@@ -21869,6 +23576,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     brands?: BrandUncheckedCreateNestedManyWithoutUserInput
     locations?: LocationUncheckedCreateNestedManyWithoutUserInput
+    filaments?: FilamentUncheckedCreateNestedManyWithoutUserInput
     spools?: SpoolUncheckedCreateNestedManyWithoutUserInput
     customFields?: CustomFieldUncheckedCreateNestedManyWithoutUserInput
   }
@@ -21901,6 +23609,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     brands?: BrandUpdateManyWithoutUserNestedInput
     locations?: LocationUpdateManyWithoutUserNestedInput
+    filaments?: FilamentUpdateManyWithoutUserNestedInput
     spools?: SpoolUpdateManyWithoutUserNestedInput
     customFields?: CustomFieldUpdateManyWithoutUserNestedInput
   }
@@ -21917,6 +23626,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     brands?: BrandUncheckedUpdateManyWithoutUserNestedInput
     locations?: LocationUncheckedUpdateManyWithoutUserNestedInput
+    filaments?: FilamentUncheckedUpdateManyWithoutUserNestedInput
     spools?: SpoolUncheckedUpdateManyWithoutUserNestedInput
     customFields?: CustomFieldUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -21933,6 +23643,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     locations?: LocationCreateNestedManyWithoutUserInput
+    filaments?: FilamentCreateNestedManyWithoutUserInput
     spools?: SpoolCreateNestedManyWithoutUserInput
     customFields?: CustomFieldCreateNestedManyWithoutUserInput
   }
@@ -21949,6 +23660,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     locations?: LocationUncheckedCreateNestedManyWithoutUserInput
+    filaments?: FilamentUncheckedCreateNestedManyWithoutUserInput
     spools?: SpoolUncheckedCreateNestedManyWithoutUserInput
     customFields?: CustomFieldUncheckedCreateNestedManyWithoutUserInput
   }
@@ -21958,61 +23670,47 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutBrandsInput, UserUncheckedCreateWithoutBrandsInput>
   }
 
-  export type SpoolCreateWithoutBrandInput = {
+  export type FilamentCreateWithoutBrandInput = {
     id?: string
     colorMode?: string
     colorName?: string | null
     diameterMm?: number
-    initialWeightG: number
-    remainingWeightG: number
-    status?: string
-    needsRepurchase?: boolean
+    defaultWeightG?: number
     productUrl?: string | null
-    purchasedAt?: Date | string | null
-    priceCents?: number | null
     notes?: string | null
-    lastDriedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutSpoolsInput
-    material: MaterialCreateNestedOneWithoutSpoolsInput
-    location?: LocationCreateNestedOneWithoutSpoolsInput
-    colors?: SpoolColorStopCreateNestedManyWithoutSpoolInput
-    usages?: UsageCreateNestedManyWithoutSpoolInput
-    customFieldValues?: CustomFieldValueCreateNestedManyWithoutSpoolInput
+    user: UserCreateNestedOneWithoutFilamentsInput
+    material: MaterialCreateNestedOneWithoutFilamentsInput
+    colors?: FilamentColorStopCreateNestedManyWithoutFilamentInput
+    spools?: SpoolCreateNestedManyWithoutFilamentInput
+    customFieldValues?: CustomFieldValueCreateNestedManyWithoutFilamentInput
   }
 
-  export type SpoolUncheckedCreateWithoutBrandInput = {
+  export type FilamentUncheckedCreateWithoutBrandInput = {
     id?: string
     userId: string
     materialId: string
-    locationId?: string | null
     colorMode?: string
     colorName?: string | null
     diameterMm?: number
-    initialWeightG: number
-    remainingWeightG: number
-    status?: string
-    needsRepurchase?: boolean
+    defaultWeightG?: number
     productUrl?: string | null
-    purchasedAt?: Date | string | null
-    priceCents?: number | null
     notes?: string | null
-    lastDriedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    colors?: SpoolColorStopUncheckedCreateNestedManyWithoutSpoolInput
-    usages?: UsageUncheckedCreateNestedManyWithoutSpoolInput
-    customFieldValues?: CustomFieldValueUncheckedCreateNestedManyWithoutSpoolInput
+    colors?: FilamentColorStopUncheckedCreateNestedManyWithoutFilamentInput
+    spools?: SpoolUncheckedCreateNestedManyWithoutFilamentInput
+    customFieldValues?: CustomFieldValueUncheckedCreateNestedManyWithoutFilamentInput
   }
 
-  export type SpoolCreateOrConnectWithoutBrandInput = {
-    where: SpoolWhereUniqueInput
-    create: XOR<SpoolCreateWithoutBrandInput, SpoolUncheckedCreateWithoutBrandInput>
+  export type FilamentCreateOrConnectWithoutBrandInput = {
+    where: FilamentWhereUniqueInput
+    create: XOR<FilamentCreateWithoutBrandInput, FilamentUncheckedCreateWithoutBrandInput>
   }
 
-  export type SpoolCreateManyBrandInputEnvelope = {
-    data: SpoolCreateManyBrandInput | SpoolCreateManyBrandInput[]
+  export type FilamentCreateManyBrandInputEnvelope = {
+    data: FilamentCreateManyBrandInput | FilamentCreateManyBrandInput[]
   }
 
   export type UserUpsertWithoutBrandsInput = {
@@ -22038,6 +23736,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     locations?: LocationUpdateManyWithoutUserNestedInput
+    filaments?: FilamentUpdateManyWithoutUserNestedInput
     spools?: SpoolUpdateManyWithoutUserNestedInput
     customFields?: CustomFieldUpdateManyWithoutUserNestedInput
   }
@@ -22054,97 +23753,84 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     locations?: LocationUncheckedUpdateManyWithoutUserNestedInput
+    filaments?: FilamentUncheckedUpdateManyWithoutUserNestedInput
     spools?: SpoolUncheckedUpdateManyWithoutUserNestedInput
     customFields?: CustomFieldUncheckedUpdateManyWithoutUserNestedInput
   }
 
-  export type SpoolUpsertWithWhereUniqueWithoutBrandInput = {
-    where: SpoolWhereUniqueInput
-    update: XOR<SpoolUpdateWithoutBrandInput, SpoolUncheckedUpdateWithoutBrandInput>
-    create: XOR<SpoolCreateWithoutBrandInput, SpoolUncheckedCreateWithoutBrandInput>
+  export type FilamentUpsertWithWhereUniqueWithoutBrandInput = {
+    where: FilamentWhereUniqueInput
+    update: XOR<FilamentUpdateWithoutBrandInput, FilamentUncheckedUpdateWithoutBrandInput>
+    create: XOR<FilamentCreateWithoutBrandInput, FilamentUncheckedCreateWithoutBrandInput>
   }
 
-  export type SpoolUpdateWithWhereUniqueWithoutBrandInput = {
-    where: SpoolWhereUniqueInput
-    data: XOR<SpoolUpdateWithoutBrandInput, SpoolUncheckedUpdateWithoutBrandInput>
+  export type FilamentUpdateWithWhereUniqueWithoutBrandInput = {
+    where: FilamentWhereUniqueInput
+    data: XOR<FilamentUpdateWithoutBrandInput, FilamentUncheckedUpdateWithoutBrandInput>
   }
 
-  export type SpoolUpdateManyWithWhereWithoutBrandInput = {
-    where: SpoolScalarWhereInput
-    data: XOR<SpoolUpdateManyMutationInput, SpoolUncheckedUpdateManyWithoutBrandInput>
+  export type FilamentUpdateManyWithWhereWithoutBrandInput = {
+    where: FilamentScalarWhereInput
+    data: XOR<FilamentUpdateManyMutationInput, FilamentUncheckedUpdateManyWithoutBrandInput>
   }
 
-  export type SpoolCreateWithoutMaterialInput = {
+  export type FilamentCreateWithoutMaterialInput = {
     id?: string
     colorMode?: string
     colorName?: string | null
     diameterMm?: number
-    initialWeightG: number
-    remainingWeightG: number
-    status?: string
-    needsRepurchase?: boolean
+    defaultWeightG?: number
     productUrl?: string | null
-    purchasedAt?: Date | string | null
-    priceCents?: number | null
     notes?: string | null
-    lastDriedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutSpoolsInput
-    brand: BrandCreateNestedOneWithoutSpoolsInput
-    location?: LocationCreateNestedOneWithoutSpoolsInput
-    colors?: SpoolColorStopCreateNestedManyWithoutSpoolInput
-    usages?: UsageCreateNestedManyWithoutSpoolInput
-    customFieldValues?: CustomFieldValueCreateNestedManyWithoutSpoolInput
+    user: UserCreateNestedOneWithoutFilamentsInput
+    brand: BrandCreateNestedOneWithoutFilamentsInput
+    colors?: FilamentColorStopCreateNestedManyWithoutFilamentInput
+    spools?: SpoolCreateNestedManyWithoutFilamentInput
+    customFieldValues?: CustomFieldValueCreateNestedManyWithoutFilamentInput
   }
 
-  export type SpoolUncheckedCreateWithoutMaterialInput = {
+  export type FilamentUncheckedCreateWithoutMaterialInput = {
     id?: string
     userId: string
     brandId: string
-    locationId?: string | null
     colorMode?: string
     colorName?: string | null
     diameterMm?: number
-    initialWeightG: number
-    remainingWeightG: number
-    status?: string
-    needsRepurchase?: boolean
+    defaultWeightG?: number
     productUrl?: string | null
-    purchasedAt?: Date | string | null
-    priceCents?: number | null
     notes?: string | null
-    lastDriedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    colors?: SpoolColorStopUncheckedCreateNestedManyWithoutSpoolInput
-    usages?: UsageUncheckedCreateNestedManyWithoutSpoolInput
-    customFieldValues?: CustomFieldValueUncheckedCreateNestedManyWithoutSpoolInput
+    colors?: FilamentColorStopUncheckedCreateNestedManyWithoutFilamentInput
+    spools?: SpoolUncheckedCreateNestedManyWithoutFilamentInput
+    customFieldValues?: CustomFieldValueUncheckedCreateNestedManyWithoutFilamentInput
   }
 
-  export type SpoolCreateOrConnectWithoutMaterialInput = {
-    where: SpoolWhereUniqueInput
-    create: XOR<SpoolCreateWithoutMaterialInput, SpoolUncheckedCreateWithoutMaterialInput>
+  export type FilamentCreateOrConnectWithoutMaterialInput = {
+    where: FilamentWhereUniqueInput
+    create: XOR<FilamentCreateWithoutMaterialInput, FilamentUncheckedCreateWithoutMaterialInput>
   }
 
-  export type SpoolCreateManyMaterialInputEnvelope = {
-    data: SpoolCreateManyMaterialInput | SpoolCreateManyMaterialInput[]
+  export type FilamentCreateManyMaterialInputEnvelope = {
+    data: FilamentCreateManyMaterialInput | FilamentCreateManyMaterialInput[]
   }
 
-  export type SpoolUpsertWithWhereUniqueWithoutMaterialInput = {
-    where: SpoolWhereUniqueInput
-    update: XOR<SpoolUpdateWithoutMaterialInput, SpoolUncheckedUpdateWithoutMaterialInput>
-    create: XOR<SpoolCreateWithoutMaterialInput, SpoolUncheckedCreateWithoutMaterialInput>
+  export type FilamentUpsertWithWhereUniqueWithoutMaterialInput = {
+    where: FilamentWhereUniqueInput
+    update: XOR<FilamentUpdateWithoutMaterialInput, FilamentUncheckedUpdateWithoutMaterialInput>
+    create: XOR<FilamentCreateWithoutMaterialInput, FilamentUncheckedCreateWithoutMaterialInput>
   }
 
-  export type SpoolUpdateWithWhereUniqueWithoutMaterialInput = {
-    where: SpoolWhereUniqueInput
-    data: XOR<SpoolUpdateWithoutMaterialInput, SpoolUncheckedUpdateWithoutMaterialInput>
+  export type FilamentUpdateWithWhereUniqueWithoutMaterialInput = {
+    where: FilamentWhereUniqueInput
+    data: XOR<FilamentUpdateWithoutMaterialInput, FilamentUncheckedUpdateWithoutMaterialInput>
   }
 
-  export type SpoolUpdateManyWithWhereWithoutMaterialInput = {
-    where: SpoolScalarWhereInput
-    data: XOR<SpoolUpdateManyMutationInput, SpoolUncheckedUpdateManyWithoutMaterialInput>
+  export type FilamentUpdateManyWithWhereWithoutMaterialInput = {
+    where: FilamentScalarWhereInput
+    data: XOR<FilamentUpdateManyMutationInput, FilamentUncheckedUpdateManyWithoutMaterialInput>
   }
 
   export type UserCreateWithoutLocationsInput = {
@@ -22159,6 +23845,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     brands?: BrandCreateNestedManyWithoutUserInput
+    filaments?: FilamentCreateNestedManyWithoutUserInput
     spools?: SpoolCreateNestedManyWithoutUserInput
     customFields?: CustomFieldCreateNestedManyWithoutUserInput
   }
@@ -22175,6 +23862,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     brands?: BrandUncheckedCreateNestedManyWithoutUserInput
+    filaments?: FilamentUncheckedCreateNestedManyWithoutUserInput
     spools?: SpoolUncheckedCreateNestedManyWithoutUserInput
     customFields?: CustomFieldUncheckedCreateNestedManyWithoutUserInput
   }
@@ -22186,14 +23874,10 @@ export namespace Prisma {
 
   export type SpoolCreateWithoutLocationInput = {
     id?: string
-    colorMode?: string
-    colorName?: string | null
-    diameterMm?: number
     initialWeightG: number
     remainingWeightG: number
     status?: string
     needsRepurchase?: boolean
-    productUrl?: string | null
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
@@ -22201,35 +23885,25 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutSpoolsInput
-    brand: BrandCreateNestedOneWithoutSpoolsInput
-    material: MaterialCreateNestedOneWithoutSpoolsInput
-    colors?: SpoolColorStopCreateNestedManyWithoutSpoolInput
+    filament: FilamentCreateNestedOneWithoutSpoolsInput
     usages?: UsageCreateNestedManyWithoutSpoolInput
-    customFieldValues?: CustomFieldValueCreateNestedManyWithoutSpoolInput
   }
 
   export type SpoolUncheckedCreateWithoutLocationInput = {
     id?: string
     userId: string
-    brandId: string
-    materialId: string
-    colorMode?: string
-    colorName?: string | null
-    diameterMm?: number
+    filamentId: string
     initialWeightG: number
     remainingWeightG: number
     status?: string
     needsRepurchase?: boolean
-    productUrl?: string | null
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
     lastDriedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    colors?: SpoolColorStopUncheckedCreateNestedManyWithoutSpoolInput
     usages?: UsageUncheckedCreateNestedManyWithoutSpoolInput
-    customFieldValues?: CustomFieldValueUncheckedCreateNestedManyWithoutSpoolInput
   }
 
   export type SpoolCreateOrConnectWithoutLocationInput = {
@@ -22264,6 +23938,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     brands?: BrandUpdateManyWithoutUserNestedInput
+    filaments?: FilamentUpdateManyWithoutUserNestedInput
     spools?: SpoolUpdateManyWithoutUserNestedInput
     customFields?: CustomFieldUpdateManyWithoutUserNestedInput
   }
@@ -22280,6 +23955,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     brands?: BrandUncheckedUpdateManyWithoutUserNestedInput
+    filaments?: FilamentUncheckedUpdateManyWithoutUserNestedInput
     spools?: SpoolUncheckedUpdateManyWithoutUserNestedInput
     customFields?: CustomFieldUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -22300,6 +23976,458 @@ export namespace Prisma {
     data: XOR<SpoolUpdateManyMutationInput, SpoolUncheckedUpdateManyWithoutLocationInput>
   }
 
+  export type UserCreateWithoutFilamentsInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    role?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    brands?: BrandCreateNestedManyWithoutUserInput
+    locations?: LocationCreateNestedManyWithoutUserInput
+    spools?: SpoolCreateNestedManyWithoutUserInput
+    customFields?: CustomFieldCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutFilamentsInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    role?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    brands?: BrandUncheckedCreateNestedManyWithoutUserInput
+    locations?: LocationUncheckedCreateNestedManyWithoutUserInput
+    spools?: SpoolUncheckedCreateNestedManyWithoutUserInput
+    customFields?: CustomFieldUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutFilamentsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutFilamentsInput, UserUncheckedCreateWithoutFilamentsInput>
+  }
+
+  export type BrandCreateWithoutFilamentsInput = {
+    id?: string
+    name: string
+    websiteUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutBrandsInput
+  }
+
+  export type BrandUncheckedCreateWithoutFilamentsInput = {
+    id?: string
+    name: string
+    websiteUrl?: string | null
+    userId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BrandCreateOrConnectWithoutFilamentsInput = {
+    where: BrandWhereUniqueInput
+    create: XOR<BrandCreateWithoutFilamentsInput, BrandUncheckedCreateWithoutFilamentsInput>
+  }
+
+  export type MaterialCreateWithoutFilamentsInput = {
+    id?: string
+    name: string
+    density?: number | null
+    maxNozzleC?: number | null
+    maxBedC?: number | null
+    minNozzleC?: number | null
+    minBedC?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MaterialUncheckedCreateWithoutFilamentsInput = {
+    id?: string
+    name: string
+    density?: number | null
+    maxNozzleC?: number | null
+    maxBedC?: number | null
+    minNozzleC?: number | null
+    minBedC?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MaterialCreateOrConnectWithoutFilamentsInput = {
+    where: MaterialWhereUniqueInput
+    create: XOR<MaterialCreateWithoutFilamentsInput, MaterialUncheckedCreateWithoutFilamentsInput>
+  }
+
+  export type FilamentColorStopCreateWithoutFilamentInput = {
+    id?: string
+    hex: string
+    name?: string | null
+    position: number
+    weight?: number | null
+  }
+
+  export type FilamentColorStopUncheckedCreateWithoutFilamentInput = {
+    id?: string
+    hex: string
+    name?: string | null
+    position: number
+    weight?: number | null
+  }
+
+  export type FilamentColorStopCreateOrConnectWithoutFilamentInput = {
+    where: FilamentColorStopWhereUniqueInput
+    create: XOR<FilamentColorStopCreateWithoutFilamentInput, FilamentColorStopUncheckedCreateWithoutFilamentInput>
+  }
+
+  export type FilamentColorStopCreateManyFilamentInputEnvelope = {
+    data: FilamentColorStopCreateManyFilamentInput | FilamentColorStopCreateManyFilamentInput[]
+  }
+
+  export type SpoolCreateWithoutFilamentInput = {
+    id?: string
+    initialWeightG: number
+    remainingWeightG: number
+    status?: string
+    needsRepurchase?: boolean
+    purchasedAt?: Date | string | null
+    priceCents?: number | null
+    notes?: string | null
+    lastDriedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutSpoolsInput
+    location?: LocationCreateNestedOneWithoutSpoolsInput
+    usages?: UsageCreateNestedManyWithoutSpoolInput
+  }
+
+  export type SpoolUncheckedCreateWithoutFilamentInput = {
+    id?: string
+    userId: string
+    locationId?: string | null
+    initialWeightG: number
+    remainingWeightG: number
+    status?: string
+    needsRepurchase?: boolean
+    purchasedAt?: Date | string | null
+    priceCents?: number | null
+    notes?: string | null
+    lastDriedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    usages?: UsageUncheckedCreateNestedManyWithoutSpoolInput
+  }
+
+  export type SpoolCreateOrConnectWithoutFilamentInput = {
+    where: SpoolWhereUniqueInput
+    create: XOR<SpoolCreateWithoutFilamentInput, SpoolUncheckedCreateWithoutFilamentInput>
+  }
+
+  export type SpoolCreateManyFilamentInputEnvelope = {
+    data: SpoolCreateManyFilamentInput | SpoolCreateManyFilamentInput[]
+  }
+
+  export type CustomFieldValueCreateWithoutFilamentInput = {
+    id?: string
+    valueText?: string | null
+    valueNumber?: number | null
+    valueBoolean?: boolean | null
+    valueDate?: Date | string | null
+    field: CustomFieldCreateNestedOneWithoutValuesInput
+  }
+
+  export type CustomFieldValueUncheckedCreateWithoutFilamentInput = {
+    id?: string
+    fieldId: string
+    valueText?: string | null
+    valueNumber?: number | null
+    valueBoolean?: boolean | null
+    valueDate?: Date | string | null
+  }
+
+  export type CustomFieldValueCreateOrConnectWithoutFilamentInput = {
+    where: CustomFieldValueWhereUniqueInput
+    create: XOR<CustomFieldValueCreateWithoutFilamentInput, CustomFieldValueUncheckedCreateWithoutFilamentInput>
+  }
+
+  export type CustomFieldValueCreateManyFilamentInputEnvelope = {
+    data: CustomFieldValueCreateManyFilamentInput | CustomFieldValueCreateManyFilamentInput[]
+  }
+
+  export type UserUpsertWithoutFilamentsInput = {
+    update: XOR<UserUpdateWithoutFilamentsInput, UserUncheckedUpdateWithoutFilamentsInput>
+    create: XOR<UserCreateWithoutFilamentsInput, UserUncheckedCreateWithoutFilamentsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutFilamentsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutFilamentsInput, UserUncheckedUpdateWithoutFilamentsInput>
+  }
+
+  export type UserUpdateWithoutFilamentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    brands?: BrandUpdateManyWithoutUserNestedInput
+    locations?: LocationUpdateManyWithoutUserNestedInput
+    spools?: SpoolUpdateManyWithoutUserNestedInput
+    customFields?: CustomFieldUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutFilamentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    brands?: BrandUncheckedUpdateManyWithoutUserNestedInput
+    locations?: LocationUncheckedUpdateManyWithoutUserNestedInput
+    spools?: SpoolUncheckedUpdateManyWithoutUserNestedInput
+    customFields?: CustomFieldUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type BrandUpsertWithoutFilamentsInput = {
+    update: XOR<BrandUpdateWithoutFilamentsInput, BrandUncheckedUpdateWithoutFilamentsInput>
+    create: XOR<BrandCreateWithoutFilamentsInput, BrandUncheckedCreateWithoutFilamentsInput>
+    where?: BrandWhereInput
+  }
+
+  export type BrandUpdateToOneWithWhereWithoutFilamentsInput = {
+    where?: BrandWhereInput
+    data: XOR<BrandUpdateWithoutFilamentsInput, BrandUncheckedUpdateWithoutFilamentsInput>
+  }
+
+  export type BrandUpdateWithoutFilamentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    websiteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutBrandsNestedInput
+  }
+
+  export type BrandUncheckedUpdateWithoutFilamentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    websiteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MaterialUpsertWithoutFilamentsInput = {
+    update: XOR<MaterialUpdateWithoutFilamentsInput, MaterialUncheckedUpdateWithoutFilamentsInput>
+    create: XOR<MaterialCreateWithoutFilamentsInput, MaterialUncheckedCreateWithoutFilamentsInput>
+    where?: MaterialWhereInput
+  }
+
+  export type MaterialUpdateToOneWithWhereWithoutFilamentsInput = {
+    where?: MaterialWhereInput
+    data: XOR<MaterialUpdateWithoutFilamentsInput, MaterialUncheckedUpdateWithoutFilamentsInput>
+  }
+
+  export type MaterialUpdateWithoutFilamentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    density?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxNozzleC?: NullableIntFieldUpdateOperationsInput | number | null
+    maxBedC?: NullableIntFieldUpdateOperationsInput | number | null
+    minNozzleC?: NullableIntFieldUpdateOperationsInput | number | null
+    minBedC?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MaterialUncheckedUpdateWithoutFilamentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    density?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxNozzleC?: NullableIntFieldUpdateOperationsInput | number | null
+    maxBedC?: NullableIntFieldUpdateOperationsInput | number | null
+    minNozzleC?: NullableIntFieldUpdateOperationsInput | number | null
+    minBedC?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FilamentColorStopUpsertWithWhereUniqueWithoutFilamentInput = {
+    where: FilamentColorStopWhereUniqueInput
+    update: XOR<FilamentColorStopUpdateWithoutFilamentInput, FilamentColorStopUncheckedUpdateWithoutFilamentInput>
+    create: XOR<FilamentColorStopCreateWithoutFilamentInput, FilamentColorStopUncheckedCreateWithoutFilamentInput>
+  }
+
+  export type FilamentColorStopUpdateWithWhereUniqueWithoutFilamentInput = {
+    where: FilamentColorStopWhereUniqueInput
+    data: XOR<FilamentColorStopUpdateWithoutFilamentInput, FilamentColorStopUncheckedUpdateWithoutFilamentInput>
+  }
+
+  export type FilamentColorStopUpdateManyWithWhereWithoutFilamentInput = {
+    where: FilamentColorStopScalarWhereInput
+    data: XOR<FilamentColorStopUpdateManyMutationInput, FilamentColorStopUncheckedUpdateManyWithoutFilamentInput>
+  }
+
+  export type FilamentColorStopScalarWhereInput = {
+    AND?: FilamentColorStopScalarWhereInput | FilamentColorStopScalarWhereInput[]
+    OR?: FilamentColorStopScalarWhereInput[]
+    NOT?: FilamentColorStopScalarWhereInput | FilamentColorStopScalarWhereInput[]
+    id?: StringFilter<"FilamentColorStop"> | string
+    filamentId?: StringFilter<"FilamentColorStop"> | string
+    hex?: StringFilter<"FilamentColorStop"> | string
+    name?: StringNullableFilter<"FilamentColorStop"> | string | null
+    position?: FloatFilter<"FilamentColorStop"> | number
+    weight?: FloatNullableFilter<"FilamentColorStop"> | number | null
+  }
+
+  export type SpoolUpsertWithWhereUniqueWithoutFilamentInput = {
+    where: SpoolWhereUniqueInput
+    update: XOR<SpoolUpdateWithoutFilamentInput, SpoolUncheckedUpdateWithoutFilamentInput>
+    create: XOR<SpoolCreateWithoutFilamentInput, SpoolUncheckedCreateWithoutFilamentInput>
+  }
+
+  export type SpoolUpdateWithWhereUniqueWithoutFilamentInput = {
+    where: SpoolWhereUniqueInput
+    data: XOR<SpoolUpdateWithoutFilamentInput, SpoolUncheckedUpdateWithoutFilamentInput>
+  }
+
+  export type SpoolUpdateManyWithWhereWithoutFilamentInput = {
+    where: SpoolScalarWhereInput
+    data: XOR<SpoolUpdateManyMutationInput, SpoolUncheckedUpdateManyWithoutFilamentInput>
+  }
+
+  export type CustomFieldValueUpsertWithWhereUniqueWithoutFilamentInput = {
+    where: CustomFieldValueWhereUniqueInput
+    update: XOR<CustomFieldValueUpdateWithoutFilamentInput, CustomFieldValueUncheckedUpdateWithoutFilamentInput>
+    create: XOR<CustomFieldValueCreateWithoutFilamentInput, CustomFieldValueUncheckedCreateWithoutFilamentInput>
+  }
+
+  export type CustomFieldValueUpdateWithWhereUniqueWithoutFilamentInput = {
+    where: CustomFieldValueWhereUniqueInput
+    data: XOR<CustomFieldValueUpdateWithoutFilamentInput, CustomFieldValueUncheckedUpdateWithoutFilamentInput>
+  }
+
+  export type CustomFieldValueUpdateManyWithWhereWithoutFilamentInput = {
+    where: CustomFieldValueScalarWhereInput
+    data: XOR<CustomFieldValueUpdateManyMutationInput, CustomFieldValueUncheckedUpdateManyWithoutFilamentInput>
+  }
+
+  export type CustomFieldValueScalarWhereInput = {
+    AND?: CustomFieldValueScalarWhereInput | CustomFieldValueScalarWhereInput[]
+    OR?: CustomFieldValueScalarWhereInput[]
+    NOT?: CustomFieldValueScalarWhereInput | CustomFieldValueScalarWhereInput[]
+    id?: StringFilter<"CustomFieldValue"> | string
+    fieldId?: StringFilter<"CustomFieldValue"> | string
+    filamentId?: StringFilter<"CustomFieldValue"> | string
+    valueText?: StringNullableFilter<"CustomFieldValue"> | string | null
+    valueNumber?: FloatNullableFilter<"CustomFieldValue"> | number | null
+    valueBoolean?: BoolNullableFilter<"CustomFieldValue"> | boolean | null
+    valueDate?: DateTimeNullableFilter<"CustomFieldValue"> | Date | string | null
+  }
+
+  export type FilamentCreateWithoutColorsInput = {
+    id?: string
+    colorMode?: string
+    colorName?: string | null
+    diameterMm?: number
+    defaultWeightG?: number
+    productUrl?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutFilamentsInput
+    brand: BrandCreateNestedOneWithoutFilamentsInput
+    material: MaterialCreateNestedOneWithoutFilamentsInput
+    spools?: SpoolCreateNestedManyWithoutFilamentInput
+    customFieldValues?: CustomFieldValueCreateNestedManyWithoutFilamentInput
+  }
+
+  export type FilamentUncheckedCreateWithoutColorsInput = {
+    id?: string
+    userId: string
+    brandId: string
+    materialId: string
+    colorMode?: string
+    colorName?: string | null
+    diameterMm?: number
+    defaultWeightG?: number
+    productUrl?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    spools?: SpoolUncheckedCreateNestedManyWithoutFilamentInput
+    customFieldValues?: CustomFieldValueUncheckedCreateNestedManyWithoutFilamentInput
+  }
+
+  export type FilamentCreateOrConnectWithoutColorsInput = {
+    where: FilamentWhereUniqueInput
+    create: XOR<FilamentCreateWithoutColorsInput, FilamentUncheckedCreateWithoutColorsInput>
+  }
+
+  export type FilamentUpsertWithoutColorsInput = {
+    update: XOR<FilamentUpdateWithoutColorsInput, FilamentUncheckedUpdateWithoutColorsInput>
+    create: XOR<FilamentCreateWithoutColorsInput, FilamentUncheckedCreateWithoutColorsInput>
+    where?: FilamentWhereInput
+  }
+
+  export type FilamentUpdateToOneWithWhereWithoutColorsInput = {
+    where?: FilamentWhereInput
+    data: XOR<FilamentUpdateWithoutColorsInput, FilamentUncheckedUpdateWithoutColorsInput>
+  }
+
+  export type FilamentUpdateWithoutColorsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    colorMode?: StringFieldUpdateOperationsInput | string
+    colorName?: NullableStringFieldUpdateOperationsInput | string | null
+    diameterMm?: FloatFieldUpdateOperationsInput | number
+    defaultWeightG?: IntFieldUpdateOperationsInput | number
+    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutFilamentsNestedInput
+    brand?: BrandUpdateOneRequiredWithoutFilamentsNestedInput
+    material?: MaterialUpdateOneRequiredWithoutFilamentsNestedInput
+    spools?: SpoolUpdateManyWithoutFilamentNestedInput
+    customFieldValues?: CustomFieldValueUpdateManyWithoutFilamentNestedInput
+  }
+
+  export type FilamentUncheckedUpdateWithoutColorsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    brandId?: StringFieldUpdateOperationsInput | string
+    materialId?: StringFieldUpdateOperationsInput | string
+    colorMode?: StringFieldUpdateOperationsInput | string
+    colorName?: NullableStringFieldUpdateOperationsInput | string | null
+    diameterMm?: FloatFieldUpdateOperationsInput | number
+    defaultWeightG?: IntFieldUpdateOperationsInput | number
+    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    spools?: SpoolUncheckedUpdateManyWithoutFilamentNestedInput
+    customFieldValues?: CustomFieldValueUncheckedUpdateManyWithoutFilamentNestedInput
+  }
+
   export type UserCreateWithoutSpoolsInput = {
     id: string
     name: string
@@ -22313,6 +24441,7 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     brands?: BrandCreateNestedManyWithoutUserInput
     locations?: LocationCreateNestedManyWithoutUserInput
+    filaments?: FilamentCreateNestedManyWithoutUserInput
     customFields?: CustomFieldCreateNestedManyWithoutUserInput
   }
 
@@ -22329,6 +24458,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     brands?: BrandUncheckedCreateNestedManyWithoutUserInput
     locations?: LocationUncheckedCreateNestedManyWithoutUserInput
+    filaments?: FilamentUncheckedCreateNestedManyWithoutUserInput
     customFields?: CustomFieldUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -22337,56 +24467,43 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutSpoolsInput, UserUncheckedCreateWithoutSpoolsInput>
   }
 
-  export type BrandCreateWithoutSpoolsInput = {
+  export type FilamentCreateWithoutSpoolsInput = {
     id?: string
-    name: string
-    websiteUrl?: string | null
+    colorMode?: string
+    colorName?: string | null
+    diameterMm?: number
+    defaultWeightG?: number
+    productUrl?: string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutBrandsInput
+    user: UserCreateNestedOneWithoutFilamentsInput
+    brand: BrandCreateNestedOneWithoutFilamentsInput
+    material: MaterialCreateNestedOneWithoutFilamentsInput
+    colors?: FilamentColorStopCreateNestedManyWithoutFilamentInput
+    customFieldValues?: CustomFieldValueCreateNestedManyWithoutFilamentInput
   }
 
-  export type BrandUncheckedCreateWithoutSpoolsInput = {
+  export type FilamentUncheckedCreateWithoutSpoolsInput = {
     id?: string
-    name: string
-    websiteUrl?: string | null
     userId: string
+    brandId: string
+    materialId: string
+    colorMode?: string
+    colorName?: string | null
+    diameterMm?: number
+    defaultWeightG?: number
+    productUrl?: string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    colors?: FilamentColorStopUncheckedCreateNestedManyWithoutFilamentInput
+    customFieldValues?: CustomFieldValueUncheckedCreateNestedManyWithoutFilamentInput
   }
 
-  export type BrandCreateOrConnectWithoutSpoolsInput = {
-    where: BrandWhereUniqueInput
-    create: XOR<BrandCreateWithoutSpoolsInput, BrandUncheckedCreateWithoutSpoolsInput>
-  }
-
-  export type MaterialCreateWithoutSpoolsInput = {
-    id?: string
-    name: string
-    density?: number | null
-    maxNozzleC?: number | null
-    maxBedC?: number | null
-    minNozzleC?: number | null
-    minBedC?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type MaterialUncheckedCreateWithoutSpoolsInput = {
-    id?: string
-    name: string
-    density?: number | null
-    maxNozzleC?: number | null
-    maxBedC?: number | null
-    minNozzleC?: number | null
-    minBedC?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type MaterialCreateOrConnectWithoutSpoolsInput = {
-    where: MaterialWhereUniqueInput
-    create: XOR<MaterialCreateWithoutSpoolsInput, MaterialUncheckedCreateWithoutSpoolsInput>
+  export type FilamentCreateOrConnectWithoutSpoolsInput = {
+    where: FilamentWhereUniqueInput
+    create: XOR<FilamentCreateWithoutSpoolsInput, FilamentUncheckedCreateWithoutSpoolsInput>
   }
 
   export type LocationCreateWithoutSpoolsInput = {
@@ -22410,31 +24527,6 @@ export namespace Prisma {
     create: XOR<LocationCreateWithoutSpoolsInput, LocationUncheckedCreateWithoutSpoolsInput>
   }
 
-  export type SpoolColorStopCreateWithoutSpoolInput = {
-    id?: string
-    hex: string
-    name?: string | null
-    position: number
-    weight?: number | null
-  }
-
-  export type SpoolColorStopUncheckedCreateWithoutSpoolInput = {
-    id?: string
-    hex: string
-    name?: string | null
-    position: number
-    weight?: number | null
-  }
-
-  export type SpoolColorStopCreateOrConnectWithoutSpoolInput = {
-    where: SpoolColorStopWhereUniqueInput
-    create: XOR<SpoolColorStopCreateWithoutSpoolInput, SpoolColorStopUncheckedCreateWithoutSpoolInput>
-  }
-
-  export type SpoolColorStopCreateManySpoolInputEnvelope = {
-    data: SpoolColorStopCreateManySpoolInput | SpoolColorStopCreateManySpoolInput[]
-  }
-
   export type UsageCreateWithoutSpoolInput = {
     id?: string
     gramsUsed: number
@@ -22456,33 +24548,6 @@ export namespace Prisma {
 
   export type UsageCreateManySpoolInputEnvelope = {
     data: UsageCreateManySpoolInput | UsageCreateManySpoolInput[]
-  }
-
-  export type CustomFieldValueCreateWithoutSpoolInput = {
-    id?: string
-    valueText?: string | null
-    valueNumber?: number | null
-    valueBoolean?: boolean | null
-    valueDate?: Date | string | null
-    field: CustomFieldCreateNestedOneWithoutValuesInput
-  }
-
-  export type CustomFieldValueUncheckedCreateWithoutSpoolInput = {
-    id?: string
-    fieldId: string
-    valueText?: string | null
-    valueNumber?: number | null
-    valueBoolean?: boolean | null
-    valueDate?: Date | string | null
-  }
-
-  export type CustomFieldValueCreateOrConnectWithoutSpoolInput = {
-    where: CustomFieldValueWhereUniqueInput
-    create: XOR<CustomFieldValueCreateWithoutSpoolInput, CustomFieldValueUncheckedCreateWithoutSpoolInput>
-  }
-
-  export type CustomFieldValueCreateManySpoolInputEnvelope = {
-    data: CustomFieldValueCreateManySpoolInput | CustomFieldValueCreateManySpoolInput[]
   }
 
   export type UserUpsertWithoutSpoolsInput = {
@@ -22509,6 +24574,7 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     brands?: BrandUpdateManyWithoutUserNestedInput
     locations?: LocationUpdateManyWithoutUserNestedInput
+    filaments?: FilamentUpdateManyWithoutUserNestedInput
     customFields?: CustomFieldUpdateManyWithoutUserNestedInput
   }
 
@@ -22525,71 +24591,53 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     brands?: BrandUncheckedUpdateManyWithoutUserNestedInput
     locations?: LocationUncheckedUpdateManyWithoutUserNestedInput
+    filaments?: FilamentUncheckedUpdateManyWithoutUserNestedInput
     customFields?: CustomFieldUncheckedUpdateManyWithoutUserNestedInput
   }
 
-  export type BrandUpsertWithoutSpoolsInput = {
-    update: XOR<BrandUpdateWithoutSpoolsInput, BrandUncheckedUpdateWithoutSpoolsInput>
-    create: XOR<BrandCreateWithoutSpoolsInput, BrandUncheckedCreateWithoutSpoolsInput>
-    where?: BrandWhereInput
+  export type FilamentUpsertWithoutSpoolsInput = {
+    update: XOR<FilamentUpdateWithoutSpoolsInput, FilamentUncheckedUpdateWithoutSpoolsInput>
+    create: XOR<FilamentCreateWithoutSpoolsInput, FilamentUncheckedCreateWithoutSpoolsInput>
+    where?: FilamentWhereInput
   }
 
-  export type BrandUpdateToOneWithWhereWithoutSpoolsInput = {
-    where?: BrandWhereInput
-    data: XOR<BrandUpdateWithoutSpoolsInput, BrandUncheckedUpdateWithoutSpoolsInput>
+  export type FilamentUpdateToOneWithWhereWithoutSpoolsInput = {
+    where?: FilamentWhereInput
+    data: XOR<FilamentUpdateWithoutSpoolsInput, FilamentUncheckedUpdateWithoutSpoolsInput>
   }
 
-  export type BrandUpdateWithoutSpoolsInput = {
+  export type FilamentUpdateWithoutSpoolsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    websiteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    colorMode?: StringFieldUpdateOperationsInput | string
+    colorName?: NullableStringFieldUpdateOperationsInput | string | null
+    diameterMm?: FloatFieldUpdateOperationsInput | number
+    defaultWeightG?: IntFieldUpdateOperationsInput | number
+    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutBrandsNestedInput
+    user?: UserUpdateOneRequiredWithoutFilamentsNestedInput
+    brand?: BrandUpdateOneRequiredWithoutFilamentsNestedInput
+    material?: MaterialUpdateOneRequiredWithoutFilamentsNestedInput
+    colors?: FilamentColorStopUpdateManyWithoutFilamentNestedInput
+    customFieldValues?: CustomFieldValueUpdateManyWithoutFilamentNestedInput
   }
 
-  export type BrandUncheckedUpdateWithoutSpoolsInput = {
+  export type FilamentUncheckedUpdateWithoutSpoolsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    websiteUrl?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
+    brandId?: StringFieldUpdateOperationsInput | string
+    materialId?: StringFieldUpdateOperationsInput | string
+    colorMode?: StringFieldUpdateOperationsInput | string
+    colorName?: NullableStringFieldUpdateOperationsInput | string | null
+    diameterMm?: FloatFieldUpdateOperationsInput | number
+    defaultWeightG?: IntFieldUpdateOperationsInput | number
+    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type MaterialUpsertWithoutSpoolsInput = {
-    update: XOR<MaterialUpdateWithoutSpoolsInput, MaterialUncheckedUpdateWithoutSpoolsInput>
-    create: XOR<MaterialCreateWithoutSpoolsInput, MaterialUncheckedCreateWithoutSpoolsInput>
-    where?: MaterialWhereInput
-  }
-
-  export type MaterialUpdateToOneWithWhereWithoutSpoolsInput = {
-    where?: MaterialWhereInput
-    data: XOR<MaterialUpdateWithoutSpoolsInput, MaterialUncheckedUpdateWithoutSpoolsInput>
-  }
-
-  export type MaterialUpdateWithoutSpoolsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    density?: NullableFloatFieldUpdateOperationsInput | number | null
-    maxNozzleC?: NullableIntFieldUpdateOperationsInput | number | null
-    maxBedC?: NullableIntFieldUpdateOperationsInput | number | null
-    minNozzleC?: NullableIntFieldUpdateOperationsInput | number | null
-    minBedC?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type MaterialUncheckedUpdateWithoutSpoolsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    density?: NullableFloatFieldUpdateOperationsInput | number | null
-    maxNozzleC?: NullableIntFieldUpdateOperationsInput | number | null
-    maxBedC?: NullableIntFieldUpdateOperationsInput | number | null
-    minNozzleC?: NullableIntFieldUpdateOperationsInput | number | null
-    minBedC?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    colors?: FilamentColorStopUncheckedUpdateManyWithoutFilamentNestedInput
+    customFieldValues?: CustomFieldValueUncheckedUpdateManyWithoutFilamentNestedInput
   }
 
   export type LocationUpsertWithoutSpoolsInput = {
@@ -22619,34 +24667,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type SpoolColorStopUpsertWithWhereUniqueWithoutSpoolInput = {
-    where: SpoolColorStopWhereUniqueInput
-    update: XOR<SpoolColorStopUpdateWithoutSpoolInput, SpoolColorStopUncheckedUpdateWithoutSpoolInput>
-    create: XOR<SpoolColorStopCreateWithoutSpoolInput, SpoolColorStopUncheckedCreateWithoutSpoolInput>
-  }
-
-  export type SpoolColorStopUpdateWithWhereUniqueWithoutSpoolInput = {
-    where: SpoolColorStopWhereUniqueInput
-    data: XOR<SpoolColorStopUpdateWithoutSpoolInput, SpoolColorStopUncheckedUpdateWithoutSpoolInput>
-  }
-
-  export type SpoolColorStopUpdateManyWithWhereWithoutSpoolInput = {
-    where: SpoolColorStopScalarWhereInput
-    data: XOR<SpoolColorStopUpdateManyMutationInput, SpoolColorStopUncheckedUpdateManyWithoutSpoolInput>
-  }
-
-  export type SpoolColorStopScalarWhereInput = {
-    AND?: SpoolColorStopScalarWhereInput | SpoolColorStopScalarWhereInput[]
-    OR?: SpoolColorStopScalarWhereInput[]
-    NOT?: SpoolColorStopScalarWhereInput | SpoolColorStopScalarWhereInput[]
-    id?: StringFilter<"SpoolColorStop"> | string
-    spoolId?: StringFilter<"SpoolColorStop"> | string
-    hex?: StringFilter<"SpoolColorStop"> | string
-    name?: StringNullableFilter<"SpoolColorStop"> | string | null
-    position?: FloatFilter<"SpoolColorStop"> | number
-    weight?: FloatNullableFilter<"SpoolColorStop"> | number | null
-  }
-
   export type UsageUpsertWithWhereUniqueWithoutSpoolInput = {
     where: UsageWhereUniqueInput
     update: XOR<UsageUpdateWithoutSpoolInput, UsageUncheckedUpdateWithoutSpoolInput>
@@ -22674,157 +24694,12 @@ export namespace Prisma {
     usedAt?: DateTimeFilter<"Usage"> | Date | string
   }
 
-  export type CustomFieldValueUpsertWithWhereUniqueWithoutSpoolInput = {
-    where: CustomFieldValueWhereUniqueInput
-    update: XOR<CustomFieldValueUpdateWithoutSpoolInput, CustomFieldValueUncheckedUpdateWithoutSpoolInput>
-    create: XOR<CustomFieldValueCreateWithoutSpoolInput, CustomFieldValueUncheckedCreateWithoutSpoolInput>
-  }
-
-  export type CustomFieldValueUpdateWithWhereUniqueWithoutSpoolInput = {
-    where: CustomFieldValueWhereUniqueInput
-    data: XOR<CustomFieldValueUpdateWithoutSpoolInput, CustomFieldValueUncheckedUpdateWithoutSpoolInput>
-  }
-
-  export type CustomFieldValueUpdateManyWithWhereWithoutSpoolInput = {
-    where: CustomFieldValueScalarWhereInput
-    data: XOR<CustomFieldValueUpdateManyMutationInput, CustomFieldValueUncheckedUpdateManyWithoutSpoolInput>
-  }
-
-  export type CustomFieldValueScalarWhereInput = {
-    AND?: CustomFieldValueScalarWhereInput | CustomFieldValueScalarWhereInput[]
-    OR?: CustomFieldValueScalarWhereInput[]
-    NOT?: CustomFieldValueScalarWhereInput | CustomFieldValueScalarWhereInput[]
-    id?: StringFilter<"CustomFieldValue"> | string
-    fieldId?: StringFilter<"CustomFieldValue"> | string
-    spoolId?: StringFilter<"CustomFieldValue"> | string
-    valueText?: StringNullableFilter<"CustomFieldValue"> | string | null
-    valueNumber?: FloatNullableFilter<"CustomFieldValue"> | number | null
-    valueBoolean?: BoolNullableFilter<"CustomFieldValue"> | boolean | null
-    valueDate?: DateTimeNullableFilter<"CustomFieldValue"> | Date | string | null
-  }
-
-  export type SpoolCreateWithoutColorsInput = {
-    id?: string
-    colorMode?: string
-    colorName?: string | null
-    diameterMm?: number
-    initialWeightG: number
-    remainingWeightG: number
-    status?: string
-    needsRepurchase?: boolean
-    productUrl?: string | null
-    purchasedAt?: Date | string | null
-    priceCents?: number | null
-    notes?: string | null
-    lastDriedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutSpoolsInput
-    brand: BrandCreateNestedOneWithoutSpoolsInput
-    material: MaterialCreateNestedOneWithoutSpoolsInput
-    location?: LocationCreateNestedOneWithoutSpoolsInput
-    usages?: UsageCreateNestedManyWithoutSpoolInput
-    customFieldValues?: CustomFieldValueCreateNestedManyWithoutSpoolInput
-  }
-
-  export type SpoolUncheckedCreateWithoutColorsInput = {
-    id?: string
-    userId: string
-    brandId: string
-    materialId: string
-    locationId?: string | null
-    colorMode?: string
-    colorName?: string | null
-    diameterMm?: number
-    initialWeightG: number
-    remainingWeightG: number
-    status?: string
-    needsRepurchase?: boolean
-    productUrl?: string | null
-    purchasedAt?: Date | string | null
-    priceCents?: number | null
-    notes?: string | null
-    lastDriedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    usages?: UsageUncheckedCreateNestedManyWithoutSpoolInput
-    customFieldValues?: CustomFieldValueUncheckedCreateNestedManyWithoutSpoolInput
-  }
-
-  export type SpoolCreateOrConnectWithoutColorsInput = {
-    where: SpoolWhereUniqueInput
-    create: XOR<SpoolCreateWithoutColorsInput, SpoolUncheckedCreateWithoutColorsInput>
-  }
-
-  export type SpoolUpsertWithoutColorsInput = {
-    update: XOR<SpoolUpdateWithoutColorsInput, SpoolUncheckedUpdateWithoutColorsInput>
-    create: XOR<SpoolCreateWithoutColorsInput, SpoolUncheckedCreateWithoutColorsInput>
-    where?: SpoolWhereInput
-  }
-
-  export type SpoolUpdateToOneWithWhereWithoutColorsInput = {
-    where?: SpoolWhereInput
-    data: XOR<SpoolUpdateWithoutColorsInput, SpoolUncheckedUpdateWithoutColorsInput>
-  }
-
-  export type SpoolUpdateWithoutColorsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    colorMode?: StringFieldUpdateOperationsInput | string
-    colorName?: NullableStringFieldUpdateOperationsInput | string | null
-    diameterMm?: FloatFieldUpdateOperationsInput | number
-    initialWeightG?: IntFieldUpdateOperationsInput | number
-    remainingWeightG?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
-    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    priceCents?: NullableIntFieldUpdateOperationsInput | number | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    lastDriedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutSpoolsNestedInput
-    brand?: BrandUpdateOneRequiredWithoutSpoolsNestedInput
-    material?: MaterialUpdateOneRequiredWithoutSpoolsNestedInput
-    location?: LocationUpdateOneWithoutSpoolsNestedInput
-    usages?: UsageUpdateManyWithoutSpoolNestedInput
-    customFieldValues?: CustomFieldValueUpdateManyWithoutSpoolNestedInput
-  }
-
-  export type SpoolUncheckedUpdateWithoutColorsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    brandId?: StringFieldUpdateOperationsInput | string
-    materialId?: StringFieldUpdateOperationsInput | string
-    locationId?: NullableStringFieldUpdateOperationsInput | string | null
-    colorMode?: StringFieldUpdateOperationsInput | string
-    colorName?: NullableStringFieldUpdateOperationsInput | string | null
-    diameterMm?: FloatFieldUpdateOperationsInput | number
-    initialWeightG?: IntFieldUpdateOperationsInput | number
-    remainingWeightG?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
-    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    priceCents?: NullableIntFieldUpdateOperationsInput | number | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    lastDriedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    usages?: UsageUncheckedUpdateManyWithoutSpoolNestedInput
-    customFieldValues?: CustomFieldValueUncheckedUpdateManyWithoutSpoolNestedInput
-  }
-
   export type SpoolCreateWithoutUsagesInput = {
     id?: string
-    colorMode?: string
-    colorName?: string | null
-    diameterMm?: number
     initialWeightG: number
     remainingWeightG: number
     status?: string
     needsRepurchase?: boolean
-    productUrl?: string | null
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
@@ -22832,35 +24707,25 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutSpoolsInput
-    brand: BrandCreateNestedOneWithoutSpoolsInput
-    material: MaterialCreateNestedOneWithoutSpoolsInput
+    filament: FilamentCreateNestedOneWithoutSpoolsInput
     location?: LocationCreateNestedOneWithoutSpoolsInput
-    colors?: SpoolColorStopCreateNestedManyWithoutSpoolInput
-    customFieldValues?: CustomFieldValueCreateNestedManyWithoutSpoolInput
   }
 
   export type SpoolUncheckedCreateWithoutUsagesInput = {
     id?: string
     userId: string
-    brandId: string
-    materialId: string
+    filamentId: string
     locationId?: string | null
-    colorMode?: string
-    colorName?: string | null
-    diameterMm?: number
     initialWeightG: number
     remainingWeightG: number
     status?: string
     needsRepurchase?: boolean
-    productUrl?: string | null
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
     lastDriedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    colors?: SpoolColorStopUncheckedCreateNestedManyWithoutSpoolInput
-    customFieldValues?: CustomFieldValueUncheckedCreateNestedManyWithoutSpoolInput
   }
 
   export type SpoolCreateOrConnectWithoutUsagesInput = {
@@ -22881,14 +24746,10 @@ export namespace Prisma {
 
   export type SpoolUpdateWithoutUsagesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    colorMode?: StringFieldUpdateOperationsInput | string
-    colorName?: NullableStringFieldUpdateOperationsInput | string | null
-    diameterMm?: FloatFieldUpdateOperationsInput | number
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
-    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22896,35 +24757,25 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutSpoolsNestedInput
-    brand?: BrandUpdateOneRequiredWithoutSpoolsNestedInput
-    material?: MaterialUpdateOneRequiredWithoutSpoolsNestedInput
+    filament?: FilamentUpdateOneRequiredWithoutSpoolsNestedInput
     location?: LocationUpdateOneWithoutSpoolsNestedInput
-    colors?: SpoolColorStopUpdateManyWithoutSpoolNestedInput
-    customFieldValues?: CustomFieldValueUpdateManyWithoutSpoolNestedInput
   }
 
   export type SpoolUncheckedUpdateWithoutUsagesInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    brandId?: StringFieldUpdateOperationsInput | string
-    materialId?: StringFieldUpdateOperationsInput | string
+    filamentId?: StringFieldUpdateOperationsInput | string
     locationId?: NullableStringFieldUpdateOperationsInput | string | null
-    colorMode?: StringFieldUpdateOperationsInput | string
-    colorName?: NullableStringFieldUpdateOperationsInput | string | null
-    diameterMm?: FloatFieldUpdateOperationsInput | number
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
-    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     lastDriedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    colors?: SpoolColorStopUncheckedUpdateManyWithoutSpoolNestedInput
-    customFieldValues?: CustomFieldValueUncheckedUpdateManyWithoutSpoolNestedInput
   }
 
   export type UserCreateWithoutCustomFieldsInput = {
@@ -22940,6 +24791,7 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     brands?: BrandCreateNestedManyWithoutUserInput
     locations?: LocationCreateNestedManyWithoutUserInput
+    filaments?: FilamentCreateNestedManyWithoutUserInput
     spools?: SpoolCreateNestedManyWithoutUserInput
   }
 
@@ -22956,6 +24808,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     brands?: BrandUncheckedCreateNestedManyWithoutUserInput
     locations?: LocationUncheckedCreateNestedManyWithoutUserInput
+    filaments?: FilamentUncheckedCreateNestedManyWithoutUserInput
     spools?: SpoolUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -22970,12 +24823,12 @@ export namespace Prisma {
     valueNumber?: number | null
     valueBoolean?: boolean | null
     valueDate?: Date | string | null
-    spool: SpoolCreateNestedOneWithoutCustomFieldValuesInput
+    filament: FilamentCreateNestedOneWithoutCustomFieldValuesInput
   }
 
   export type CustomFieldValueUncheckedCreateWithoutFieldInput = {
     id?: string
-    spoolId: string
+    filamentId: string
     valueText?: string | null
     valueNumber?: number | null
     valueBoolean?: boolean | null
@@ -23015,6 +24868,7 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     brands?: BrandUpdateManyWithoutUserNestedInput
     locations?: LocationUpdateManyWithoutUserNestedInput
+    filaments?: FilamentUpdateManyWithoutUserNestedInput
     spools?: SpoolUpdateManyWithoutUserNestedInput
   }
 
@@ -23031,6 +24885,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     brands?: BrandUncheckedUpdateManyWithoutUserNestedInput
     locations?: LocationUncheckedUpdateManyWithoutUserNestedInput
+    filaments?: FilamentUncheckedUpdateManyWithoutUserNestedInput
     spools?: SpoolUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -23085,57 +24940,43 @@ export namespace Prisma {
     create: XOR<CustomFieldCreateWithoutValuesInput, CustomFieldUncheckedCreateWithoutValuesInput>
   }
 
-  export type SpoolCreateWithoutCustomFieldValuesInput = {
+  export type FilamentCreateWithoutCustomFieldValuesInput = {
     id?: string
     colorMode?: string
     colorName?: string | null
     diameterMm?: number
-    initialWeightG: number
-    remainingWeightG: number
-    status?: string
-    needsRepurchase?: boolean
+    defaultWeightG?: number
     productUrl?: string | null
-    purchasedAt?: Date | string | null
-    priceCents?: number | null
     notes?: string | null
-    lastDriedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutSpoolsInput
-    brand: BrandCreateNestedOneWithoutSpoolsInput
-    material: MaterialCreateNestedOneWithoutSpoolsInput
-    location?: LocationCreateNestedOneWithoutSpoolsInput
-    colors?: SpoolColorStopCreateNestedManyWithoutSpoolInput
-    usages?: UsageCreateNestedManyWithoutSpoolInput
+    user: UserCreateNestedOneWithoutFilamentsInput
+    brand: BrandCreateNestedOneWithoutFilamentsInput
+    material: MaterialCreateNestedOneWithoutFilamentsInput
+    colors?: FilamentColorStopCreateNestedManyWithoutFilamentInput
+    spools?: SpoolCreateNestedManyWithoutFilamentInput
   }
 
-  export type SpoolUncheckedCreateWithoutCustomFieldValuesInput = {
+  export type FilamentUncheckedCreateWithoutCustomFieldValuesInput = {
     id?: string
     userId: string
     brandId: string
     materialId: string
-    locationId?: string | null
     colorMode?: string
     colorName?: string | null
     diameterMm?: number
-    initialWeightG: number
-    remainingWeightG: number
-    status?: string
-    needsRepurchase?: boolean
+    defaultWeightG?: number
     productUrl?: string | null
-    purchasedAt?: Date | string | null
-    priceCents?: number | null
     notes?: string | null
-    lastDriedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    colors?: SpoolColorStopUncheckedCreateNestedManyWithoutSpoolInput
-    usages?: UsageUncheckedCreateNestedManyWithoutSpoolInput
+    colors?: FilamentColorStopUncheckedCreateNestedManyWithoutFilamentInput
+    spools?: SpoolUncheckedCreateNestedManyWithoutFilamentInput
   }
 
-  export type SpoolCreateOrConnectWithoutCustomFieldValuesInput = {
-    where: SpoolWhereUniqueInput
-    create: XOR<SpoolCreateWithoutCustomFieldValuesInput, SpoolUncheckedCreateWithoutCustomFieldValuesInput>
+  export type FilamentCreateOrConnectWithoutCustomFieldValuesInput = {
+    where: FilamentWhereUniqueInput
+    create: XOR<FilamentCreateWithoutCustomFieldValuesInput, FilamentUncheckedCreateWithoutCustomFieldValuesInput>
   }
 
   export type CustomFieldUpsertWithoutValuesInput = {
@@ -23179,63 +25020,49 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type SpoolUpsertWithoutCustomFieldValuesInput = {
-    update: XOR<SpoolUpdateWithoutCustomFieldValuesInput, SpoolUncheckedUpdateWithoutCustomFieldValuesInput>
-    create: XOR<SpoolCreateWithoutCustomFieldValuesInput, SpoolUncheckedCreateWithoutCustomFieldValuesInput>
-    where?: SpoolWhereInput
+  export type FilamentUpsertWithoutCustomFieldValuesInput = {
+    update: XOR<FilamentUpdateWithoutCustomFieldValuesInput, FilamentUncheckedUpdateWithoutCustomFieldValuesInput>
+    create: XOR<FilamentCreateWithoutCustomFieldValuesInput, FilamentUncheckedCreateWithoutCustomFieldValuesInput>
+    where?: FilamentWhereInput
   }
 
-  export type SpoolUpdateToOneWithWhereWithoutCustomFieldValuesInput = {
-    where?: SpoolWhereInput
-    data: XOR<SpoolUpdateWithoutCustomFieldValuesInput, SpoolUncheckedUpdateWithoutCustomFieldValuesInput>
+  export type FilamentUpdateToOneWithWhereWithoutCustomFieldValuesInput = {
+    where?: FilamentWhereInput
+    data: XOR<FilamentUpdateWithoutCustomFieldValuesInput, FilamentUncheckedUpdateWithoutCustomFieldValuesInput>
   }
 
-  export type SpoolUpdateWithoutCustomFieldValuesInput = {
+  export type FilamentUpdateWithoutCustomFieldValuesInput = {
     id?: StringFieldUpdateOperationsInput | string
     colorMode?: StringFieldUpdateOperationsInput | string
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
-    initialWeightG?: IntFieldUpdateOperationsInput | number
-    remainingWeightG?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
+    defaultWeightG?: IntFieldUpdateOperationsInput | number
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
-    lastDriedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutSpoolsNestedInput
-    brand?: BrandUpdateOneRequiredWithoutSpoolsNestedInput
-    material?: MaterialUpdateOneRequiredWithoutSpoolsNestedInput
-    location?: LocationUpdateOneWithoutSpoolsNestedInput
-    colors?: SpoolColorStopUpdateManyWithoutSpoolNestedInput
-    usages?: UsageUpdateManyWithoutSpoolNestedInput
+    user?: UserUpdateOneRequiredWithoutFilamentsNestedInput
+    brand?: BrandUpdateOneRequiredWithoutFilamentsNestedInput
+    material?: MaterialUpdateOneRequiredWithoutFilamentsNestedInput
+    colors?: FilamentColorStopUpdateManyWithoutFilamentNestedInput
+    spools?: SpoolUpdateManyWithoutFilamentNestedInput
   }
 
-  export type SpoolUncheckedUpdateWithoutCustomFieldValuesInput = {
+  export type FilamentUncheckedUpdateWithoutCustomFieldValuesInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     brandId?: StringFieldUpdateOperationsInput | string
     materialId?: StringFieldUpdateOperationsInput | string
-    locationId?: NullableStringFieldUpdateOperationsInput | string | null
     colorMode?: StringFieldUpdateOperationsInput | string
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
-    initialWeightG?: IntFieldUpdateOperationsInput | number
-    remainingWeightG?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
+    defaultWeightG?: IntFieldUpdateOperationsInput | number
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
-    lastDriedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    colors?: SpoolColorStopUncheckedUpdateManyWithoutSpoolNestedInput
-    usages?: UsageUncheckedUpdateManyWithoutSpoolNestedInput
+    colors?: FilamentColorStopUncheckedUpdateManyWithoutFilamentNestedInput
+    spools?: SpoolUncheckedUpdateManyWithoutFilamentNestedInput
   }
 
   export type SessionCreateManyUserInput = {
@@ -23278,19 +25105,28 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type SpoolCreateManyUserInput = {
+  export type FilamentCreateManyUserInput = {
     id?: string
     brandId: string
     materialId: string
-    locationId?: string | null
     colorMode?: string
     colorName?: string | null
     diameterMm?: number
+    defaultWeightG?: number
+    productUrl?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SpoolCreateManyUserInput = {
+    id?: string
+    filamentId: string
+    locationId?: string | null
     initialWeightG: number
     remainingWeightG: number
     status?: string
     needsRepurchase?: boolean
-    productUrl?: string | null
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
@@ -23394,7 +25230,7 @@ export namespace Prisma {
     websiteUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    spools?: SpoolUpdateManyWithoutBrandNestedInput
+    filaments?: FilamentUpdateManyWithoutBrandNestedInput
   }
 
   export type BrandUncheckedUpdateWithoutUserInput = {
@@ -23403,7 +25239,7 @@ export namespace Prisma {
     websiteUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    spools?: SpoolUncheckedUpdateManyWithoutBrandNestedInput
+    filaments?: FilamentUncheckedUpdateManyWithoutBrandNestedInput
   }
 
   export type BrandUncheckedUpdateManyWithoutUserInput = {
@@ -23437,67 +25273,96 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type SpoolUpdateWithoutUserInput = {
+  export type FilamentUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     colorMode?: StringFieldUpdateOperationsInput | string
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
+    defaultWeightG?: IntFieldUpdateOperationsInput | number
+    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    brand?: BrandUpdateOneRequiredWithoutFilamentsNestedInput
+    material?: MaterialUpdateOneRequiredWithoutFilamentsNestedInput
+    colors?: FilamentColorStopUpdateManyWithoutFilamentNestedInput
+    spools?: SpoolUpdateManyWithoutFilamentNestedInput
+    customFieldValues?: CustomFieldValueUpdateManyWithoutFilamentNestedInput
+  }
+
+  export type FilamentUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    brandId?: StringFieldUpdateOperationsInput | string
+    materialId?: StringFieldUpdateOperationsInput | string
+    colorMode?: StringFieldUpdateOperationsInput | string
+    colorName?: NullableStringFieldUpdateOperationsInput | string | null
+    diameterMm?: FloatFieldUpdateOperationsInput | number
+    defaultWeightG?: IntFieldUpdateOperationsInput | number
+    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    colors?: FilamentColorStopUncheckedUpdateManyWithoutFilamentNestedInput
+    spools?: SpoolUncheckedUpdateManyWithoutFilamentNestedInput
+    customFieldValues?: CustomFieldValueUncheckedUpdateManyWithoutFilamentNestedInput
+  }
+
+  export type FilamentUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    brandId?: StringFieldUpdateOperationsInput | string
+    materialId?: StringFieldUpdateOperationsInput | string
+    colorMode?: StringFieldUpdateOperationsInput | string
+    colorName?: NullableStringFieldUpdateOperationsInput | string | null
+    diameterMm?: FloatFieldUpdateOperationsInput | number
+    defaultWeightG?: IntFieldUpdateOperationsInput | number
+    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SpoolUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
-    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     lastDriedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    brand?: BrandUpdateOneRequiredWithoutSpoolsNestedInput
-    material?: MaterialUpdateOneRequiredWithoutSpoolsNestedInput
+    filament?: FilamentUpdateOneRequiredWithoutSpoolsNestedInput
     location?: LocationUpdateOneWithoutSpoolsNestedInput
-    colors?: SpoolColorStopUpdateManyWithoutSpoolNestedInput
     usages?: UsageUpdateManyWithoutSpoolNestedInput
-    customFieldValues?: CustomFieldValueUpdateManyWithoutSpoolNestedInput
   }
 
   export type SpoolUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    brandId?: StringFieldUpdateOperationsInput | string
-    materialId?: StringFieldUpdateOperationsInput | string
+    filamentId?: StringFieldUpdateOperationsInput | string
     locationId?: NullableStringFieldUpdateOperationsInput | string | null
-    colorMode?: StringFieldUpdateOperationsInput | string
-    colorName?: NullableStringFieldUpdateOperationsInput | string | null
-    diameterMm?: FloatFieldUpdateOperationsInput | number
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
-    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     lastDriedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    colors?: SpoolColorStopUncheckedUpdateManyWithoutSpoolNestedInput
     usages?: UsageUncheckedUpdateManyWithoutSpoolNestedInput
-    customFieldValues?: CustomFieldValueUncheckedUpdateManyWithoutSpoolNestedInput
   }
 
   export type SpoolUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    brandId?: StringFieldUpdateOperationsInput | string
-    materialId?: StringFieldUpdateOperationsInput | string
+    filamentId?: StringFieldUpdateOperationsInput | string
     locationId?: NullableStringFieldUpdateOperationsInput | string | null
-    colorMode?: StringFieldUpdateOperationsInput | string
-    colorName?: NullableStringFieldUpdateOperationsInput | string | null
-    diameterMm?: FloatFieldUpdateOperationsInput | number
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
-    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23550,182 +25415,126 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type SpoolCreateManyBrandInput = {
+  export type FilamentCreateManyBrandInput = {
     id?: string
     userId: string
     materialId: string
-    locationId?: string | null
     colorMode?: string
     colorName?: string | null
     diameterMm?: number
-    initialWeightG: number
-    remainingWeightG: number
-    status?: string
-    needsRepurchase?: boolean
+    defaultWeightG?: number
     productUrl?: string | null
-    purchasedAt?: Date | string | null
-    priceCents?: number | null
     notes?: string | null
-    lastDriedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type SpoolUpdateWithoutBrandInput = {
+  export type FilamentUpdateWithoutBrandInput = {
     id?: StringFieldUpdateOperationsInput | string
     colorMode?: StringFieldUpdateOperationsInput | string
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
-    initialWeightG?: IntFieldUpdateOperationsInput | number
-    remainingWeightG?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
+    defaultWeightG?: IntFieldUpdateOperationsInput | number
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
-    lastDriedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutSpoolsNestedInput
-    material?: MaterialUpdateOneRequiredWithoutSpoolsNestedInput
-    location?: LocationUpdateOneWithoutSpoolsNestedInput
-    colors?: SpoolColorStopUpdateManyWithoutSpoolNestedInput
-    usages?: UsageUpdateManyWithoutSpoolNestedInput
-    customFieldValues?: CustomFieldValueUpdateManyWithoutSpoolNestedInput
+    user?: UserUpdateOneRequiredWithoutFilamentsNestedInput
+    material?: MaterialUpdateOneRequiredWithoutFilamentsNestedInput
+    colors?: FilamentColorStopUpdateManyWithoutFilamentNestedInput
+    spools?: SpoolUpdateManyWithoutFilamentNestedInput
+    customFieldValues?: CustomFieldValueUpdateManyWithoutFilamentNestedInput
   }
 
-  export type SpoolUncheckedUpdateWithoutBrandInput = {
+  export type FilamentUncheckedUpdateWithoutBrandInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     materialId?: StringFieldUpdateOperationsInput | string
-    locationId?: NullableStringFieldUpdateOperationsInput | string | null
     colorMode?: StringFieldUpdateOperationsInput | string
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
-    initialWeightG?: IntFieldUpdateOperationsInput | number
-    remainingWeightG?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
+    defaultWeightG?: IntFieldUpdateOperationsInput | number
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
-    lastDriedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    colors?: SpoolColorStopUncheckedUpdateManyWithoutSpoolNestedInput
-    usages?: UsageUncheckedUpdateManyWithoutSpoolNestedInput
-    customFieldValues?: CustomFieldValueUncheckedUpdateManyWithoutSpoolNestedInput
+    colors?: FilamentColorStopUncheckedUpdateManyWithoutFilamentNestedInput
+    spools?: SpoolUncheckedUpdateManyWithoutFilamentNestedInput
+    customFieldValues?: CustomFieldValueUncheckedUpdateManyWithoutFilamentNestedInput
   }
 
-  export type SpoolUncheckedUpdateManyWithoutBrandInput = {
+  export type FilamentUncheckedUpdateManyWithoutBrandInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     materialId?: StringFieldUpdateOperationsInput | string
-    locationId?: NullableStringFieldUpdateOperationsInput | string | null
     colorMode?: StringFieldUpdateOperationsInput | string
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
-    initialWeightG?: IntFieldUpdateOperationsInput | number
-    remainingWeightG?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
+    defaultWeightG?: IntFieldUpdateOperationsInput | number
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
-    lastDriedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type SpoolCreateManyMaterialInput = {
+  export type FilamentCreateManyMaterialInput = {
     id?: string
     userId: string
     brandId: string
-    locationId?: string | null
     colorMode?: string
     colorName?: string | null
     diameterMm?: number
-    initialWeightG: number
-    remainingWeightG: number
-    status?: string
-    needsRepurchase?: boolean
+    defaultWeightG?: number
     productUrl?: string | null
-    purchasedAt?: Date | string | null
-    priceCents?: number | null
     notes?: string | null
-    lastDriedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type SpoolUpdateWithoutMaterialInput = {
+  export type FilamentUpdateWithoutMaterialInput = {
     id?: StringFieldUpdateOperationsInput | string
     colorMode?: StringFieldUpdateOperationsInput | string
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
-    initialWeightG?: IntFieldUpdateOperationsInput | number
-    remainingWeightG?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
+    defaultWeightG?: IntFieldUpdateOperationsInput | number
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
-    lastDriedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutSpoolsNestedInput
-    brand?: BrandUpdateOneRequiredWithoutSpoolsNestedInput
-    location?: LocationUpdateOneWithoutSpoolsNestedInput
-    colors?: SpoolColorStopUpdateManyWithoutSpoolNestedInput
-    usages?: UsageUpdateManyWithoutSpoolNestedInput
-    customFieldValues?: CustomFieldValueUpdateManyWithoutSpoolNestedInput
+    user?: UserUpdateOneRequiredWithoutFilamentsNestedInput
+    brand?: BrandUpdateOneRequiredWithoutFilamentsNestedInput
+    colors?: FilamentColorStopUpdateManyWithoutFilamentNestedInput
+    spools?: SpoolUpdateManyWithoutFilamentNestedInput
+    customFieldValues?: CustomFieldValueUpdateManyWithoutFilamentNestedInput
   }
 
-  export type SpoolUncheckedUpdateWithoutMaterialInput = {
+  export type FilamentUncheckedUpdateWithoutMaterialInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     brandId?: StringFieldUpdateOperationsInput | string
-    locationId?: NullableStringFieldUpdateOperationsInput | string | null
     colorMode?: StringFieldUpdateOperationsInput | string
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
-    initialWeightG?: IntFieldUpdateOperationsInput | number
-    remainingWeightG?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
+    defaultWeightG?: IntFieldUpdateOperationsInput | number
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
-    lastDriedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    colors?: SpoolColorStopUncheckedUpdateManyWithoutSpoolNestedInput
-    usages?: UsageUncheckedUpdateManyWithoutSpoolNestedInput
-    customFieldValues?: CustomFieldValueUncheckedUpdateManyWithoutSpoolNestedInput
+    colors?: FilamentColorStopUncheckedUpdateManyWithoutFilamentNestedInput
+    spools?: SpoolUncheckedUpdateManyWithoutFilamentNestedInput
+    customFieldValues?: CustomFieldValueUncheckedUpdateManyWithoutFilamentNestedInput
   }
 
-  export type SpoolUncheckedUpdateManyWithoutMaterialInput = {
+  export type FilamentUncheckedUpdateManyWithoutMaterialInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     brandId?: StringFieldUpdateOperationsInput | string
-    locationId?: NullableStringFieldUpdateOperationsInput | string | null
     colorMode?: StringFieldUpdateOperationsInput | string
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
-    initialWeightG?: IntFieldUpdateOperationsInput | number
-    remainingWeightG?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
+    defaultWeightG?: IntFieldUpdateOperationsInput | number
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
-    lastDriedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -23733,16 +25542,11 @@ export namespace Prisma {
   export type SpoolCreateManyLocationInput = {
     id?: string
     userId: string
-    brandId: string
-    materialId: string
-    colorMode?: string
-    colorName?: string | null
-    diameterMm?: number
+    filamentId: string
     initialWeightG: number
     remainingWeightG: number
     status?: string
     needsRepurchase?: boolean
-    productUrl?: string | null
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
@@ -23753,14 +25557,10 @@ export namespace Prisma {
 
   export type SpoolUpdateWithoutLocationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    colorMode?: StringFieldUpdateOperationsInput | string
-    colorName?: NullableStringFieldUpdateOperationsInput | string | null
-    diameterMm?: FloatFieldUpdateOperationsInput | number
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
-    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23768,50 +25568,35 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutSpoolsNestedInput
-    brand?: BrandUpdateOneRequiredWithoutSpoolsNestedInput
-    material?: MaterialUpdateOneRequiredWithoutSpoolsNestedInput
-    colors?: SpoolColorStopUpdateManyWithoutSpoolNestedInput
+    filament?: FilamentUpdateOneRequiredWithoutSpoolsNestedInput
     usages?: UsageUpdateManyWithoutSpoolNestedInput
-    customFieldValues?: CustomFieldValueUpdateManyWithoutSpoolNestedInput
   }
 
   export type SpoolUncheckedUpdateWithoutLocationInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    brandId?: StringFieldUpdateOperationsInput | string
-    materialId?: StringFieldUpdateOperationsInput | string
-    colorMode?: StringFieldUpdateOperationsInput | string
-    colorName?: NullableStringFieldUpdateOperationsInput | string | null
-    diameterMm?: FloatFieldUpdateOperationsInput | number
+    filamentId?: StringFieldUpdateOperationsInput | string
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
-    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     lastDriedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    colors?: SpoolColorStopUncheckedUpdateManyWithoutSpoolNestedInput
     usages?: UsageUncheckedUpdateManyWithoutSpoolNestedInput
-    customFieldValues?: CustomFieldValueUncheckedUpdateManyWithoutSpoolNestedInput
   }
 
   export type SpoolUncheckedUpdateManyWithoutLocationInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    brandId?: StringFieldUpdateOperationsInput | string
-    materialId?: StringFieldUpdateOperationsInput | string
-    colorMode?: StringFieldUpdateOperationsInput | string
-    colorName?: NullableStringFieldUpdateOperationsInput | string | null
-    diameterMm?: FloatFieldUpdateOperationsInput | number
+    filamentId?: StringFieldUpdateOperationsInput | string
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
-    productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23820,7 +25605,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type SpoolColorStopCreateManySpoolInput = {
+  export type FilamentColorStopCreateManyFilamentInput = {
     id?: string
     hex: string
     name?: string | null
@@ -23828,14 +25613,23 @@ export namespace Prisma {
     weight?: number | null
   }
 
-  export type UsageCreateManySpoolInput = {
+  export type SpoolCreateManyFilamentInput = {
     id?: string
-    gramsUsed: number
-    note?: string | null
-    usedAt?: Date | string
+    userId: string
+    locationId?: string | null
+    initialWeightG: number
+    remainingWeightG: number
+    status?: string
+    needsRepurchase?: boolean
+    purchasedAt?: Date | string | null
+    priceCents?: number | null
+    notes?: string | null
+    lastDriedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type CustomFieldValueCreateManySpoolInput = {
+  export type CustomFieldValueCreateManyFilamentInput = {
     id?: string
     fieldId: string
     valueText?: string | null
@@ -23844,7 +25638,7 @@ export namespace Prisma {
     valueDate?: Date | string | null
   }
 
-  export type SpoolColorStopUpdateWithoutSpoolInput = {
+  export type FilamentColorStopUpdateWithoutFilamentInput = {
     id?: StringFieldUpdateOperationsInput | string
     hex?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23852,7 +25646,7 @@ export namespace Prisma {
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
-  export type SpoolColorStopUncheckedUpdateWithoutSpoolInput = {
+  export type FilamentColorStopUncheckedUpdateWithoutFilamentInput = {
     id?: StringFieldUpdateOperationsInput | string
     hex?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23860,12 +25654,96 @@ export namespace Prisma {
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
-  export type SpoolColorStopUncheckedUpdateManyWithoutSpoolInput = {
+  export type FilamentColorStopUncheckedUpdateManyWithoutFilamentInput = {
     id?: StringFieldUpdateOperationsInput | string
     hex?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     position?: FloatFieldUpdateOperationsInput | number
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type SpoolUpdateWithoutFilamentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    initialWeightG?: IntFieldUpdateOperationsInput | number
+    remainingWeightG?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
+    purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priceCents?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    lastDriedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutSpoolsNestedInput
+    location?: LocationUpdateOneWithoutSpoolsNestedInput
+    usages?: UsageUpdateManyWithoutSpoolNestedInput
+  }
+
+  export type SpoolUncheckedUpdateWithoutFilamentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    locationId?: NullableStringFieldUpdateOperationsInput | string | null
+    initialWeightG?: IntFieldUpdateOperationsInput | number
+    remainingWeightG?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
+    purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priceCents?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    lastDriedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usages?: UsageUncheckedUpdateManyWithoutSpoolNestedInput
+  }
+
+  export type SpoolUncheckedUpdateManyWithoutFilamentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    locationId?: NullableStringFieldUpdateOperationsInput | string | null
+    initialWeightG?: IntFieldUpdateOperationsInput | number
+    remainingWeightG?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
+    purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priceCents?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    lastDriedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomFieldValueUpdateWithoutFilamentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    valueText?: NullableStringFieldUpdateOperationsInput | string | null
+    valueNumber?: NullableFloatFieldUpdateOperationsInput | number | null
+    valueBoolean?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    valueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    field?: CustomFieldUpdateOneRequiredWithoutValuesNestedInput
+  }
+
+  export type CustomFieldValueUncheckedUpdateWithoutFilamentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fieldId?: StringFieldUpdateOperationsInput | string
+    valueText?: NullableStringFieldUpdateOperationsInput | string | null
+    valueNumber?: NullableFloatFieldUpdateOperationsInput | number | null
+    valueBoolean?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    valueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CustomFieldValueUncheckedUpdateManyWithoutFilamentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fieldId?: StringFieldUpdateOperationsInput | string
+    valueText?: NullableStringFieldUpdateOperationsInput | string | null
+    valueNumber?: NullableFloatFieldUpdateOperationsInput | number | null
+    valueBoolean?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    valueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type UsageCreateManySpoolInput = {
+    id?: string
+    gramsUsed: number
+    note?: string | null
+    usedAt?: Date | string
   }
 
   export type UsageUpdateWithoutSpoolInput = {
@@ -23889,36 +25767,9 @@ export namespace Prisma {
     usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type CustomFieldValueUpdateWithoutSpoolInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    valueText?: NullableStringFieldUpdateOperationsInput | string | null
-    valueNumber?: NullableFloatFieldUpdateOperationsInput | number | null
-    valueBoolean?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    valueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    field?: CustomFieldUpdateOneRequiredWithoutValuesNestedInput
-  }
-
-  export type CustomFieldValueUncheckedUpdateWithoutSpoolInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    fieldId?: StringFieldUpdateOperationsInput | string
-    valueText?: NullableStringFieldUpdateOperationsInput | string | null
-    valueNumber?: NullableFloatFieldUpdateOperationsInput | number | null
-    valueBoolean?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    valueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type CustomFieldValueUncheckedUpdateManyWithoutSpoolInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    fieldId?: StringFieldUpdateOperationsInput | string
-    valueText?: NullableStringFieldUpdateOperationsInput | string | null
-    valueNumber?: NullableFloatFieldUpdateOperationsInput | number | null
-    valueBoolean?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    valueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
   export type CustomFieldValueCreateManyFieldInput = {
     id?: string
-    spoolId: string
+    filamentId: string
     valueText?: string | null
     valueNumber?: number | null
     valueBoolean?: boolean | null
@@ -23931,12 +25782,12 @@ export namespace Prisma {
     valueNumber?: NullableFloatFieldUpdateOperationsInput | number | null
     valueBoolean?: NullableBoolFieldUpdateOperationsInput | boolean | null
     valueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    spool?: SpoolUpdateOneRequiredWithoutCustomFieldValuesNestedInput
+    filament?: FilamentUpdateOneRequiredWithoutCustomFieldValuesNestedInput
   }
 
   export type CustomFieldValueUncheckedUpdateWithoutFieldInput = {
     id?: StringFieldUpdateOperationsInput | string
-    spoolId?: StringFieldUpdateOperationsInput | string
+    filamentId?: StringFieldUpdateOperationsInput | string
     valueText?: NullableStringFieldUpdateOperationsInput | string | null
     valueNumber?: NullableFloatFieldUpdateOperationsInput | number | null
     valueBoolean?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -23945,7 +25796,7 @@ export namespace Prisma {
 
   export type CustomFieldValueUncheckedUpdateManyWithoutFieldInput = {
     id?: StringFieldUpdateOperationsInput | string
-    spoolId?: StringFieldUpdateOperationsInput | string
+    filamentId?: StringFieldUpdateOperationsInput | string
     valueText?: NullableStringFieldUpdateOperationsInput | string | null
     valueNumber?: NullableFloatFieldUpdateOperationsInput | number | null
     valueBoolean?: NullableBoolFieldUpdateOperationsInput | boolean | null

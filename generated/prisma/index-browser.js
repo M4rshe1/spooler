@@ -194,35 +194,45 @@ exports.Prisma.LocationScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.SpoolScalarFieldEnum = {
+exports.Prisma.FilamentScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   brandId: 'brandId',
   materialId: 'materialId',
-  locationId: 'locationId',
   colorMode: 'colorMode',
   colorName: 'colorName',
   diameterMm: 'diameterMm',
+  defaultWeightG: 'defaultWeightG',
+  productUrl: 'productUrl',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.FilamentColorStopScalarFieldEnum = {
+  id: 'id',
+  filamentId: 'filamentId',
+  hex: 'hex',
+  name: 'name',
+  position: 'position',
+  weight: 'weight'
+};
+
+exports.Prisma.SpoolScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  filamentId: 'filamentId',
+  locationId: 'locationId',
   initialWeightG: 'initialWeightG',
   remainingWeightG: 'remainingWeightG',
   status: 'status',
   needsRepurchase: 'needsRepurchase',
-  productUrl: 'productUrl',
   purchasedAt: 'purchasedAt',
   priceCents: 'priceCents',
   notes: 'notes',
   lastDriedAt: 'lastDriedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
-};
-
-exports.Prisma.SpoolColorStopScalarFieldEnum = {
-  id: 'id',
-  spoolId: 'spoolId',
-  hex: 'hex',
-  name: 'name',
-  position: 'position',
-  weight: 'weight'
 };
 
 exports.Prisma.UsageScalarFieldEnum = {
@@ -251,7 +261,7 @@ exports.Prisma.CustomFieldScalarFieldEnum = {
 exports.Prisma.CustomFieldValueScalarFieldEnum = {
   id: 'id',
   fieldId: 'fieldId',
-  spoolId: 'spoolId',
+  filamentId: 'filamentId',
   valueText: 'valueText',
   valueNumber: 'valueNumber',
   valueBoolean: 'valueBoolean',
@@ -286,8 +296,9 @@ exports.Prisma.ModelName = {
   Brand: 'Brand',
   Material: 'Material',
   Location: 'Location',
+  Filament: 'Filament',
+  FilamentColorStop: 'FilamentColorStop',
   Spool: 'Spool',
-  SpoolColorStop: 'SpoolColorStop',
   Usage: 'Usage',
   CustomField: 'CustomField',
   CustomFieldValue: 'CustomFieldValue',

@@ -26,6 +26,7 @@ model User {
 
   brands       Brand[]
   locations    Location[]
+  filaments    Filament[]
   spools       Spool[]
   customFields CustomField[]
 
@@ -79,31 +80,31 @@ model Verification {
 }
 
 model Brand {
-  id         String   @id @default(cuid())
+  id         String     @id @default(cuid())
   name       String
   /// Storefront / manufacturer website
   websiteUrl String?
   userId     String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  spools     Spool[]
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  filaments  Filament[]
 
   @@unique([userId, name])
   @@index([userId])
 }
 
 model Material {
-  id         String   @id @default(cuid())
-  name       String   @unique
+  id         String     @id @default(cuid())
+  name       String     @unique
   density    Float?
   maxNozzleC Int?
   maxBedC    Int?
   minNozzleC Int?
   minBedC    Int?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  spools     Spool[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  filaments  Filament[]
 }
 
 model Location {
@@ -119,54 +120,72 @@ model Location {
   @@index([userId])
 }
 
+/// Product definition: brand + material + color (+ defaults)
 /// SOLID | GRADIENT | MULTI
-model Spool {
-  id                String             @id @default(cuid())
+model Filament {
+  id                String              @id @default(cuid())
   userId            String
-  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   brandId           String
-  brand             Brand              @relation(fields: [brandId], references: [id])
+  brand             Brand               @relation(fields: [brandId], references: [id])
   materialId        String
-  material          Material           @relation(fields: [materialId], references: [id])
-  locationId        String?
-  location          Location?          @relation(fields: [locationId], references: [id], onDelete: SetNull)
-  colorMode         String             @default("SOLID")
+  material          Material            @relation(fields: [materialId], references: [id])
+  colorMode         String              @default("SOLID")
   colorName         String?
-  diameterMm        Float              @default(1.75)
-  initialWeightG    Int
-  remainingWeightG  Int
-  /// sealed | open | empty | archived
-  status            String             @default("sealed")
-  /// Manually or auto flagged for repurchase list
-  needsRepurchase   Boolean            @default(false)
-  /// Product page / store listing for this spool
+  diameterMm        Float               @default(1.75)
+  /// Nominal full weight used when opening a new spool
+  defaultWeightG    Int                 @default(1000)
+  /// Product page / store listing
   productUrl        String?
-  purchasedAt       DateTime?
-  priceCents        Int?
   notes             String?
-  lastDriedAt       DateTime?
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  colors            SpoolColorStop[]
-  usages            Usage[]
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  colors            FilamentColorStop[]
+  spools            Spool[]
   customFieldValues CustomFieldValue[]
 
   @@index([userId])
-  @@index([userId, status])
   @@index([materialId])
   @@index([brandId])
 }
 
-model SpoolColorStop {
-  id       String  @id @default(cuid())
-  spoolId  String
-  spool    Spool   @relation(fields: [spoolId], references: [id], onDelete: Cascade)
-  hex      String
-  name     String?
-  position Float
-  weight   Float?
+model FilamentColorStop {
+  id         String   @id @default(cuid())
+  filamentId String
+  filament   Filament @relation(fields: [filamentId], references: [id], onDelete: Cascade)
+  hex        String
+  name       String?
+  position   Float
+  weight     Float?
 
-  @@index([spoolId])
+  @@index([filamentId])
+}
+
+/// Physical spool instance (weights, status, location, usage logs)
+model Spool {
+  id               String    @id @default(cuid())
+  userId           String
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  filamentId       String
+  filament         Filament  @relation(fields: [filamentId], references: [id])
+  locationId       String?
+  location         Location? @relation(fields: [locationId], references: [id], onDelete: SetNull)
+  initialWeightG   Int
+  remainingWeightG Int
+  /// sealed | open | empty | archived
+  status           String    @default("sealed")
+  needsRepurchase  Boolean   @default(false)
+  purchasedAt      DateTime?
+  priceCents       Int?
+  notes            String?
+  lastDriedAt      DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  usages           Usage[]
+
+  @@index([userId])
+  @@index([userId, status])
+  @@index([filamentId])
 }
 
 model Usage {
@@ -180,13 +199,13 @@ model Usage {
   @@index([spoolId])
 }
 
-/// TEXT | NUMBER | BOOLEAN | DATE | SELECT | MULTISELECT
+/// TEXT | NUMBER | BOOLEAN | DATE | SELECT | MULTISELECT | URL
 model CustomField {
   id         String             @id @default(cuid())
   userId     String
   user       User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  /// SPOOL for now
-  entity     String             @default("SPOOL")
+  /// FILAMENT
+  entity     String             @default("FILAMENT")
   key        String
   label      String
   type       String
@@ -207,15 +226,15 @@ model CustomFieldValue {
   id           String      @id @default(cuid())
   fieldId      String
   field        CustomField @relation(fields: [fieldId], references: [id], onDelete: Cascade)
-  spoolId      String
-  spool        Spool       @relation(fields: [spoolId], references: [id], onDelete: Cascade)
+  filamentId   String
+  filament     Filament    @relation(fields: [filamentId], references: [id], onDelete: Cascade)
   valueText    String?
   valueNumber  Float?
   valueBoolean Boolean?
   valueDate    DateTime?
 
-  @@unique([fieldId, spoolId])
-  @@index([spoolId])
+  @@unique([fieldId, filamentId])
+  @@index([filamentId])
 }
 
 /// Singleton row (id = 1) tracking first-run setup

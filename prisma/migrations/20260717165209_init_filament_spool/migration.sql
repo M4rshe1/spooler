@@ -5,6 +5,7 @@ CREATE TABLE "user" (
     "email" TEXT NOT NULL,
     "emailVerified" BOOLEAN NOT NULL DEFAULT false,
     "image" TEXT,
+    "role" TEXT NOT NULL DEFAULT 'user',
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -54,6 +55,7 @@ CREATE TABLE "verification" (
 CREATE TABLE "Brand" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
+    "websiteUrl" TEXT,
     "userId" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
@@ -65,8 +67,10 @@ CREATE TABLE "Material" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
     "density" REAL,
-    "defaultNozzleC" INTEGER,
-    "defaultBedC" INTEGER,
+    "maxNozzleC" INTEGER,
+    "maxBedC" INTEGER,
+    "minNozzleC" INTEGER,
+    "minBedC" INTEGER,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL
 );
@@ -82,18 +86,45 @@ CREATE TABLE "Location" (
 );
 
 -- CreateTable
-CREATE TABLE "Spool" (
+CREATE TABLE "Filament" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "userId" TEXT NOT NULL,
     "brandId" TEXT NOT NULL,
     "materialId" TEXT NOT NULL,
-    "locationId" TEXT,
     "colorMode" TEXT NOT NULL DEFAULT 'SOLID',
     "colorName" TEXT,
     "diameterMm" REAL NOT NULL DEFAULT 1.75,
+    "defaultWeightG" INTEGER NOT NULL DEFAULT 1000,
+    "productUrl" TEXT,
+    "notes" TEXT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    CONSTRAINT "Filament_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "Filament_brandId_fkey" FOREIGN KEY ("brandId") REFERENCES "Brand" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "Filament_materialId_fkey" FOREIGN KEY ("materialId") REFERENCES "Material" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "FilamentColorStop" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "filamentId" TEXT NOT NULL,
+    "hex" TEXT NOT NULL,
+    "name" TEXT,
+    "position" REAL NOT NULL,
+    "weight" REAL,
+    CONSTRAINT "FilamentColorStop_filamentId_fkey" FOREIGN KEY ("filamentId") REFERENCES "Filament" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "Spool" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "userId" TEXT NOT NULL,
+    "filamentId" TEXT NOT NULL,
+    "locationId" TEXT,
     "initialWeightG" INTEGER NOT NULL,
     "remainingWeightG" INTEGER NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'sealed',
+    "needsRepurchase" BOOLEAN NOT NULL DEFAULT false,
     "purchasedAt" DATETIME,
     "priceCents" INTEGER,
     "notes" TEXT,
@@ -101,20 +132,8 @@ CREATE TABLE "Spool" (
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
     CONSTRAINT "Spool_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "Spool_brandId_fkey" FOREIGN KEY ("brandId") REFERENCES "Brand" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "Spool_materialId_fkey" FOREIGN KEY ("materialId") REFERENCES "Material" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "Spool_filamentId_fkey" FOREIGN KEY ("filamentId") REFERENCES "Filament" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "Spool_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "Location" ("id") ON DELETE SET NULL ON UPDATE CASCADE
-);
-
--- CreateTable
-CREATE TABLE "SpoolColorStop" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "spoolId" TEXT NOT NULL,
-    "hex" TEXT NOT NULL,
-    "name" TEXT,
-    "position" REAL NOT NULL,
-    "weight" REAL,
-    CONSTRAINT "SpoolColorStop_spoolId_fkey" FOREIGN KEY ("spoolId") REFERENCES "Spool" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -131,7 +150,7 @@ CREATE TABLE "Usage" (
 CREATE TABLE "CustomField" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "userId" TEXT NOT NULL,
-    "entity" TEXT NOT NULL DEFAULT 'SPOOL',
+    "entity" TEXT NOT NULL DEFAULT 'FILAMENT',
     "key" TEXT NOT NULL,
     "label" TEXT NOT NULL,
     "type" TEXT NOT NULL,
@@ -148,13 +167,23 @@ CREATE TABLE "CustomField" (
 CREATE TABLE "CustomFieldValue" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "fieldId" TEXT NOT NULL,
-    "spoolId" TEXT NOT NULL,
+    "filamentId" TEXT NOT NULL,
     "valueText" TEXT,
     "valueNumber" REAL,
     "valueBoolean" BOOLEAN,
     "valueDate" DATETIME,
     CONSTRAINT "CustomFieldValue_fieldId_fkey" FOREIGN KEY ("fieldId") REFERENCES "CustomField" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "CustomFieldValue_spoolId_fkey" FOREIGN KEY ("spoolId") REFERENCES "Spool" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT "CustomFieldValue_filamentId_fkey" FOREIGN KEY ("filamentId") REFERENCES "Filament" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "AppSetup" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT DEFAULT 1,
+    "completed" BOOLEAN NOT NULL DEFAULT false,
+    "completedAt" DATETIME,
+    "installedDatasets" TEXT NOT NULL DEFAULT '[]',
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateIndex
@@ -179,19 +208,25 @@ CREATE INDEX "Location_userId_idx" ON "Location"("userId");
 CREATE UNIQUE INDEX "Location_userId_name_key" ON "Location"("userId", "name");
 
 -- CreateIndex
+CREATE INDEX "Filament_userId_idx" ON "Filament"("userId");
+
+-- CreateIndex
+CREATE INDEX "Filament_materialId_idx" ON "Filament"("materialId");
+
+-- CreateIndex
+CREATE INDEX "Filament_brandId_idx" ON "Filament"("brandId");
+
+-- CreateIndex
+CREATE INDEX "FilamentColorStop_filamentId_idx" ON "FilamentColorStop"("filamentId");
+
+-- CreateIndex
 CREATE INDEX "Spool_userId_idx" ON "Spool"("userId");
 
 -- CreateIndex
 CREATE INDEX "Spool_userId_status_idx" ON "Spool"("userId", "status");
 
 -- CreateIndex
-CREATE INDEX "Spool_materialId_idx" ON "Spool"("materialId");
-
--- CreateIndex
-CREATE INDEX "Spool_brandId_idx" ON "Spool"("brandId");
-
--- CreateIndex
-CREATE INDEX "SpoolColorStop_spoolId_idx" ON "SpoolColorStop"("spoolId");
+CREATE INDEX "Spool_filamentId_idx" ON "Spool"("filamentId");
 
 -- CreateIndex
 CREATE INDEX "Usage_spoolId_idx" ON "Usage"("spoolId");
@@ -203,7 +238,7 @@ CREATE INDEX "CustomField_userId_entity_idx" ON "CustomField"("userId", "entity"
 CREATE UNIQUE INDEX "CustomField_userId_entity_key_key" ON "CustomField"("userId", "entity", "key");
 
 -- CreateIndex
-CREATE INDEX "CustomFieldValue_spoolId_idx" ON "CustomFieldValue"("spoolId");
+CREATE INDEX "CustomFieldValue_filamentId_idx" ON "CustomFieldValue"("filamentId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "CustomFieldValue_fieldId_spoolId_key" ON "CustomFieldValue"("fieldId", "spoolId");
+CREATE UNIQUE INDEX "CustomFieldValue_fieldId_filamentId_key" ON "CustomFieldValue"("fieldId", "filamentId");
