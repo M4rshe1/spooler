@@ -6,12 +6,8 @@ import { toast } from "sonner";
 
 import { ColorSwatch } from "@/components/filament/color-swatch";
 import { ExternalLink } from "@/components/filament/external-link";
-import {
-  RepurchaseControls,
-  RepurchaseQtyBadge,
-} from "@/components/filament/repurchase-controls";
+import { RepurchaseControls } from "@/components/filament/repurchase-controls";
 import { FilamentBuyButton } from "@/components/filament/filament-buy-button";
-import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   displayUrlHost,
@@ -97,9 +93,6 @@ export default function FilamentDetailPage() {
             <p className="text-muted-foreground mt-1 text-sm">
               {filament.brand.name} · {filament.material.name} ·{" "}
               {filament.diameterMm}mm
-              {temps.preferredNozzle
-                ? ` · ${formatNozzleMaterial(temps.preferredNozzle)} nozzle`
-                : ""}
             </p>
             <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
               {filament.brand.websiteUrl && (
@@ -119,28 +112,6 @@ export default function FilamentDetailPage() {
                 </ExternalLink>
               )}
             </div>
-            <div className="mt-2 flex flex-wrap gap-2">
-              <Badge variant="secondary">
-                {filament.colorMode.toLowerCase()}
-              </Badge>
-              <Badge variant="outline">
-                default {filament.defaultWeightG}g
-              </Badge>
-              {filament.defaultEmptyWeightG != null && (
-                <Badge variant="outline">
-                  empty {filament.defaultEmptyWeightG}g
-                </Badge>
-              )}
-              {nozzleRange && (
-                <Badge variant="outline">Nozzle {nozzleRange}</Badge>
-              )}
-              {bedRange && <Badge variant="outline">Bed {bedRange}</Badge>}
-              <Badge variant="outline">
-                {filament._count.spools} spool
-                {filament._count.spools === 1 ? "" : "s"}
-              </Badge>
-              <RepurchaseQtyBadge quantity={filament.repurchaseQty} />
-            </div>
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -153,7 +124,9 @@ export default function FilamentDetailPage() {
           <FilamentBuyButton
             productUrl={filament.productUrl}
             brandWebsiteUrl={filament.brand.websiteUrl}
-            quantity={filament.repurchaseQty > 0 ? filament.repurchaseQty : undefined}
+            quantity={
+              filament.repurchaseQty > 0 ? filament.repurchaseQty : undefined
+            }
           />
           <RepurchaseControls
             filamentId={filament.id}
@@ -174,15 +147,70 @@ export default function FilamentDetailPage() {
             }}
             disabled={remove.isPending || filament._count.spools > 0}
             title={
-              filament._count.spools > 0
-                ? "Remove all spools first"
-                : undefined
+              filament._count.spools > 0 ? "Remove all spools first" : undefined
             }
           >
             Delete
           </Button>
         </div>
       </div>
+
+      <section className="space-y-2">
+        <h2 className="font-heading text-lg font-semibold">Details</h2>
+        <dl className="grid gap-2 sm:grid-cols-2">
+          <div className="border-border border px-3 py-2">
+            <dt className="text-muted-foreground text-xs">Color mode</dt>
+            <dd className="mt-0.5 text-sm capitalize">
+              {filament.colorMode.toLowerCase()}
+            </dd>
+          </div>
+          <div className="border-border border px-3 py-2">
+            <dt className="text-muted-foreground text-xs">Default weight</dt>
+            <dd className="mt-0.5 text-sm">{filament.defaultWeightG}g</dd>
+          </div>
+          {filament.defaultEmptyWeightG != null && (
+            <div className="border-border border px-3 py-2">
+              <dt className="text-muted-foreground text-xs">Empty spool</dt>
+              <dd className="mt-0.5 text-sm">
+                {filament.defaultEmptyWeightG}g
+              </dd>
+            </div>
+          )}
+          {temps.preferredNozzle && (
+            <div className="border-border border px-3 py-2">
+              <dt className="text-muted-foreground text-xs">
+                Preferred nozzle
+              </dt>
+              <dd className="mt-0.5 text-sm">
+                {formatNozzleMaterial(temps.preferredNozzle)}
+              </dd>
+            </div>
+          )}
+          {nozzleRange && (
+            <div className="border-border border px-3 py-2">
+              <dt className="text-muted-foreground text-xs">Nozzle temp</dt>
+              <dd className="mt-0.5 text-sm">{nozzleRange}</dd>
+            </div>
+          )}
+          {bedRange && (
+            <div className="border-border border px-3 py-2">
+              <dt className="text-muted-foreground text-xs">Bed temp</dt>
+              <dd className="mt-0.5 text-sm">{bedRange}</dd>
+            </div>
+          )}
+          <div className="border-border border px-3 py-2">
+            <dt className="text-muted-foreground text-xs">Spools</dt>
+            <dd className="mt-0.5 text-sm">
+              {filament._count.spools} (
+              {filament.spools.reduce(
+                (acc, spool) => acc + spool.remainingWeightG,
+                0,
+              )}
+              g left)
+            </dd>
+          </div>
+        </dl>
+      </section>
 
       {filament.colors.length > 0 && (
         <section className="space-y-2">
@@ -193,11 +221,7 @@ export default function FilamentDetailPage() {
                 key={stop.id}
                 className="border-border flex items-center gap-2 border px-2 py-1.5 text-xs"
               >
-                <ColorSwatch
-                  mode="SOLID"
-                  colors={[stop]}
-                  className="size-4"
-                />
+                <ColorSwatch mode="SOLID" colors={[stop]} className="size-4" />
                 <span className="font-mono">{stop.hex}</span>
                 {stop.name && (
                   <span className="text-muted-foreground">{stop.name}</span>
@@ -214,7 +238,9 @@ export default function FilamentDetailPage() {
           <dl className="grid gap-2 sm:grid-cols-2">
             {filament.customFieldValues.map((cv) => (
               <div key={cv.id} className="border-border border px-3 py-2">
-                <dt className="text-muted-foreground text-xs">{cv.field.label}</dt>
+                <dt className="text-muted-foreground text-xs">
+                  {cv.field.label}
+                </dt>
                 <dd className="mt-0.5 text-sm">{formatCustomValue(cv)}</dd>
               </div>
             ))}

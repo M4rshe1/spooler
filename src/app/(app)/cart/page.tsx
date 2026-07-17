@@ -80,8 +80,8 @@ export default function CartPage() {
           </div>
           <p className="font-heading text-lg font-semibold">Cart is empty</p>
           <p className="text-muted-foreground mx-auto mt-1 max-w-sm text-sm">
-            Add filaments from inventory or the filament library when you need to
-            restock.
+            Add filaments from inventory or the filament library when you need
+            to restock.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-2">
             <Link href="/inventory" className={cn(buttonVariants())}>
@@ -97,7 +97,7 @@ export default function CartPage() {
         </div>
       ) : (
         <>
-          <ul className="border-border divide-y divide-border border md:hidden">
+          <ul className="border-border divide-border divide-y border md:hidden">
             {items.map((item) => (
               <li key={item.id} className="space-y-3 p-3">
                 <Link
@@ -171,7 +171,7 @@ export default function CartPage() {
           <div className="border-border hidden overflow-x-auto border md:block">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-border bg-muted/40 border-b text-left text-xs uppercase tracking-wide">
+                <tr className="border-border bg-muted/40 border-b text-left text-xs tracking-wide uppercase">
                   <th className="px-3 py-2.5 font-medium">Filament</th>
                   <th className="px-3 py-2.5 font-medium">Why</th>
                   <th className="px-3 py-2.5 font-medium">Qty</th>
@@ -179,7 +179,7 @@ export default function CartPage() {
                   <th className="px-3 py-2.5 font-medium">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border">
+              <tbody className="divide-border divide-y">
                 {items.map((item) => (
                   <tr key={item.id} className="hover:bg-muted/30">
                     <td className="px-3 py-3">
@@ -213,10 +213,7 @@ export default function CartPage() {
                     </td>
                     <td className="px-3 py-3">
                       <div className="flex flex-wrap items-center gap-1.5">
-                        <Badge variant="secondary">Buy {item.quantity}</Badge>
-                        {item.repurchaseQty > 0 && (
-                          <RepurchaseQtyBadge quantity={item.repurchaseQty} />
-                        )}
+                        {item.quantity}
                       </div>
                     </td>
                     <td className="text-muted-foreground px-3 py-3">

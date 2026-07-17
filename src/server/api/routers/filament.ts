@@ -1,10 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import {
-  filamentCreateSchema,
-  filamentUpdateSchema,
-} from "@/lib/filament";
+import { filamentCreateSchema, filamentUpdateSchema } from "@/lib/filament";
 import {
   filamentInclude,
   normalizeCustomValues,
@@ -59,7 +56,18 @@ export const filamentRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const filament = await ctx.db.filament.findFirst({
         where: { id: input.id, userId: ctx.session.user.id },
-        include: filamentInclude,
+        include: {
+          brand: true,
+          material: true,
+          colors: { orderBy: { position: "asc" as const } },
+          customFieldValues: { include: { field: true } },
+          _count: { select: { spools: true } },
+          spools: {
+            select: {
+              remainingWeightG: true,
+            },
+          },
+        },
       });
       if (!filament) {
         throw new TRPCError({
@@ -146,7 +154,10 @@ export const filamentRouter = createTRPCRouter({
           where: { id: input.brandId, userId },
         });
         if (!brand) {
-          throw new TRPCError({ code: "BAD_REQUEST", message: "Invalid brand" });
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Invalid brand",
+          });
         }
       }
       if (input.materialId) {
