@@ -2,7 +2,7 @@ FROM oven/bun:1.3
 WORKDIR /app
 
 COPY package.json bun.lock ./
-COPY prisma ./prisma
+COPY prisma/schema.prisma ./prisma/schema.prisma
 RUN bun install --frozen-lockfile
 
 COPY . .
