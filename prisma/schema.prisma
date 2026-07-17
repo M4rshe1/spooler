@@ -102,6 +102,8 @@ model Material {
   maxBedC   Int?
   minNozzleC Int?
   minBedC   Int?
+  /// brass | stainless | hardened | ruby — preferred nozzle tip material
+  preferredNozzle String?
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   filaments Filament[]
@@ -133,11 +135,15 @@ model Filament {
   colorMode         String               @default("SOLID")
   colorName         String?
   diameterMm        Float                @default(1.75)
-  /// Nominal full weight used when opening a new spool
+  /// Nominal full filament weight used when opening a new spool
   defaultWeightG    Int                  @default(1000)
+  /// Typical empty plastic spool tare (g); copied onto new spool instances
+  defaultEmptyWeightG Int?
   /// Product page / store listing
   productUrl        String?
   notes             String?
+  /// How many replacement spools to buy; 0 = not on repurchase list
+  repurchaseQty     Int                  @default(0)
   createdAt         DateTime             @default(now())
   updatedAt         DateTime             @updatedAt
   colors            FilamentColorStop[]
@@ -145,6 +151,7 @@ model Filament {
   customFieldValues CustomFieldValue[]
 
   @@index([userId])
+  @@index([userId, repurchaseQty])
   @@index([materialId])
   @@index([brandId])
 }
@@ -172,9 +179,10 @@ model Spool {
   location         Location? @relation(fields: [locationId], references: [id], onDelete: SetNull)
   initialWeightG   Int
   remainingWeightG Int
+  /// Empty plastic spool tare (g) for scale → filament math
+  emptyWeightG     Int?
   /// sealed | open | empty | archived
   status           String    @default("sealed")
-  needsRepurchase  Boolean   @default(false)
   purchasedAt      DateTime?
   priceCents       Int?
   notes            String?

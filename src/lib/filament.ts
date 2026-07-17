@@ -19,6 +19,31 @@ export type CustomFieldType = (typeof CUSTOM_FIELD_TYPES)[number];
 /** Spools at or below this remaining weight are suggested for repurchase */
 export const LOW_STOCK_THRESHOLD_G = 200;
 
+/** Common empty plastic spool tare weights (g) */
+export const COMMON_EMPTY_SPOOL_WEIGHTS_G = [140, 160, 180, 200, 220, 250] as const;
+
+/** Filament remaining from a scale reading of spool + filament */
+export function filamentFromGrossWeight(
+  grossG: number,
+  emptyWeightG: number | null | undefined,
+): number | null {
+  if (emptyWeightG == null || !Number.isFinite(grossG) || !Number.isFinite(emptyWeightG)) {
+    return null;
+  }
+  return Math.max(0, Math.round(grossG - emptyWeightG));
+}
+
+/** Scale reading implied by filament remaining + empty spool */
+export function grossFromFilamentWeight(
+  filamentG: number,
+  emptyWeightG: number | null | undefined,
+): number | null {
+  if (emptyWeightG == null || !Number.isFinite(filamentG) || !Number.isFinite(emptyWeightG)) {
+    return null;
+  }
+  return Math.round(filamentG + emptyWeightG);
+}
+
 /** Accepts http(s) URLs; empty string becomes null via optional helpers */
 export const optionalUrlSchema = z
   .string()
@@ -113,39 +138,29 @@ export const customValueInputSchema = z.object({
   valueMulti: z.array(z.string()).optional().nullable(),
 });
 
-export const spoolCreateSchema = z
+export const filamentCreateSchema = z
   .object({
     brandId: z.string().min(1),
     materialId: z.string().min(1),
-    locationId: z.string().optional().nullable(),
     diameterMm: z.number().positive().default(1.75),
-    initialWeightG: z.number().int().positive(),
-    remainingWeightG: z.number().int().nonnegative().optional(),
-    status: z.enum(SPOOL_STATUSES).default("sealed"),
+    defaultWeightG: z.number().int().positive().default(1000),
+    defaultEmptyWeightG: z.number().int().nonnegative().optional().nullable(),
     productUrl: optionalUrlSchema,
-    purchasedAt: z.coerce.date().optional().nullable(),
-    priceCents: z.number().int().nonnegative().optional().nullable(),
     notes: z.string().max(2000).optional().nullable(),
-    lastDriedAt: z.coerce.date().optional().nullable(),
     customValues: z.array(customValueInputSchema).default([]),
   })
   .and(colorsForModeSchema);
 
-export const spoolUpdateSchema = z
+export const filamentUpdateSchema = z
   .object({
     id: z.string().min(1),
     brandId: z.string().min(1).optional(),
     materialId: z.string().min(1).optional(),
-    locationId: z.string().optional().nullable(),
     diameterMm: z.number().positive().optional(),
-    initialWeightG: z.number().int().positive().optional(),
-    remainingWeightG: z.number().int().nonnegative().optional(),
-    status: z.enum(SPOOL_STATUSES).optional(),
+    defaultWeightG: z.number().int().positive().optional(),
+    defaultEmptyWeightG: z.number().int().nonnegative().optional().nullable(),
     productUrl: optionalUrlSchema,
-    purchasedAt: z.coerce.date().optional().nullable(),
-    priceCents: z.number().int().nonnegative().optional().nullable(),
     notes: z.string().max(2000).optional().nullable(),
-    lastDriedAt: z.coerce.date().optional().nullable(),
     customValues: z.array(customValueInputSchema).optional(),
     colorMode: z.enum(COLOR_MODES).optional(),
     colorName: z.string().trim().max(128).optional().nullable(),
@@ -173,6 +188,43 @@ export const spoolUpdateSchema = z
       }
     }
   });
+
+export const spoolCreateSchema = z.object({
+  filamentId: z.string().min(1),
+  locationId: z.string().optional().nullable(),
+  initialWeightG: z.number().int().positive().optional(),
+  remainingWeightG: z.number().int().nonnegative().optional(),
+  emptyWeightG: z.number().int().nonnegative().optional().nullable(),
+  /** How many identical spool instances to create */
+  count: z.number().int().min(1).max(50).default(1),
+  status: z.enum(SPOOL_STATUSES).default("sealed"),
+  purchasedAt: z.coerce.date().optional().nullable(),
+  priceCents: z.number().int().nonnegative().optional().nullable(),
+  notes: z.string().max(2000).optional().nullable(),
+  lastDriedAt: z.coerce.date().optional().nullable(),
+});
+
+export const spoolUpdateSchema = z.object({
+  id: z.string().min(1),
+  filamentId: z.string().min(1).optional(),
+  locationId: z.string().optional().nullable(),
+  initialWeightG: z.number().int().positive().optional(),
+  remainingWeightG: z.number().int().nonnegative().optional(),
+  emptyWeightG: z.number().int().nonnegative().optional().nullable(),
+  status: z.enum(SPOOL_STATUSES).optional(),
+  purchasedAt: z.coerce.date().optional().nullable(),
+  priceCents: z.number().int().nonnegative().optional().nullable(),
+  notes: z.string().max(2000).optional().nullable(),
+  lastDriedAt: z.coerce.date().optional().nullable(),
+});
+
+/** Weigh the whole spool on a scale; remaining filament = gross − empty tare */
+export const spoolWeighSchema = z.object({
+  id: z.string().min(1),
+  grossWeightG: z.number().int().nonnegative(),
+  /** Update empty tare at the same time if known */
+  emptyWeightG: z.number().int().nonnegative().optional().nullable(),
+});
 
 export const customFieldCreateSchema = z
   .object({
@@ -236,6 +288,33 @@ export function parseOptionsJson(options: string | null | undefined): string[] {
   return parseMultiSelect(options);
 }
 
+/** Preferred hotend nozzle tip material for a filament type */
+export const NOZZLE_MATERIALS = [
+  "brass",
+  "stainless",
+  "hardened",
+  "ruby",
+] as const;
+
+export type NozzleMaterial = (typeof NOZZLE_MATERIALS)[number];
+
+export const NOZZLE_MATERIAL_LABELS: Record<NozzleMaterial, string> = {
+  brass: "Brass",
+  stainless: "Stainless steel",
+  hardened: "Hardened steel",
+  ruby: "Ruby / jewel",
+};
+
+export function formatNozzleMaterial(
+  value: string | null | undefined,
+): string | null {
+  if (!value) return null;
+  if (value in NOZZLE_MATERIAL_LABELS) {
+    return NOZZLE_MATERIAL_LABELS[value as NozzleMaterial];
+  }
+  return value;
+}
+
 export const DEFAULT_MATERIALS = [
   {
     name: "PLA",
@@ -244,6 +323,7 @@ export const DEFAULT_MATERIALS = [
     maxNozzleC: 220,
     minBedC: 50,
     maxBedC: 70,
+    preferredNozzle: "brass" as const,
   },
   {
     name: "PETG",
@@ -252,6 +332,7 @@ export const DEFAULT_MATERIALS = [
     maxNozzleC: 250,
     minBedC: 70,
     maxBedC: 90,
+    preferredNozzle: "brass" as const,
   },
   {
     name: "ABS",
@@ -260,6 +341,7 @@ export const DEFAULT_MATERIALS = [
     maxNozzleC: 260,
     minBedC: 90,
     maxBedC: 110,
+    preferredNozzle: "brass" as const,
   },
   {
     name: "ASA",
@@ -268,6 +350,7 @@ export const DEFAULT_MATERIALS = [
     maxNozzleC: 270,
     minBedC: 90,
     maxBedC: 110,
+    preferredNozzle: "brass" as const,
   },
   {
     name: "TPU",
@@ -276,6 +359,7 @@ export const DEFAULT_MATERIALS = [
     maxNozzleC: 240,
     minBedC: 30,
     maxBedC: 60,
+    preferredNozzle: "brass" as const,
   },
   {
     name: "Nylon",
@@ -284,6 +368,7 @@ export const DEFAULT_MATERIALS = [
     maxNozzleC: 270,
     minBedC: 70,
     maxBedC: 100,
+    preferredNozzle: "brass" as const,
   },
   {
     name: "PC",
@@ -292,6 +377,7 @@ export const DEFAULT_MATERIALS = [
     maxNozzleC: 300,
     minBedC: 90,
     maxBedC: 120,
+    preferredNozzle: "brass" as const,
   },
   {
     name: "PLA+",
@@ -300,5 +386,6 @@ export const DEFAULT_MATERIALS = [
     maxNozzleC: 225,
     minBedC: 50,
     maxBedC: 70,
+    preferredNozzle: "brass" as const,
   },
 ] as const;

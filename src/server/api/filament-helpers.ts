@@ -21,6 +21,7 @@ export async function ensureDefaultMaterials(db: PrismaClient) {
         maxNozzleC: material.maxNozzleC,
         minBedC: material.minBedC,
         maxBedC: material.maxBedC,
+        preferredNozzle: material.preferredNozzle,
       },
     });
   }
@@ -176,11 +177,23 @@ export function normalizeCustomValues(
   return rows;
 }
 
-export const spoolInclude = {
+export const filamentInclude = {
   brand: true,
   material: true,
-  location: true,
   colors: { orderBy: { position: "asc" as const } },
   customFieldValues: { include: { field: true } },
+  _count: { select: { spools: true } },
+} as const;
+
+export const spoolInclude = {
+  filament: {
+    include: {
+      brand: true,
+      material: true,
+      colors: { orderBy: { position: "asc" as const } },
+      customFieldValues: { include: { field: true } },
+    },
+  },
+  location: true,
   usages: { orderBy: { usedAt: "desc" as const }, take: 20 },
 } as const;

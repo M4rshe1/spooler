@@ -7,11 +7,15 @@ import { toast } from "sonner";
 
 import { ColorSwatch } from "@/components/filament/color-swatch";
 import { ExternalLink } from "@/components/filament/external-link";
+import {
+  RepurchaseControls,
+  RepurchaseQtyBadge,
+} from "@/components/filament/repurchase-controls";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { displayUrlHost, parseMultiSelect } from "@/lib/filament";
+import { displayUrlHost, formatNozzleMaterial, grossFromFilamentWeight, parseMultiSelect } from "@/lib/filament";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 
@@ -56,6 +60,7 @@ export default function SpoolDetailPage() {
   const logUsage = api.spool.logUsage.useMutation({
     onSuccess: async () => {
       await utils.spool.invalidate();
+      await utils.filament.invalidate();
       await utils.stats.invalidate();
       setGramsUsed("");
       setUsageNote("");
@@ -84,19 +89,6 @@ export default function SpoolDetailPage() {
     onError: (err) => toast.error(err.message),
   });
 
-  const setNeedsRepurchase = api.spool.setNeedsRepurchase.useMutation({
-    onSuccess: async (updated) => {
-      await utils.spool.invalidate();
-      await utils.stats.invalidate();
-      toast.success(
-        updated.needsRepurchase
-          ? "Added to repurchase list"
-          : "Removed from repurchase list",
-      );
-    },
-    onError: (err) => toast.error(err.message),
-  });
-
   if (isLoading) {
     return <p className="text-muted-foreground text-sm">Loading…</p>;
   }
@@ -105,8 +97,15 @@ export default function SpoolDetailPage() {
     return <p className="text-muted-foreground text-sm">Spool not found.</p>;
   }
 
+  const { filament } = spool;
   const pct = Math.round(
     (spool.remainingWeightG / Math.max(1, spool.initialWeightG)) * 100,
+  );
+  const emptyWeightG =
+    spool.emptyWeightG ?? filament.defaultEmptyWeightG ?? null;
+  const grossWeightG = grossFromFilamentWeight(
+    spool.remainingWeightG,
+    emptyWeightG,
   );
 
   return (
@@ -114,29 +113,39 @@ export default function SpoolDetailPage() {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex gap-4">
           <ColorSwatch
-            mode={spool.colorMode}
-            colors={spool.colors}
+            mode={filament.colorMode}
+            colors={filament.colors}
             className="h-16 w-24"
           />
           <div>
             <h1 className="font-heading text-3xl font-bold tracking-tight">
-              {spool.colorName ?? "Untitled spool"}
+              {filament.colorName ?? "Untitled spool"}
             </h1>
             <p className="text-muted-foreground mt-1 text-sm">
-              {spool.brand.name} · {spool.material.name} · {spool.diameterMm}mm
+              {filament.brand.name} · {filament.material.name} ·{" "}
+              {filament.diameterMm}mm
+              {filament.material.preferredNozzle
+                ? ` · ${formatNozzleMaterial(filament.material.preferredNozzle)} nozzle`
+                : ""}
             </p>
             <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
-              {spool.brand.websiteUrl && (
+              <Link
+                href={`/filaments/${filament.id}`}
+                className="text-muted-foreground underline-offset-2 hover:underline"
+              >
+                View filament
+              </Link>
+              {filament.brand.websiteUrl && (
                 <ExternalLink
-                  href={spool.brand.websiteUrl}
+                  href={filament.brand.websiteUrl}
                   className="text-muted-foreground text-xs"
                 >
-                  {displayUrlHost(spool.brand.websiteUrl)}
+                  {displayUrlHost(filament.brand.websiteUrl)}
                 </ExternalLink>
               )}
-              {spool.productUrl && (
+              {filament.productUrl && (
                 <ExternalLink
-                  href={spool.productUrl}
+                  href={filament.productUrl}
                   className="text-muted-foreground text-xs"
                 >
                   Product page
@@ -145,10 +154,10 @@ export default function SpoolDetailPage() {
             </div>
             <div className="mt-2 flex flex-wrap gap-2">
               <Badge variant="outline">{spool.status}</Badge>
-              <Badge variant="secondary">{spool.colorMode.toLowerCase()}</Badge>
-              {spool.needsRepurchase && (
-                <Badge variant="destructive">repurchase</Badge>
-              )}
+              <Badge variant="secondary">
+                {filament.colorMode.toLowerCase()}
+              </Badge>
+              <RepurchaseQtyBadge quantity={filament.repurchaseQty} />
               {spool.location && (
                 <Badge variant="outline">{spool.location.name}</Badge>
               )}
@@ -156,18 +165,10 @@ export default function SpoolDetailPage() {
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button
-            variant={spool.needsRepurchase ? "secondary" : "outline"}
-            disabled={setNeedsRepurchase.isPending}
-            onClick={() =>
-              setNeedsRepurchase.mutate({
-                id: spool.id,
-                needsRepurchase: !spool.needsRepurchase,
-              })
-            }
-          >
-            {spool.needsRepurchase ? "Unmark repurchase" : "Mark to repurchase"}
-          </Button>
+          <RepurchaseControls
+            filamentId={filament.id}
+            repurchaseQty={filament.repurchaseQty}
+          />
           <Link
             href={`/spools/${spool.id}/edit`}
             className={cn(buttonVariants({ variant: "outline" }))}
@@ -199,7 +200,7 @@ export default function SpoolDetailPage() {
         <div className="flex items-end justify-between">
           <div>
             <div className="text-muted-foreground text-xs uppercase">
-              Remaining
+              Remaining filament
             </div>
             <div className="font-heading text-2xl font-semibold tabular-nums">
               {spool.remainingWeightG}g
@@ -208,6 +209,15 @@ export default function SpoolDetailPage() {
                 / {spool.initialWeightG}g
               </span>
             </div>
+            {(emptyWeightG != null || grossWeightG != null) && (
+              <p className="text-muted-foreground mt-1 text-xs tabular-nums">
+                {emptyWeightG != null ? `Empty spool ${emptyWeightG}g` : null}
+                {emptyWeightG != null && grossWeightG != null ? " · " : null}
+                {grossWeightG != null
+                  ? `Scale should read ~${grossWeightG}g`
+                  : null}
+              </p>
+            )}
           </div>
           <div className="text-muted-foreground text-sm tabular-nums">{pct}%</div>
         </div>
@@ -219,11 +229,11 @@ export default function SpoolDetailPage() {
         </div>
       </section>
 
-      {spool.colors.length > 0 && (
+      {filament.colors.length > 0 && (
         <section className="space-y-2">
           <h2 className="font-heading text-lg font-semibold">Color stops</h2>
           <ul className="flex flex-wrap gap-2">
-            {spool.colors.map((stop) => (
+            {filament.colors.map((stop) => (
               <li
                 key={stop.id}
                 className="border-border flex items-center gap-2 border px-2 py-1.5 text-xs"
@@ -243,11 +253,11 @@ export default function SpoolDetailPage() {
         </section>
       )}
 
-      {spool.customFieldValues.length > 0 && (
+      {filament.customFieldValues.length > 0 && (
         <section className="space-y-2">
           <h2 className="font-heading text-lg font-semibold">Custom fields</h2>
           <dl className="grid gap-2 sm:grid-cols-2">
-            {spool.customFieldValues.map((cv) => (
+            {filament.customFieldValues.map((cv) => (
               <div key={cv.id} className="border-border border px-3 py-2">
                 <dt className="text-muted-foreground text-xs">{cv.field.label}</dt>
                 <dd className="mt-0.5 text-sm">{formatCustomValue(cv)}</dd>

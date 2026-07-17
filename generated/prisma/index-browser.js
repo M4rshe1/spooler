@@ -182,6 +182,7 @@ exports.Prisma.MaterialScalarFieldEnum = {
   maxBedC: 'maxBedC',
   minNozzleC: 'minNozzleC',
   minBedC: 'minBedC',
+  preferredNozzle: 'preferredNozzle',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -203,8 +204,10 @@ exports.Prisma.FilamentScalarFieldEnum = {
   colorName: 'colorName',
   diameterMm: 'diameterMm',
   defaultWeightG: 'defaultWeightG',
+  defaultEmptyWeightG: 'defaultEmptyWeightG',
   productUrl: 'productUrl',
   notes: 'notes',
+  repurchaseQty: 'repurchaseQty',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -225,8 +228,8 @@ exports.Prisma.SpoolScalarFieldEnum = {
   locationId: 'locationId',
   initialWeightG: 'initialWeightG',
   remainingWeightG: 'remainingWeightG',
+  emptyWeightG: 'emptyWeightG',
   status: 'status',
-  needsRepurchase: 'needsRepurchase',
   purchasedAt: 'purchasedAt',
   priceCents: 'priceCents',
   notes: 'notes',

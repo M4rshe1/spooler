@@ -23,6 +23,7 @@ export const SPECIALTY_MATERIALS = [
     maxNozzleC: 230,
     minBedC: 45,
     maxBedC: 70,
+    preferredNozzle: "hardened" as const,
   },
   {
     name: "PETG-CF",
@@ -31,6 +32,7 @@ export const SPECIALTY_MATERIALS = [
     maxNozzleC: 260,
     minBedC: 70,
     maxBedC: 90,
+    preferredNozzle: "hardened" as const,
   },
   {
     name: "PA-CF",
@@ -39,6 +41,7 @@ export const SPECIALTY_MATERIALS = [
     maxNozzleC: 290,
     minBedC: 80,
     maxBedC: 110,
+    preferredNozzle: "hardened" as const,
   },
   {
     name: "Wood PLA",
@@ -47,6 +50,7 @@ export const SPECIALTY_MATERIALS = [
     maxNozzleC: 220,
     minBedC: 50,
     maxBedC: 70,
+    preferredNozzle: "hardened" as const,
   },
   {
     name: "Silk PLA",
@@ -55,6 +59,7 @@ export const SPECIALTY_MATERIALS = [
     maxNozzleC: 230,
     minBedC: 50,
     maxBedC: 70,
+    preferredNozzle: "brass" as const,
   },
   {
     name: "HIPS",
@@ -63,6 +68,7 @@ export const SPECIALTY_MATERIALS = [
     maxNozzleC: 250,
     minBedC: 90,
     maxBedC: 110,
+    preferredNozzle: "brass" as const,
   },
   {
     name: "PVA",
@@ -71,6 +77,7 @@ export const SPECIALTY_MATERIALS = [
     maxNozzleC: 220,
     minBedC: 45,
     maxBedC: 60,
+    preferredNozzle: "brass" as const,
   },
 ] as const;
 

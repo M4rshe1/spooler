@@ -35,7 +35,7 @@ export function colorPreviewStyle(
       return `${normalizeHex(s.hex)} ${pct}%`;
     });
     return {
-      backgroundImage: `linear-gradient(90deg, ${parts.join(", ")})`,
+      backgroundImage: `linear-gradient(0deg, ${parts.join(", ")})`,
     };
   }
 

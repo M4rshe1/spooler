@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { optionalUrlSchema } from "@/lib/filament";
+import { NOZZLE_MATERIALS, optionalUrlSchema } from "@/lib/filament";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 
 const materialInputSchema = z.object({
@@ -11,6 +11,7 @@ const materialInputSchema = z.object({
   maxNozzleC: z.number().int().optional().nullable(),
   minBedC: z.number().int().optional().nullable(),
   maxBedC: z.number().int().optional().nullable(),
+  preferredNozzle: z.enum(NOZZLE_MATERIALS).optional().nullable(),
 });
 
 const brandInputSchema = z.object({
@@ -22,7 +23,7 @@ export const catalogRouter = createTRPCRouter({
   brands: protectedProcedure.query(async ({ ctx }) => {
     return ctx.db.brand.findMany({
       where: { userId: ctx.session.user.id },
-      include: { _count: { select: { spools: true } } },
+      include: { _count: { select: { filaments: true } } },
       orderBy: { name: "asc" },
     });
   }),
@@ -104,15 +105,15 @@ export const catalogRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const brand = await ctx.db.brand.findFirst({
         where: { id: input.id, userId: ctx.session.user.id },
-        include: { _count: { select: { spools: true } } },
+        include: { _count: { select: { filaments: true } } },
       });
       if (!brand) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Brand not found" });
       }
-      if (brand._count.spools > 0) {
+      if (brand._count.filaments > 0) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Cannot delete a brand that has spools",
+          message: "Cannot delete a brand that has filaments",
         });
       }
       await ctx.db.brand.delete({ where: { id: brand.id } });
@@ -121,7 +122,7 @@ export const catalogRouter = createTRPCRouter({
 
   materials: protectedProcedure.query(async ({ ctx }) => {
     return ctx.db.material.findMany({
-      include: { _count: { select: { spools: true } } },
+      include: { _count: { select: { filaments: true } } },
       orderBy: { name: "asc" },
     });
   }),
@@ -138,6 +139,7 @@ export const catalogRouter = createTRPCRouter({
             maxNozzleC: input.maxNozzleC ?? null,
             minBedC: input.minBedC ?? null,
             maxBedC: input.maxBedC ?? null,
+            preferredNozzle: input.preferredNozzle ?? null,
           },
         });
       } catch {
@@ -209,6 +211,7 @@ export const catalogRouter = createTRPCRouter({
             maxNozzleC: input.maxNozzleC ?? null,
             minBedC: input.minBedC ?? null,
             maxBedC: input.maxBedC ?? null,
+            preferredNozzle: input.preferredNozzle ?? null,
           },
         });
       } catch {
@@ -224,7 +227,7 @@ export const catalogRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const material = await ctx.db.material.findUnique({
         where: { id: input.id },
-        include: { _count: { select: { spools: true } } },
+        include: { _count: { select: { filaments: true } } },
       });
       if (!material) {
         throw new TRPCError({
@@ -232,10 +235,10 @@ export const catalogRouter = createTRPCRouter({
           message: "Material not found",
         });
       }
-      if (material._count.spools > 0) {
+      if (material._count.filaments > 0) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Cannot delete a material that has spools",
+          message: "Cannot delete a material that has filaments",
         });
       }
       await ctx.db.material.delete({ where: { id: material.id } });

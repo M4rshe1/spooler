@@ -51,6 +51,7 @@ async function upsertMaterials(
     maxNozzleC?: number | null;
     minBedC?: number | null;
     maxBedC?: number | null;
+    preferredNozzle?: string | null;
   }[],
 ) {
   let count = 0;
@@ -64,6 +65,7 @@ async function upsertMaterials(
         maxNozzleC: material.maxNozzleC ?? null,
         minBedC: material.minBedC ?? null,
         maxBedC: material.maxBedC ?? null,
+        preferredNozzle: material.preferredNozzle ?? null,
       },
       update: {
         density: material.density ?? null,
@@ -71,6 +73,7 @@ async function upsertMaterials(
         maxNozzleC: material.maxNozzleC ?? null,
         minBedC: material.minBedC ?? null,
         maxBedC: material.maxBedC ?? null,
+        preferredNozzle: material.preferredNozzle ?? null,
       },
     });
     count += 1;
@@ -134,13 +137,13 @@ export async function installDatasets(
             where: {
               userId_entity_key: {
                 userId,
-                entity: "SPOOL",
+                entity: "FILAMENT",
                 key: field.key,
               },
             },
             create: {
               userId,
-              entity: "SPOOL",
+              entity: "FILAMENT",
               key: field.key,
               label: field.label,
               type: field.type,

@@ -2,15 +2,14 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import {
+  filamentFromGrossWeight,
   LOW_STOCK_THRESHOLD_G,
   SPOOL_STATUSES,
   spoolCreateSchema,
   spoolUpdateSchema,
+  spoolWeighSchema,
 } from "@/lib/filament";
-import {
-  normalizeCustomValues,
-  spoolInclude,
-} from "@/server/api/filament-helpers";
+import { spoolInclude } from "@/server/api/filament-helpers";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 
 export const spoolRouter = createTRPCRouter({
@@ -21,6 +20,7 @@ export const spoolRouter = createTRPCRouter({
           status: z.enum(SPOOL_STATUSES).optional(),
           materialId: z.string().optional(),
           brandId: z.string().optional(),
+          filamentId: z.string().optional(),
           search: z.string().optional(),
           includeArchived: z.boolean().default(false),
         })
@@ -36,26 +36,37 @@ export const spoolRouter = createTRPCRouter({
           status:
             input?.status ??
             (input?.includeArchived ? undefined : { not: "archived" }),
-          materialId: input?.materialId,
-          brandId: input?.brandId,
+          filamentId: input?.filamentId,
+          filament:
+            input?.materialId || input?.brandId
+              ? {
+                  materialId: input?.materialId,
+                  brandId: input?.brandId,
+                }
+              : undefined,
           OR: search
             ? [
-                { colorName: { contains: search } },
                 { notes: { contains: search } },
-                { brand: { name: { contains: search } } },
-                { material: { name: { contains: search } } },
+                { filament: { colorName: { contains: search } } },
+                { filament: { notes: { contains: search } } },
+                { filament: { brand: { name: { contains: search } } } },
+                { filament: { material: { name: { contains: search } } } },
               ]
             : undefined,
         },
         include: {
-          brand: true,
-          material: true,
-          location: true,
-          colors: { orderBy: { position: "asc" } },
-          customFieldValues: {
-            include: { field: true },
-            where: { field: { showInList: true } },
+          filament: {
+            include: {
+              brand: true,
+              material: true,
+              colors: { orderBy: { position: "asc" } },
+              customFieldValues: {
+                include: { field: true },
+                where: { field: { showInList: true } },
+              },
+            },
           },
+          location: true,
         },
         orderBy: [{ updatedAt: "desc" }],
       });
@@ -79,19 +90,16 @@ export const spoolRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
 
-      const [brand, material] = await Promise.all([
-        ctx.db.brand.findFirst({ where: { id: input.brandId, userId } }),
-        ctx.db.material.findUnique({ where: { id: input.materialId } }),
-      ]);
-      if (!brand) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "Invalid brand" });
-      }
-      if (!material) {
+      const filament = await ctx.db.filament.findFirst({
+        where: { id: input.filamentId, userId },
+      });
+      if (!filament) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Invalid material",
+          message: "Invalid filament",
         });
       }
+
       if (input.locationId) {
         const location = await ctx.db.location.findFirst({
           where: { id: input.locationId, userId },
@@ -104,44 +112,48 @@ export const spoolRouter = createTRPCRouter({
         }
       }
 
-      const fields = await ctx.db.customField.findMany({
-        where: { userId, entity: "SPOOL" },
+      const initialWeightG = input.initialWeightG ?? filament.defaultWeightG;
+      const remainingWeightG = input.remainingWeightG ?? initialWeightG;
+      const emptyWeightG =
+        input.emptyWeightG !== undefined
+          ? input.emptyWeightG
+          : (filament.defaultEmptyWeightG ?? null);
+      const count = input.count ?? 1;
+
+      const row = {
+        userId,
+        filamentId: input.filamentId,
+        locationId: input.locationId ?? null,
+        initialWeightG,
+        remainingWeightG,
+        emptyWeightG,
+        status: input.status,
+        purchasedAt: input.purchasedAt ?? null,
+        priceCents: input.priceCents ?? null,
+        notes: input.notes ?? null,
+        lastDriedAt: input.lastDriedAt ?? null,
+      };
+
+      if (count === 1) {
+        const spool = await ctx.db.spool.create({
+          data: row,
+          include: spoolInclude,
+        });
+        return { count: 1, spools: [spool] };
+      }
+
+      await ctx.db.spool.createMany({
+        data: Array.from({ length: count }, () => ({ ...row })),
       });
-      const customRows = normalizeCustomValues(fields, input.customValues);
 
-      const remaining = input.remainingWeightG ?? input.initialWeightG;
-
-      return ctx.db.spool.create({
-        data: {
-          userId,
-          brandId: input.brandId,
-          materialId: input.materialId,
-          locationId: input.locationId ?? null,
-          colorMode: input.colorMode,
-          colorName: input.colorName ?? null,
-          diameterMm: input.diameterMm,
-          initialWeightG: input.initialWeightG,
-          remainingWeightG: remaining,
-          status: input.status,
-          productUrl: input.productUrl ?? null,
-          purchasedAt: input.purchasedAt ?? null,
-          priceCents: input.priceCents ?? null,
-          notes: input.notes ?? null,
-          lastDriedAt: input.lastDriedAt ?? null,
-          colors: {
-            create: input.colors.map((c) => ({
-              hex: c.hex.toUpperCase(),
-              name: c.name ?? null,
-              position: c.position,
-              weight: c.weight ?? null,
-            })),
-          },
-          customFieldValues: {
-            create: customRows,
-          },
-        },
+      const spools = await ctx.db.spool.findMany({
+        where: { userId, filamentId: input.filamentId },
         include: spoolInclude,
+        orderBy: { createdAt: "desc" },
+        take: count,
       });
+
+      return { count, spools };
     }),
 
   update: protectedProcedure
@@ -155,22 +167,14 @@ export const spoolRouter = createTRPCRouter({
         throw new TRPCError({ code: "NOT_FOUND", message: "Spool not found" });
       }
 
-      if (input.brandId) {
-        const brand = await ctx.db.brand.findFirst({
-          where: { id: input.brandId, userId },
+      if (input.filamentId) {
+        const filament = await ctx.db.filament.findFirst({
+          where: { id: input.filamentId, userId },
         });
-        if (!brand) {
-          throw new TRPCError({ code: "BAD_REQUEST", message: "Invalid brand" });
-        }
-      }
-      if (input.materialId) {
-        const material = await ctx.db.material.findUnique({
-          where: { id: input.materialId },
-        });
-        if (!material) {
+        if (!filament) {
           throw new TRPCError({
             code: "BAD_REQUEST",
-            message: "Invalid material",
+            message: "Invalid filament",
           });
         }
       }
@@ -186,61 +190,96 @@ export const spoolRouter = createTRPCRouter({
         }
       }
 
-      let customRows:
-        | ReturnType<typeof normalizeCustomValues>
-        | undefined;
-      if (input.customValues) {
-        const fields = await ctx.db.customField.findMany({
-          where: { userId, entity: "SPOOL" },
-        });
-        customRows = normalizeCustomValues(fields, input.customValues);
+      return ctx.db.spool.update({
+        where: { id: existing.id },
+        data: {
+          filamentId: input.filamentId,
+          locationId:
+            input.locationId === undefined ? undefined : input.locationId,
+          initialWeightG: input.initialWeightG,
+          remainingWeightG: input.remainingWeightG,
+          emptyWeightG:
+            input.emptyWeightG === undefined ? undefined : input.emptyWeightG,
+          status: input.status,
+          purchasedAt: input.purchasedAt,
+          priceCents: input.priceCents,
+          notes: input.notes,
+          lastDriedAt: input.lastDriedAt,
+        },
+        include: spoolInclude,
+      });
+    }),
+
+  /** Set remaining filament from a scale reading: gross − empty tare */
+  weigh: protectedProcedure
+    .input(spoolWeighSchema)
+    .mutation(async ({ ctx, input }) => {
+      const spool = await ctx.db.spool.findFirst({
+        where: { id: input.id, userId: ctx.session.user.id },
+      });
+      if (!spool) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Spool not found" });
       }
 
-      return ctx.db.$transaction(async (tx) => {
-        if (input.colors && input.colorMode) {
-          await tx.spoolColorStop.deleteMany({ where: { spoolId: existing.id } });
-          await tx.spoolColorStop.createMany({
-            data: input.colors.map((c) => ({
-              spoolId: existing.id,
-              hex: c.hex.toUpperCase(),
-              name: c.name ?? null,
-              position: c.position,
-              weight: c.weight ?? null,
-            })),
-          });
-        }
+      const emptyWeightG =
+        input.emptyWeightG !== undefined
+          ? input.emptyWeightG
+          : spool.emptyWeightG;
 
-        if (customRows) {
-          await tx.customFieldValue.deleteMany({
-            where: { spoolId: existing.id },
+      if (emptyWeightG == null) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Set an empty spool weight before weighing",
+        });
+      }
+
+      const remaining = filamentFromGrossWeight(
+        input.grossWeightG,
+        emptyWeightG,
+      );
+      if (remaining == null) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid scale reading",
+        });
+      }
+
+      if (input.grossWeightG < emptyWeightG) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `Scale reading (${input.grossWeightG}g) is below empty spool weight (${emptyWeightG}g)`,
+        });
+      }
+
+      const status =
+        remaining === 0
+          ? "empty"
+          : spool.status === "sealed"
+            ? "open"
+            : spool.status;
+
+      const shouldSuggestRepurchase =
+        remaining === 0 || remaining <= LOW_STOCK_THRESHOLD_G;
+
+      return ctx.db.$transaction(async (tx) => {
+        if (shouldSuggestRepurchase) {
+          const filament = await tx.filament.findFirst({
+            where: { id: spool.filamentId, userId: ctx.session.user.id },
           });
-          if (customRows.length > 0) {
-            await tx.customFieldValue.createMany({
-              data: customRows.map((row) => ({
-                ...row,
-                spoolId: existing.id,
-              })),
+          if (filament && filament.repurchaseQty === 0) {
+            await tx.filament.update({
+              where: { id: filament.id },
+              data: { repurchaseQty: 1 },
             });
           }
         }
 
         return tx.spool.update({
-          where: { id: existing.id },
+          where: { id: spool.id },
           data: {
-            brandId: input.brandId,
-            materialId: input.materialId,
-            locationId: input.locationId === undefined ? undefined : input.locationId,
-            diameterMm: input.diameterMm,
-            initialWeightG: input.initialWeightG,
-            remainingWeightG: input.remainingWeightG,
-            status: input.status,
-            productUrl: input.productUrl,
-            purchasedAt: input.purchasedAt,
-            priceCents: input.priceCents,
-            notes: input.notes,
-            lastDriedAt: input.lastDriedAt,
-            colorMode: input.colorMode,
-            colorName: input.colorName,
+            remainingWeightG: remaining,
+            emptyWeightG,
+            status,
           },
           include: spoolInclude,
         });
@@ -270,10 +309,9 @@ export const spoolRouter = createTRPCRouter({
           : spool.status === "sealed"
             ? "open"
             : spool.status;
-      const needsRepurchase =
-        spool.needsRepurchase ||
-        remaining === 0 ||
-        remaining <= LOW_STOCK_THRESHOLD_G;
+
+      const shouldSuggestRepurchase =
+        remaining === 0 || remaining <= LOW_STOCK_THRESHOLD_G;
 
       return ctx.db.$transaction(async (tx) => {
         await tx.usage.create({
@@ -283,62 +321,24 @@ export const spoolRouter = createTRPCRouter({
             note: input.note ?? null,
           },
         });
+
+        if (shouldSuggestRepurchase) {
+          const filament = await tx.filament.findFirst({
+            where: { id: spool.filamentId, userId: ctx.session.user.id },
+          });
+          if (filament && filament.repurchaseQty === 0) {
+            await tx.filament.update({
+              where: { id: filament.id },
+              data: { repurchaseQty: 1 },
+            });
+          }
+        }
+
         return tx.spool.update({
           where: { id: spool.id },
-          data: { remainingWeightG: remaining, status, needsRepurchase },
+          data: { remainingWeightG: remaining, status },
           include: spoolInclude,
         });
-      });
-    }),
-
-  setNeedsRepurchase: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        needsRepurchase: z.boolean(),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const spool = await ctx.db.spool.findFirst({
-        where: { id: input.id, userId: ctx.session.user.id },
-      });
-      if (!spool) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Spool not found" });
-      }
-      return ctx.db.spool.update({
-        where: { id: spool.id },
-        data: { needsRepurchase: input.needsRepurchase },
-        include: spoolInclude,
-      });
-    }),
-
-  /** Clear repurchase flag (and archive empty spools) after you bought a replacement */
-  markRepurchased: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        archiveIfEmpty: z.boolean().default(true),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const spool = await ctx.db.spool.findFirst({
-        where: { id: input.id, userId: ctx.session.user.id },
-      });
-      if (!spool) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Spool not found" });
-      }
-
-      const shouldArchive =
-        input.archiveIfEmpty &&
-        (spool.status === "empty" || spool.remainingWeightG <= 0);
-
-      return ctx.db.spool.update({
-        where: { id: spool.id },
-        data: {
-          needsRepurchase: false,
-          status: shouldArchive ? "archived" : spool.status,
-        },
-        include: spoolInclude,
       });
     }),
 

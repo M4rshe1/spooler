@@ -27,7 +27,13 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import { Separator } from "@/components/ui/separator";
+import {
+  formatNozzleMaterial,
+  NOZZLE_MATERIAL_LABELS,
+  NOZZLE_MATERIALS,
+} from "@/lib/filament";
 import { api } from "@/trpc/react";
 
 export function BrandsPanel() {
@@ -154,7 +160,7 @@ export function BrandsPanel() {
         <CardHeader>
           <CardTitle>Your brands</CardTitle>
           <CardDescription>
-            Used when adding spools. Delete only if unused.
+            Used when adding filaments. Delete only if unused.
           </CardDescription>
         </CardHeader>
         <CardContent className="px-0">
@@ -179,8 +185,8 @@ export function BrandsPanel() {
                       {brand.name}
                     </div>
                     <div className="text-muted-foreground text-xs">
-                      {brand._count.spools} spool
-                      {brand._count.spools === 1 ? "" : "s"}
+                      {brand._count.filaments} filament
+                      {brand._count.filaments === 1 ? "" : "s"}
                       {brand.websiteUrl ? (
                         <>
                           {" · "}
@@ -212,7 +218,7 @@ export function BrandsPanel() {
                       size="icon-sm"
                       variant="ghost"
                       disabled={
-                        brand._count.spools > 0 || deleteBrand.isPending
+                        brand._count.filaments > 0 || deleteBrand.isPending
                       }
                       onClick={() => {
                         if (confirm(`Delete brand “${brand.name}”?`)) {
@@ -252,6 +258,7 @@ export function MaterialsPanel() {
 
   const [name, setName] = useState("");
   const [density, setDensity] = useState("");
+  const [preferredNozzle, setPreferredNozzle] = useState<string>("");
   const [minNozzleC, setMinNozzleC] = useState("");
   const [maxNozzleC, setMaxNozzleC] = useState("");
   const [minBedC, setMinBedC] = useState("");
@@ -262,6 +269,7 @@ export function MaterialsPanel() {
       await utils.catalog.materials.invalidate();
       setName("");
       setDensity("");
+      setPreferredNozzle("");
       setMinNozzleC("");
       setMaxNozzleC("");
       setMinBedC("");
@@ -284,6 +292,9 @@ export function MaterialsPanel() {
     createMaterial.mutate({
       name: name.trim(),
       density: optionalFloat(density),
+      preferredNozzle: preferredNozzle
+        ? (preferredNozzle as (typeof NOZZLE_MATERIALS)[number])
+        : null,
       minNozzleC: optionalInt(minNozzleC),
       maxNozzleC: optionalInt(maxNozzleC),
       minBedC: optionalInt(minBedC),
@@ -323,6 +334,28 @@ export function MaterialsPanel() {
                 onChange={(e) => setDensity(e.target.value)}
               />
               <FieldDescription>Optional, for later volume math.</FieldDescription>
+            </Field>
+            <Field>
+              <FieldLabel>Preferred nozzle</FieldLabel>
+              <SearchableSelect
+                value={preferredNozzle || "none"}
+                onValueChange={(value) => {
+                  if (value === "none" || value == null) setPreferredNozzle("");
+                  else setPreferredNozzle(value);
+                }}
+                placeholder="Select nozzle…"
+                allowClear
+                options={[
+                  { value: "none", label: "Not set" },
+                  ...NOZZLE_MATERIALS.map((n) => ({
+                    value: n,
+                    label: NOZZLE_MATERIAL_LABELS[n],
+                  })),
+                ]}
+              />
+              <FieldDescription>
+                Tip material — use hardened for carbon/glass-filled filaments.
+              </FieldDescription>
             </Field>
             <Separator />
             <div className="grid grid-cols-2 gap-3">
@@ -404,14 +437,20 @@ export function MaterialsPanel() {
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="text-sm font-medium">{material.name}</span>
                       <Badge variant="secondary">
-                        {material._count.spools} spool
-                        {material._count.spools === 1 ? "" : "s"}
+                        {material._count.filaments} filament
+                        {material._count.filaments === 1 ? "" : "s"}
                       </Badge>
                     </div>
                     <div className="text-muted-foreground text-xs">
                       {material.density != null
                         ? `${material.density} g/cm³`
                         : "No density"}
+                      {material.preferredNozzle && (
+                        <>
+                          {" · "}
+                          {formatNozzleMaterial(material.preferredNozzle)} nozzle
+                        </>
+                      )}
                       {(material.minNozzleC != null ||
                         material.maxNozzleC != null) && (
                         <>
@@ -434,7 +473,7 @@ export function MaterialsPanel() {
                     size="icon-sm"
                     variant="ghost"
                     disabled={
-                      material._count.spools > 0 || deleteMaterial.isPending
+                      material._count.filaments > 0 || deleteMaterial.isPending
                     }
                     onClick={() => {
                       if (confirm(`Delete material “${material.name}”?`)) {

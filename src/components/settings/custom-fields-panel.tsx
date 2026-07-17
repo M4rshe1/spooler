@@ -71,7 +71,7 @@ export function CustomFieldsPanel() {
         <CardHeader>
           <CardTitle>Add custom field</CardTitle>
           <CardDescription>
-            Extra spool attributes like finish, SKU, or tags.
+            Extra filament attributes like finish, SKU, or tags.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -157,7 +157,7 @@ export function CustomFieldsPanel() {
         <CardHeader>
           <CardTitle>Custom fields</CardTitle>
           <CardDescription>
-            These appear on spool forms and optionally in the inventory table.
+            These appear on filament forms and optionally in the inventory table.
           </CardDescription>
         </CardHeader>
         <CardContent className="px-0">

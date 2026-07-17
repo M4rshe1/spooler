@@ -1,4 +1,16 @@
+"use client";
+
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
+
 import { SpoolForm } from "@/components/filament/spool-form";
+
+function NewSpoolContent() {
+  const searchParams = useSearchParams();
+  const filamentId = searchParams.get("filamentId") ?? undefined;
+
+  return <SpoolForm mode="create" defaultFilamentId={filamentId} />;
+}
 
 export default function NewSpoolPage() {
   return (
@@ -8,11 +20,12 @@ export default function NewSpoolPage() {
           Add spool
         </h1>
         <p className="text-muted-foreground mt-1 text-sm">
-          Scan an OpenPrintTag / OpenSpool NFC tag on Android Chrome, or fill
-          the form manually.
+          Open a physical roll from an existing filament definition.
         </p>
       </div>
-      <SpoolForm mode="create" />
+      <Suspense fallback={<p className="text-muted-foreground text-sm">Loading…</p>}>
+        <NewSpoolContent />
+      </Suspense>
     </div>
   );
 }

@@ -12,7 +12,7 @@ export const customFieldRouter = createTRPCRouter({
     .input(
       z
         .object({
-          entity: z.literal("SPOOL").default("SPOOL"),
+          entity: z.literal("FILAMENT").default("FILAMENT"),
         })
         .optional(),
     )
@@ -20,7 +20,7 @@ export const customFieldRouter = createTRPCRouter({
       return ctx.db.customField.findMany({
         where: {
           userId: ctx.session.user.id,
-          entity: input?.entity ?? "SPOOL",
+          entity: input?.entity ?? "FILAMENT",
         },
         orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
       });
@@ -38,14 +38,14 @@ export const customFieldRouter = createTRPCRouter({
       }
 
       const maxOrder = await ctx.db.customField.aggregate({
-        where: { userId: ctx.session.user.id, entity: "SPOOL" },
+        where: { userId: ctx.session.user.id, entity: "FILAMENT" },
         _max: { sortOrder: true },
       });
 
       return ctx.db.customField.create({
         data: {
           userId: ctx.session.user.id,
-          entity: "SPOOL",
+          entity: "FILAMENT",
           key,
           label: input.label,
           type: input.type,

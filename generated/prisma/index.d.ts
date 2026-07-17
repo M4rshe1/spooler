@@ -8010,6 +8010,7 @@ export namespace Prisma {
     maxBedC: number | null
     minNozzleC: number | null
     minBedC: number | null
+    preferredNozzle: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -8022,6 +8023,7 @@ export namespace Prisma {
     maxBedC: number | null
     minNozzleC: number | null
     minBedC: number | null
+    preferredNozzle: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -8034,6 +8036,7 @@ export namespace Prisma {
     maxBedC: number
     minNozzleC: number
     minBedC: number
+    preferredNozzle: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -8064,6 +8067,7 @@ export namespace Prisma {
     maxBedC?: true
     minNozzleC?: true
     minBedC?: true
+    preferredNozzle?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8076,6 +8080,7 @@ export namespace Prisma {
     maxBedC?: true
     minNozzleC?: true
     minBedC?: true
+    preferredNozzle?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8088,6 +8093,7 @@ export namespace Prisma {
     maxBedC?: true
     minNozzleC?: true
     minBedC?: true
+    preferredNozzle?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -8187,6 +8193,7 @@ export namespace Prisma {
     maxBedC: number | null
     minNozzleC: number | null
     minBedC: number | null
+    preferredNozzle: string | null
     createdAt: Date
     updatedAt: Date
     _count: MaterialCountAggregateOutputType | null
@@ -8218,6 +8225,7 @@ export namespace Prisma {
     maxBedC?: boolean
     minNozzleC?: boolean
     minBedC?: boolean
+    preferredNozzle?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     filaments?: boolean | Material$filamentsArgs<ExtArgs>
@@ -8232,6 +8240,7 @@ export namespace Prisma {
     maxBedC?: boolean
     minNozzleC?: boolean
     minBedC?: boolean
+    preferredNozzle?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["material"]>
@@ -8244,6 +8253,7 @@ export namespace Prisma {
     maxBedC?: boolean
     minNozzleC?: boolean
     minBedC?: boolean
+    preferredNozzle?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["material"]>
@@ -8256,11 +8266,12 @@ export namespace Prisma {
     maxBedC?: boolean
     minNozzleC?: boolean
     minBedC?: boolean
+    preferredNozzle?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type MaterialOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "density" | "maxNozzleC" | "maxBedC" | "minNozzleC" | "minBedC" | "createdAt" | "updatedAt", ExtArgs["result"]["material"]>
+  export type MaterialOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "density" | "maxNozzleC" | "maxBedC" | "minNozzleC" | "minBedC" | "preferredNozzle" | "createdAt" | "updatedAt", ExtArgs["result"]["material"]>
   export type MaterialInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     filaments?: boolean | Material$filamentsArgs<ExtArgs>
     _count?: boolean | MaterialCountOutputTypeDefaultArgs<ExtArgs>
@@ -8281,6 +8292,10 @@ export namespace Prisma {
       maxBedC: number | null
       minNozzleC: number | null
       minBedC: number | null
+      /**
+       * brass | stainless | hardened | ruby — preferred nozzle tip material
+       */
+      preferredNozzle: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["material"]>
@@ -8714,6 +8729,7 @@ export namespace Prisma {
     readonly maxBedC: FieldRef<"Material", 'Int'>
     readonly minNozzleC: FieldRef<"Material", 'Int'>
     readonly minBedC: FieldRef<"Material", 'Int'>
+    readonly preferredNozzle: FieldRef<"Material", 'String'>
     readonly createdAt: FieldRef<"Material", 'DateTime'>
     readonly updatedAt: FieldRef<"Material", 'DateTime'>
   }
@@ -10245,11 +10261,15 @@ export namespace Prisma {
   export type FilamentAvgAggregateOutputType = {
     diameterMm: number | null
     defaultWeightG: number | null
+    defaultEmptyWeightG: number | null
+    repurchaseQty: number | null
   }
 
   export type FilamentSumAggregateOutputType = {
     diameterMm: number | null
     defaultWeightG: number | null
+    defaultEmptyWeightG: number | null
+    repurchaseQty: number | null
   }
 
   export type FilamentMinAggregateOutputType = {
@@ -10261,8 +10281,10 @@ export namespace Prisma {
     colorName: string | null
     diameterMm: number | null
     defaultWeightG: number | null
+    defaultEmptyWeightG: number | null
     productUrl: string | null
     notes: string | null
+    repurchaseQty: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10276,8 +10298,10 @@ export namespace Prisma {
     colorName: string | null
     diameterMm: number | null
     defaultWeightG: number | null
+    defaultEmptyWeightG: number | null
     productUrl: string | null
     notes: string | null
+    repurchaseQty: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10291,8 +10315,10 @@ export namespace Prisma {
     colorName: number
     diameterMm: number
     defaultWeightG: number
+    defaultEmptyWeightG: number
     productUrl: number
     notes: number
+    repurchaseQty: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -10302,11 +10328,15 @@ export namespace Prisma {
   export type FilamentAvgAggregateInputType = {
     diameterMm?: true
     defaultWeightG?: true
+    defaultEmptyWeightG?: true
+    repurchaseQty?: true
   }
 
   export type FilamentSumAggregateInputType = {
     diameterMm?: true
     defaultWeightG?: true
+    defaultEmptyWeightG?: true
+    repurchaseQty?: true
   }
 
   export type FilamentMinAggregateInputType = {
@@ -10318,8 +10348,10 @@ export namespace Prisma {
     colorName?: true
     diameterMm?: true
     defaultWeightG?: true
+    defaultEmptyWeightG?: true
     productUrl?: true
     notes?: true
+    repurchaseQty?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -10333,8 +10365,10 @@ export namespace Prisma {
     colorName?: true
     diameterMm?: true
     defaultWeightG?: true
+    defaultEmptyWeightG?: true
     productUrl?: true
     notes?: true
+    repurchaseQty?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -10348,8 +10382,10 @@ export namespace Prisma {
     colorName?: true
     diameterMm?: true
     defaultWeightG?: true
+    defaultEmptyWeightG?: true
     productUrl?: true
     notes?: true
+    repurchaseQty?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -10450,8 +10486,10 @@ export namespace Prisma {
     colorName: string | null
     diameterMm: number
     defaultWeightG: number
+    defaultEmptyWeightG: number | null
     productUrl: string | null
     notes: string | null
+    repurchaseQty: number
     createdAt: Date
     updatedAt: Date
     _count: FilamentCountAggregateOutputType | null
@@ -10484,8 +10522,10 @@ export namespace Prisma {
     colorName?: boolean
     diameterMm?: boolean
     defaultWeightG?: boolean
+    defaultEmptyWeightG?: boolean
     productUrl?: boolean
     notes?: boolean
+    repurchaseQty?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -10506,8 +10546,10 @@ export namespace Prisma {
     colorName?: boolean
     diameterMm?: boolean
     defaultWeightG?: boolean
+    defaultEmptyWeightG?: boolean
     productUrl?: boolean
     notes?: boolean
+    repurchaseQty?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -10524,8 +10566,10 @@ export namespace Prisma {
     colorName?: boolean
     diameterMm?: boolean
     defaultWeightG?: boolean
+    defaultEmptyWeightG?: boolean
     productUrl?: boolean
     notes?: boolean
+    repurchaseQty?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -10542,13 +10586,15 @@ export namespace Prisma {
     colorName?: boolean
     diameterMm?: boolean
     defaultWeightG?: boolean
+    defaultEmptyWeightG?: boolean
     productUrl?: boolean
     notes?: boolean
+    repurchaseQty?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type FilamentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "brandId" | "materialId" | "colorMode" | "colorName" | "diameterMm" | "defaultWeightG" | "productUrl" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["filament"]>
+  export type FilamentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "brandId" | "materialId" | "colorMode" | "colorName" | "diameterMm" | "defaultWeightG" | "defaultEmptyWeightG" | "productUrl" | "notes" | "repurchaseQty" | "createdAt" | "updatedAt", ExtArgs["result"]["filament"]>
   export type FilamentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     brand?: boolean | BrandDefaultArgs<ExtArgs>
@@ -10588,14 +10634,22 @@ export namespace Prisma {
       colorName: string | null
       diameterMm: number
       /**
-       * Nominal full weight used when opening a new spool
+       * Nominal full filament weight used when opening a new spool
        */
       defaultWeightG: number
+      /**
+       * Typical empty plastic spool tare (g); copied onto new spool instances
+       */
+      defaultEmptyWeightG: number | null
       /**
        * Product page / store listing
        */
       productUrl: string | null
       notes: string | null
+      /**
+       * How many replacement spools to buy; 0 = not on repurchase list
+       */
+      repurchaseQty: number
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["filament"]>
@@ -11035,8 +11089,10 @@ export namespace Prisma {
     readonly colorName: FieldRef<"Filament", 'String'>
     readonly diameterMm: FieldRef<"Filament", 'Float'>
     readonly defaultWeightG: FieldRef<"Filament", 'Int'>
+    readonly defaultEmptyWeightG: FieldRef<"Filament", 'Int'>
     readonly productUrl: FieldRef<"Filament", 'String'>
     readonly notes: FieldRef<"Filament", 'String'>
+    readonly repurchaseQty: FieldRef<"Filament", 'Int'>
     readonly createdAt: FieldRef<"Filament", 'DateTime'>
     readonly updatedAt: FieldRef<"Filament", 'DateTime'>
   }
@@ -12645,12 +12701,14 @@ export namespace Prisma {
   export type SpoolAvgAggregateOutputType = {
     initialWeightG: number | null
     remainingWeightG: number | null
+    emptyWeightG: number | null
     priceCents: number | null
   }
 
   export type SpoolSumAggregateOutputType = {
     initialWeightG: number | null
     remainingWeightG: number | null
+    emptyWeightG: number | null
     priceCents: number | null
   }
 
@@ -12661,8 +12719,8 @@ export namespace Prisma {
     locationId: string | null
     initialWeightG: number | null
     remainingWeightG: number | null
+    emptyWeightG: number | null
     status: string | null
-    needsRepurchase: boolean | null
     purchasedAt: Date | null
     priceCents: number | null
     notes: string | null
@@ -12678,8 +12736,8 @@ export namespace Prisma {
     locationId: string | null
     initialWeightG: number | null
     remainingWeightG: number | null
+    emptyWeightG: number | null
     status: string | null
-    needsRepurchase: boolean | null
     purchasedAt: Date | null
     priceCents: number | null
     notes: string | null
@@ -12695,8 +12753,8 @@ export namespace Prisma {
     locationId: number
     initialWeightG: number
     remainingWeightG: number
+    emptyWeightG: number
     status: number
-    needsRepurchase: number
     purchasedAt: number
     priceCents: number
     notes: number
@@ -12710,12 +12768,14 @@ export namespace Prisma {
   export type SpoolAvgAggregateInputType = {
     initialWeightG?: true
     remainingWeightG?: true
+    emptyWeightG?: true
     priceCents?: true
   }
 
   export type SpoolSumAggregateInputType = {
     initialWeightG?: true
     remainingWeightG?: true
+    emptyWeightG?: true
     priceCents?: true
   }
 
@@ -12726,8 +12786,8 @@ export namespace Prisma {
     locationId?: true
     initialWeightG?: true
     remainingWeightG?: true
+    emptyWeightG?: true
     status?: true
-    needsRepurchase?: true
     purchasedAt?: true
     priceCents?: true
     notes?: true
@@ -12743,8 +12803,8 @@ export namespace Prisma {
     locationId?: true
     initialWeightG?: true
     remainingWeightG?: true
+    emptyWeightG?: true
     status?: true
-    needsRepurchase?: true
     purchasedAt?: true
     priceCents?: true
     notes?: true
@@ -12760,8 +12820,8 @@ export namespace Prisma {
     locationId?: true
     initialWeightG?: true
     remainingWeightG?: true
+    emptyWeightG?: true
     status?: true
-    needsRepurchase?: true
     purchasedAt?: true
     priceCents?: true
     notes?: true
@@ -12864,8 +12924,8 @@ export namespace Prisma {
     locationId: string | null
     initialWeightG: number
     remainingWeightG: number
+    emptyWeightG: number | null
     status: string
-    needsRepurchase: boolean
     purchasedAt: Date | null
     priceCents: number | null
     notes: string | null
@@ -12900,8 +12960,8 @@ export namespace Prisma {
     locationId?: boolean
     initialWeightG?: boolean
     remainingWeightG?: boolean
+    emptyWeightG?: boolean
     status?: boolean
-    needsRepurchase?: boolean
     purchasedAt?: boolean
     priceCents?: boolean
     notes?: boolean
@@ -12922,8 +12982,8 @@ export namespace Prisma {
     locationId?: boolean
     initialWeightG?: boolean
     remainingWeightG?: boolean
+    emptyWeightG?: boolean
     status?: boolean
-    needsRepurchase?: boolean
     purchasedAt?: boolean
     priceCents?: boolean
     notes?: boolean
@@ -12942,8 +13002,8 @@ export namespace Prisma {
     locationId?: boolean
     initialWeightG?: boolean
     remainingWeightG?: boolean
+    emptyWeightG?: boolean
     status?: boolean
-    needsRepurchase?: boolean
     purchasedAt?: boolean
     priceCents?: boolean
     notes?: boolean
@@ -12962,8 +13022,8 @@ export namespace Prisma {
     locationId?: boolean
     initialWeightG?: boolean
     remainingWeightG?: boolean
+    emptyWeightG?: boolean
     status?: boolean
-    needsRepurchase?: boolean
     purchasedAt?: boolean
     priceCents?: boolean
     notes?: boolean
@@ -12972,7 +13032,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type SpoolOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "filamentId" | "locationId" | "initialWeightG" | "remainingWeightG" | "status" | "needsRepurchase" | "purchasedAt" | "priceCents" | "notes" | "lastDriedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["spool"]>
+  export type SpoolOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "filamentId" | "locationId" | "initialWeightG" | "remainingWeightG" | "emptyWeightG" | "status" | "purchasedAt" | "priceCents" | "notes" | "lastDriedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["spool"]>
   export type SpoolInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     filament?: boolean | FilamentDefaultArgs<ExtArgs>
@@ -13007,10 +13067,13 @@ export namespace Prisma {
       initialWeightG: number
       remainingWeightG: number
       /**
+       * Empty plastic spool tare (g) for scale → filament math
+       */
+      emptyWeightG: number | null
+      /**
        * sealed | open | empty | archived
        */
       status: string
-      needsRepurchase: boolean
       purchasedAt: Date | null
       priceCents: number | null
       notes: string | null
@@ -13450,8 +13513,8 @@ export namespace Prisma {
     readonly locationId: FieldRef<"Spool", 'String'>
     readonly initialWeightG: FieldRef<"Spool", 'Int'>
     readonly remainingWeightG: FieldRef<"Spool", 'Int'>
+    readonly emptyWeightG: FieldRef<"Spool", 'Int'>
     readonly status: FieldRef<"Spool", 'String'>
-    readonly needsRepurchase: FieldRef<"Spool", 'Boolean'>
     readonly purchasedAt: FieldRef<"Spool", 'DateTime'>
     readonly priceCents: FieldRef<"Spool", 'Int'>
     readonly notes: FieldRef<"Spool", 'String'>
@@ -18474,6 +18537,7 @@ export namespace Prisma {
     maxBedC: 'maxBedC',
     minNozzleC: 'minNozzleC',
     minBedC: 'minBedC',
+    preferredNozzle: 'preferredNozzle',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -18501,8 +18565,10 @@ export namespace Prisma {
     colorName: 'colorName',
     diameterMm: 'diameterMm',
     defaultWeightG: 'defaultWeightG',
+    defaultEmptyWeightG: 'defaultEmptyWeightG',
     productUrl: 'productUrl',
     notes: 'notes',
+    repurchaseQty: 'repurchaseQty',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -18529,8 +18595,8 @@ export namespace Prisma {
     locationId: 'locationId',
     initialWeightG: 'initialWeightG',
     remainingWeightG: 'remainingWeightG',
+    emptyWeightG: 'emptyWeightG',
     status: 'status',
-    needsRepurchase: 'needsRepurchase',
     purchasedAt: 'purchasedAt',
     priceCents: 'priceCents',
     notes: 'notes',
@@ -19040,6 +19106,7 @@ export namespace Prisma {
     maxBedC?: IntNullableFilter<"Material"> | number | null
     minNozzleC?: IntNullableFilter<"Material"> | number | null
     minBedC?: IntNullableFilter<"Material"> | number | null
+    preferredNozzle?: StringNullableFilter<"Material"> | string | null
     createdAt?: DateTimeFilter<"Material"> | Date | string
     updatedAt?: DateTimeFilter<"Material"> | Date | string
     filaments?: FilamentListRelationFilter
@@ -19053,6 +19120,7 @@ export namespace Prisma {
     maxBedC?: SortOrderInput | SortOrder
     minNozzleC?: SortOrderInput | SortOrder
     minBedC?: SortOrderInput | SortOrder
+    preferredNozzle?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     filaments?: FilamentOrderByRelationAggregateInput
@@ -19069,6 +19137,7 @@ export namespace Prisma {
     maxBedC?: IntNullableFilter<"Material"> | number | null
     minNozzleC?: IntNullableFilter<"Material"> | number | null
     minBedC?: IntNullableFilter<"Material"> | number | null
+    preferredNozzle?: StringNullableFilter<"Material"> | string | null
     createdAt?: DateTimeFilter<"Material"> | Date | string
     updatedAt?: DateTimeFilter<"Material"> | Date | string
     filaments?: FilamentListRelationFilter
@@ -19082,6 +19151,7 @@ export namespace Prisma {
     maxBedC?: SortOrderInput | SortOrder
     minNozzleC?: SortOrderInput | SortOrder
     minBedC?: SortOrderInput | SortOrder
+    preferredNozzle?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: MaterialCountOrderByAggregateInput
@@ -19102,6 +19172,7 @@ export namespace Prisma {
     maxBedC?: IntNullableWithAggregatesFilter<"Material"> | number | null
     minNozzleC?: IntNullableWithAggregatesFilter<"Material"> | number | null
     minBedC?: IntNullableWithAggregatesFilter<"Material"> | number | null
+    preferredNozzle?: StringNullableWithAggregatesFilter<"Material"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Material"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Material"> | Date | string
   }
@@ -19177,8 +19248,10 @@ export namespace Prisma {
     colorName?: StringNullableFilter<"Filament"> | string | null
     diameterMm?: FloatFilter<"Filament"> | number
     defaultWeightG?: IntFilter<"Filament"> | number
+    defaultEmptyWeightG?: IntNullableFilter<"Filament"> | number | null
     productUrl?: StringNullableFilter<"Filament"> | string | null
     notes?: StringNullableFilter<"Filament"> | string | null
+    repurchaseQty?: IntFilter<"Filament"> | number
     createdAt?: DateTimeFilter<"Filament"> | Date | string
     updatedAt?: DateTimeFilter<"Filament"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -19198,8 +19271,10 @@ export namespace Prisma {
     colorName?: SortOrderInput | SortOrder
     diameterMm?: SortOrder
     defaultWeightG?: SortOrder
+    defaultEmptyWeightG?: SortOrderInput | SortOrder
     productUrl?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
+    repurchaseQty?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -19222,8 +19297,10 @@ export namespace Prisma {
     colorName?: StringNullableFilter<"Filament"> | string | null
     diameterMm?: FloatFilter<"Filament"> | number
     defaultWeightG?: IntFilter<"Filament"> | number
+    defaultEmptyWeightG?: IntNullableFilter<"Filament"> | number | null
     productUrl?: StringNullableFilter<"Filament"> | string | null
     notes?: StringNullableFilter<"Filament"> | string | null
+    repurchaseQty?: IntFilter<"Filament"> | number
     createdAt?: DateTimeFilter<"Filament"> | Date | string
     updatedAt?: DateTimeFilter<"Filament"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -19243,8 +19320,10 @@ export namespace Prisma {
     colorName?: SortOrderInput | SortOrder
     diameterMm?: SortOrder
     defaultWeightG?: SortOrder
+    defaultEmptyWeightG?: SortOrderInput | SortOrder
     productUrl?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
+    repurchaseQty?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: FilamentCountOrderByAggregateInput
@@ -19266,8 +19345,10 @@ export namespace Prisma {
     colorName?: StringNullableWithAggregatesFilter<"Filament"> | string | null
     diameterMm?: FloatWithAggregatesFilter<"Filament"> | number
     defaultWeightG?: IntWithAggregatesFilter<"Filament"> | number
+    defaultEmptyWeightG?: IntNullableWithAggregatesFilter<"Filament"> | number | null
     productUrl?: StringNullableWithAggregatesFilter<"Filament"> | string | null
     notes?: StringNullableWithAggregatesFilter<"Filament"> | string | null
+    repurchaseQty?: IntWithAggregatesFilter<"Filament"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Filament"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Filament"> | Date | string
   }
@@ -19344,8 +19425,8 @@ export namespace Prisma {
     locationId?: StringNullableFilter<"Spool"> | string | null
     initialWeightG?: IntFilter<"Spool"> | number
     remainingWeightG?: IntFilter<"Spool"> | number
+    emptyWeightG?: IntNullableFilter<"Spool"> | number | null
     status?: StringFilter<"Spool"> | string
-    needsRepurchase?: BoolFilter<"Spool"> | boolean
     purchasedAt?: DateTimeNullableFilter<"Spool"> | Date | string | null
     priceCents?: IntNullableFilter<"Spool"> | number | null
     notes?: StringNullableFilter<"Spool"> | string | null
@@ -19365,8 +19446,8 @@ export namespace Prisma {
     locationId?: SortOrderInput | SortOrder
     initialWeightG?: SortOrder
     remainingWeightG?: SortOrder
+    emptyWeightG?: SortOrderInput | SortOrder
     status?: SortOrder
-    needsRepurchase?: SortOrder
     purchasedAt?: SortOrderInput | SortOrder
     priceCents?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
@@ -19389,8 +19470,8 @@ export namespace Prisma {
     locationId?: StringNullableFilter<"Spool"> | string | null
     initialWeightG?: IntFilter<"Spool"> | number
     remainingWeightG?: IntFilter<"Spool"> | number
+    emptyWeightG?: IntNullableFilter<"Spool"> | number | null
     status?: StringFilter<"Spool"> | string
-    needsRepurchase?: BoolFilter<"Spool"> | boolean
     purchasedAt?: DateTimeNullableFilter<"Spool"> | Date | string | null
     priceCents?: IntNullableFilter<"Spool"> | number | null
     notes?: StringNullableFilter<"Spool"> | string | null
@@ -19410,8 +19491,8 @@ export namespace Prisma {
     locationId?: SortOrderInput | SortOrder
     initialWeightG?: SortOrder
     remainingWeightG?: SortOrder
+    emptyWeightG?: SortOrderInput | SortOrder
     status?: SortOrder
-    needsRepurchase?: SortOrder
     purchasedAt?: SortOrderInput | SortOrder
     priceCents?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
@@ -19435,8 +19516,8 @@ export namespace Prisma {
     locationId?: StringNullableWithAggregatesFilter<"Spool"> | string | null
     initialWeightG?: IntWithAggregatesFilter<"Spool"> | number
     remainingWeightG?: IntWithAggregatesFilter<"Spool"> | number
+    emptyWeightG?: IntNullableWithAggregatesFilter<"Spool"> | number | null
     status?: StringWithAggregatesFilter<"Spool"> | string
-    needsRepurchase?: BoolWithAggregatesFilter<"Spool"> | boolean
     purchasedAt?: DateTimeNullableWithAggregatesFilter<"Spool"> | Date | string | null
     priceCents?: IntNullableWithAggregatesFilter<"Spool"> | number | null
     notes?: StringNullableWithAggregatesFilter<"Spool"> | string | null
@@ -20157,6 +20238,7 @@ export namespace Prisma {
     maxBedC?: number | null
     minNozzleC?: number | null
     minBedC?: number | null
+    preferredNozzle?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     filaments?: FilamentCreateNestedManyWithoutMaterialInput
@@ -20170,6 +20252,7 @@ export namespace Prisma {
     maxBedC?: number | null
     minNozzleC?: number | null
     minBedC?: number | null
+    preferredNozzle?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     filaments?: FilamentUncheckedCreateNestedManyWithoutMaterialInput
@@ -20183,6 +20266,7 @@ export namespace Prisma {
     maxBedC?: NullableIntFieldUpdateOperationsInput | number | null
     minNozzleC?: NullableIntFieldUpdateOperationsInput | number | null
     minBedC?: NullableIntFieldUpdateOperationsInput | number | null
+    preferredNozzle?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     filaments?: FilamentUpdateManyWithoutMaterialNestedInput
@@ -20196,6 +20280,7 @@ export namespace Prisma {
     maxBedC?: NullableIntFieldUpdateOperationsInput | number | null
     minNozzleC?: NullableIntFieldUpdateOperationsInput | number | null
     minBedC?: NullableIntFieldUpdateOperationsInput | number | null
+    preferredNozzle?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     filaments?: FilamentUncheckedUpdateManyWithoutMaterialNestedInput
@@ -20209,6 +20294,7 @@ export namespace Prisma {
     maxBedC?: number | null
     minNozzleC?: number | null
     minBedC?: number | null
+    preferredNozzle?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -20221,6 +20307,7 @@ export namespace Prisma {
     maxBedC?: NullableIntFieldUpdateOperationsInput | number | null
     minNozzleC?: NullableIntFieldUpdateOperationsInput | number | null
     minBedC?: NullableIntFieldUpdateOperationsInput | number | null
+    preferredNozzle?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -20233,6 +20320,7 @@ export namespace Prisma {
     maxBedC?: NullableIntFieldUpdateOperationsInput | number | null
     minNozzleC?: NullableIntFieldUpdateOperationsInput | number | null
     minBedC?: NullableIntFieldUpdateOperationsInput | number | null
+    preferredNozzle?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -20302,8 +20390,10 @@ export namespace Prisma {
     colorName?: string | null
     diameterMm?: number
     defaultWeightG?: number
+    defaultEmptyWeightG?: number | null
     productUrl?: string | null
     notes?: string | null
+    repurchaseQty?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutFilamentsInput
@@ -20323,8 +20413,10 @@ export namespace Prisma {
     colorName?: string | null
     diameterMm?: number
     defaultWeightG?: number
+    defaultEmptyWeightG?: number | null
     productUrl?: string | null
     notes?: string | null
+    repurchaseQty?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     colors?: FilamentColorStopUncheckedCreateNestedManyWithoutFilamentInput
@@ -20338,8 +20430,10 @@ export namespace Prisma {
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
     defaultWeightG?: IntFieldUpdateOperationsInput | number
+    defaultEmptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    repurchaseQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutFilamentsNestedInput
@@ -20359,8 +20453,10 @@ export namespace Prisma {
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
     defaultWeightG?: IntFieldUpdateOperationsInput | number
+    defaultEmptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    repurchaseQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     colors?: FilamentColorStopUncheckedUpdateManyWithoutFilamentNestedInput
@@ -20377,8 +20473,10 @@ export namespace Prisma {
     colorName?: string | null
     diameterMm?: number
     defaultWeightG?: number
+    defaultEmptyWeightG?: number | null
     productUrl?: string | null
     notes?: string | null
+    repurchaseQty?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -20389,8 +20487,10 @@ export namespace Prisma {
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
     defaultWeightG?: IntFieldUpdateOperationsInput | number
+    defaultEmptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    repurchaseQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -20404,8 +20504,10 @@ export namespace Prisma {
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
     defaultWeightG?: IntFieldUpdateOperationsInput | number
+    defaultEmptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    repurchaseQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -20476,8 +20578,8 @@ export namespace Prisma {
     id?: string
     initialWeightG: number
     remainingWeightG: number
+    emptyWeightG?: number | null
     status?: string
-    needsRepurchase?: boolean
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
@@ -20497,8 +20599,8 @@ export namespace Prisma {
     locationId?: string | null
     initialWeightG: number
     remainingWeightG: number
+    emptyWeightG?: number | null
     status?: string
-    needsRepurchase?: boolean
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
@@ -20512,8 +20614,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
+    emptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20533,8 +20635,8 @@ export namespace Prisma {
     locationId?: NullableStringFieldUpdateOperationsInput | string | null
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
+    emptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20551,8 +20653,8 @@ export namespace Prisma {
     locationId?: string | null
     initialWeightG: number
     remainingWeightG: number
+    emptyWeightG?: number | null
     status?: string
-    needsRepurchase?: boolean
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
@@ -20565,8 +20667,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
+    emptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20582,8 +20684,8 @@ export namespace Prisma {
     locationId?: NullableStringFieldUpdateOperationsInput | string | null
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
+    emptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21294,6 +21396,7 @@ export namespace Prisma {
     maxBedC?: SortOrder
     minNozzleC?: SortOrder
     minBedC?: SortOrder
+    preferredNozzle?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -21314,6 +21417,7 @@ export namespace Prisma {
     maxBedC?: SortOrder
     minNozzleC?: SortOrder
     minBedC?: SortOrder
+    preferredNozzle?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -21326,6 +21430,7 @@ export namespace Prisma {
     maxBedC?: SortOrder
     minNozzleC?: SortOrder
     minBedC?: SortOrder
+    preferredNozzle?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -21460,8 +21565,10 @@ export namespace Prisma {
     colorName?: SortOrder
     diameterMm?: SortOrder
     defaultWeightG?: SortOrder
+    defaultEmptyWeightG?: SortOrder
     productUrl?: SortOrder
     notes?: SortOrder
+    repurchaseQty?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -21469,6 +21576,8 @@ export namespace Prisma {
   export type FilamentAvgOrderByAggregateInput = {
     diameterMm?: SortOrder
     defaultWeightG?: SortOrder
+    defaultEmptyWeightG?: SortOrder
+    repurchaseQty?: SortOrder
   }
 
   export type FilamentMaxOrderByAggregateInput = {
@@ -21480,8 +21589,10 @@ export namespace Prisma {
     colorName?: SortOrder
     diameterMm?: SortOrder
     defaultWeightG?: SortOrder
+    defaultEmptyWeightG?: SortOrder
     productUrl?: SortOrder
     notes?: SortOrder
+    repurchaseQty?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -21495,8 +21606,10 @@ export namespace Prisma {
     colorName?: SortOrder
     diameterMm?: SortOrder
     defaultWeightG?: SortOrder
+    defaultEmptyWeightG?: SortOrder
     productUrl?: SortOrder
     notes?: SortOrder
+    repurchaseQty?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -21504,6 +21617,8 @@ export namespace Prisma {
   export type FilamentSumOrderByAggregateInput = {
     diameterMm?: SortOrder
     defaultWeightG?: SortOrder
+    defaultEmptyWeightG?: SortOrder
+    repurchaseQty?: SortOrder
   }
 
   export type FloatWithAggregatesFilter<$PrismaModel = never> = {
@@ -21602,8 +21717,8 @@ export namespace Prisma {
     locationId?: SortOrder
     initialWeightG?: SortOrder
     remainingWeightG?: SortOrder
+    emptyWeightG?: SortOrder
     status?: SortOrder
-    needsRepurchase?: SortOrder
     purchasedAt?: SortOrder
     priceCents?: SortOrder
     notes?: SortOrder
@@ -21615,6 +21730,7 @@ export namespace Prisma {
   export type SpoolAvgOrderByAggregateInput = {
     initialWeightG?: SortOrder
     remainingWeightG?: SortOrder
+    emptyWeightG?: SortOrder
     priceCents?: SortOrder
   }
 
@@ -21625,8 +21741,8 @@ export namespace Prisma {
     locationId?: SortOrder
     initialWeightG?: SortOrder
     remainingWeightG?: SortOrder
+    emptyWeightG?: SortOrder
     status?: SortOrder
-    needsRepurchase?: SortOrder
     purchasedAt?: SortOrder
     priceCents?: SortOrder
     notes?: SortOrder
@@ -21642,8 +21758,8 @@ export namespace Prisma {
     locationId?: SortOrder
     initialWeightG?: SortOrder
     remainingWeightG?: SortOrder
+    emptyWeightG?: SortOrder
     status?: SortOrder
-    needsRepurchase?: SortOrder
     purchasedAt?: SortOrder
     priceCents?: SortOrder
     notes?: SortOrder
@@ -21655,6 +21771,7 @@ export namespace Prisma {
   export type SpoolSumOrderByAggregateInput = {
     initialWeightG?: SortOrder
     remainingWeightG?: SortOrder
+    emptyWeightG?: SortOrder
     priceCents?: SortOrder
   }
 
@@ -23120,8 +23237,10 @@ export namespace Prisma {
     colorName?: string | null
     diameterMm?: number
     defaultWeightG?: number
+    defaultEmptyWeightG?: number | null
     productUrl?: string | null
     notes?: string | null
+    repurchaseQty?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     brand: BrandCreateNestedOneWithoutFilamentsInput
@@ -23139,8 +23258,10 @@ export namespace Prisma {
     colorName?: string | null
     diameterMm?: number
     defaultWeightG?: number
+    defaultEmptyWeightG?: number | null
     productUrl?: string | null
     notes?: string | null
+    repurchaseQty?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     colors?: FilamentColorStopUncheckedCreateNestedManyWithoutFilamentInput
@@ -23161,8 +23282,8 @@ export namespace Prisma {
     id?: string
     initialWeightG: number
     remainingWeightG: number
+    emptyWeightG?: number | null
     status?: string
-    needsRepurchase?: boolean
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
@@ -23180,8 +23301,8 @@ export namespace Prisma {
     locationId?: string | null
     initialWeightG: number
     remainingWeightG: number
+    emptyWeightG?: number | null
     status?: string
-    needsRepurchase?: boolean
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
@@ -23387,8 +23508,10 @@ export namespace Prisma {
     colorName?: StringNullableFilter<"Filament"> | string | null
     diameterMm?: FloatFilter<"Filament"> | number
     defaultWeightG?: IntFilter<"Filament"> | number
+    defaultEmptyWeightG?: IntNullableFilter<"Filament"> | number | null
     productUrl?: StringNullableFilter<"Filament"> | string | null
     notes?: StringNullableFilter<"Filament"> | string | null
+    repurchaseQty?: IntFilter<"Filament"> | number
     createdAt?: DateTimeFilter<"Filament"> | Date | string
     updatedAt?: DateTimeFilter<"Filament"> | Date | string
   }
@@ -23419,8 +23542,8 @@ export namespace Prisma {
     locationId?: StringNullableFilter<"Spool"> | string | null
     initialWeightG?: IntFilter<"Spool"> | number
     remainingWeightG?: IntFilter<"Spool"> | number
+    emptyWeightG?: IntNullableFilter<"Spool"> | number | null
     status?: StringFilter<"Spool"> | string
-    needsRepurchase?: BoolFilter<"Spool"> | boolean
     purchasedAt?: DateTimeNullableFilter<"Spool"> | Date | string | null
     priceCents?: IntNullableFilter<"Spool"> | number | null
     notes?: StringNullableFilter<"Spool"> | string | null
@@ -23676,8 +23799,10 @@ export namespace Prisma {
     colorName?: string | null
     diameterMm?: number
     defaultWeightG?: number
+    defaultEmptyWeightG?: number | null
     productUrl?: string | null
     notes?: string | null
+    repurchaseQty?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutFilamentsInput
@@ -23695,8 +23820,10 @@ export namespace Prisma {
     colorName?: string | null
     diameterMm?: number
     defaultWeightG?: number
+    defaultEmptyWeightG?: number | null
     productUrl?: string | null
     notes?: string | null
+    repurchaseQty?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     colors?: FilamentColorStopUncheckedCreateNestedManyWithoutFilamentInput
@@ -23780,8 +23907,10 @@ export namespace Prisma {
     colorName?: string | null
     diameterMm?: number
     defaultWeightG?: number
+    defaultEmptyWeightG?: number | null
     productUrl?: string | null
     notes?: string | null
+    repurchaseQty?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutFilamentsInput
@@ -23799,8 +23928,10 @@ export namespace Prisma {
     colorName?: string | null
     diameterMm?: number
     defaultWeightG?: number
+    defaultEmptyWeightG?: number | null
     productUrl?: string | null
     notes?: string | null
+    repurchaseQty?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     colors?: FilamentColorStopUncheckedCreateNestedManyWithoutFilamentInput
@@ -23876,8 +24007,8 @@ export namespace Prisma {
     id?: string
     initialWeightG: number
     remainingWeightG: number
+    emptyWeightG?: number | null
     status?: string
-    needsRepurchase?: boolean
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
@@ -23895,8 +24026,8 @@ export namespace Prisma {
     filamentId: string
     initialWeightG: number
     remainingWeightG: number
+    emptyWeightG?: number | null
     status?: string
-    needsRepurchase?: boolean
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
@@ -24046,6 +24177,7 @@ export namespace Prisma {
     maxBedC?: number | null
     minNozzleC?: number | null
     minBedC?: number | null
+    preferredNozzle?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -24058,6 +24190,7 @@ export namespace Prisma {
     maxBedC?: number | null
     minNozzleC?: number | null
     minBedC?: number | null
+    preferredNozzle?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -24096,8 +24229,8 @@ export namespace Prisma {
     id?: string
     initialWeightG: number
     remainingWeightG: number
+    emptyWeightG?: number | null
     status?: string
-    needsRepurchase?: boolean
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
@@ -24115,8 +24248,8 @@ export namespace Prisma {
     locationId?: string | null
     initialWeightG: number
     remainingWeightG: number
+    emptyWeightG?: number | null
     status?: string
-    needsRepurchase?: boolean
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
@@ -24255,6 +24388,7 @@ export namespace Prisma {
     maxBedC?: NullableIntFieldUpdateOperationsInput | number | null
     minNozzleC?: NullableIntFieldUpdateOperationsInput | number | null
     minBedC?: NullableIntFieldUpdateOperationsInput | number | null
+    preferredNozzle?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -24267,6 +24401,7 @@ export namespace Prisma {
     maxBedC?: NullableIntFieldUpdateOperationsInput | number | null
     minNozzleC?: NullableIntFieldUpdateOperationsInput | number | null
     minBedC?: NullableIntFieldUpdateOperationsInput | number | null
+    preferredNozzle?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -24350,8 +24485,10 @@ export namespace Prisma {
     colorName?: string | null
     diameterMm?: number
     defaultWeightG?: number
+    defaultEmptyWeightG?: number | null
     productUrl?: string | null
     notes?: string | null
+    repurchaseQty?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutFilamentsInput
@@ -24370,8 +24507,10 @@ export namespace Prisma {
     colorName?: string | null
     diameterMm?: number
     defaultWeightG?: number
+    defaultEmptyWeightG?: number | null
     productUrl?: string | null
     notes?: string | null
+    repurchaseQty?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     spools?: SpoolUncheckedCreateNestedManyWithoutFilamentInput
@@ -24400,8 +24539,10 @@ export namespace Prisma {
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
     defaultWeightG?: IntFieldUpdateOperationsInput | number
+    defaultEmptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    repurchaseQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutFilamentsNestedInput
@@ -24420,8 +24561,10 @@ export namespace Prisma {
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
     defaultWeightG?: IntFieldUpdateOperationsInput | number
+    defaultEmptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    repurchaseQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     spools?: SpoolUncheckedUpdateManyWithoutFilamentNestedInput
@@ -24473,8 +24616,10 @@ export namespace Prisma {
     colorName?: string | null
     diameterMm?: number
     defaultWeightG?: number
+    defaultEmptyWeightG?: number | null
     productUrl?: string | null
     notes?: string | null
+    repurchaseQty?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutFilamentsInput
@@ -24493,8 +24638,10 @@ export namespace Prisma {
     colorName?: string | null
     diameterMm?: number
     defaultWeightG?: number
+    defaultEmptyWeightG?: number | null
     productUrl?: string | null
     notes?: string | null
+    repurchaseQty?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     colors?: FilamentColorStopUncheckedCreateNestedManyWithoutFilamentInput
@@ -24612,8 +24759,10 @@ export namespace Prisma {
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
     defaultWeightG?: IntFieldUpdateOperationsInput | number
+    defaultEmptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    repurchaseQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutFilamentsNestedInput
@@ -24632,8 +24781,10 @@ export namespace Prisma {
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
     defaultWeightG?: IntFieldUpdateOperationsInput | number
+    defaultEmptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    repurchaseQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     colors?: FilamentColorStopUncheckedUpdateManyWithoutFilamentNestedInput
@@ -24698,8 +24849,8 @@ export namespace Prisma {
     id?: string
     initialWeightG: number
     remainingWeightG: number
+    emptyWeightG?: number | null
     status?: string
-    needsRepurchase?: boolean
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
@@ -24718,8 +24869,8 @@ export namespace Prisma {
     locationId?: string | null
     initialWeightG: number
     remainingWeightG: number
+    emptyWeightG?: number | null
     status?: string
-    needsRepurchase?: boolean
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
@@ -24748,8 +24899,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
+    emptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24768,8 +24919,8 @@ export namespace Prisma {
     locationId?: NullableStringFieldUpdateOperationsInput | string | null
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
+    emptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24946,8 +25097,10 @@ export namespace Prisma {
     colorName?: string | null
     diameterMm?: number
     defaultWeightG?: number
+    defaultEmptyWeightG?: number | null
     productUrl?: string | null
     notes?: string | null
+    repurchaseQty?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutFilamentsInput
@@ -24966,8 +25119,10 @@ export namespace Prisma {
     colorName?: string | null
     diameterMm?: number
     defaultWeightG?: number
+    defaultEmptyWeightG?: number | null
     productUrl?: string | null
     notes?: string | null
+    repurchaseQty?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     colors?: FilamentColorStopUncheckedCreateNestedManyWithoutFilamentInput
@@ -25037,8 +25192,10 @@ export namespace Prisma {
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
     defaultWeightG?: IntFieldUpdateOperationsInput | number
+    defaultEmptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    repurchaseQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutFilamentsNestedInput
@@ -25057,8 +25214,10 @@ export namespace Prisma {
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
     defaultWeightG?: IntFieldUpdateOperationsInput | number
+    defaultEmptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    repurchaseQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     colors?: FilamentColorStopUncheckedUpdateManyWithoutFilamentNestedInput
@@ -25113,8 +25272,10 @@ export namespace Prisma {
     colorName?: string | null
     diameterMm?: number
     defaultWeightG?: number
+    defaultEmptyWeightG?: number | null
     productUrl?: string | null
     notes?: string | null
+    repurchaseQty?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -25125,8 +25286,8 @@ export namespace Prisma {
     locationId?: string | null
     initialWeightG: number
     remainingWeightG: number
+    emptyWeightG?: number | null
     status?: string
-    needsRepurchase?: boolean
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
@@ -25279,8 +25440,10 @@ export namespace Prisma {
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
     defaultWeightG?: IntFieldUpdateOperationsInput | number
+    defaultEmptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    repurchaseQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     brand?: BrandUpdateOneRequiredWithoutFilamentsNestedInput
@@ -25298,8 +25461,10 @@ export namespace Prisma {
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
     defaultWeightG?: IntFieldUpdateOperationsInput | number
+    defaultEmptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    repurchaseQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     colors?: FilamentColorStopUncheckedUpdateManyWithoutFilamentNestedInput
@@ -25315,8 +25480,10 @@ export namespace Prisma {
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
     defaultWeightG?: IntFieldUpdateOperationsInput | number
+    defaultEmptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    repurchaseQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -25325,8 +25492,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
+    emptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25344,8 +25511,8 @@ export namespace Prisma {
     locationId?: NullableStringFieldUpdateOperationsInput | string | null
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
+    emptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25361,8 +25528,8 @@ export namespace Prisma {
     locationId?: NullableStringFieldUpdateOperationsInput | string | null
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
+    emptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25423,8 +25590,10 @@ export namespace Prisma {
     colorName?: string | null
     diameterMm?: number
     defaultWeightG?: number
+    defaultEmptyWeightG?: number | null
     productUrl?: string | null
     notes?: string | null
+    repurchaseQty?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -25435,8 +25604,10 @@ export namespace Prisma {
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
     defaultWeightG?: IntFieldUpdateOperationsInput | number
+    defaultEmptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    repurchaseQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutFilamentsNestedInput
@@ -25454,8 +25625,10 @@ export namespace Prisma {
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
     defaultWeightG?: IntFieldUpdateOperationsInput | number
+    defaultEmptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    repurchaseQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     colors?: FilamentColorStopUncheckedUpdateManyWithoutFilamentNestedInput
@@ -25471,8 +25644,10 @@ export namespace Prisma {
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
     defaultWeightG?: IntFieldUpdateOperationsInput | number
+    defaultEmptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    repurchaseQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -25485,8 +25660,10 @@ export namespace Prisma {
     colorName?: string | null
     diameterMm?: number
     defaultWeightG?: number
+    defaultEmptyWeightG?: number | null
     productUrl?: string | null
     notes?: string | null
+    repurchaseQty?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -25497,8 +25674,10 @@ export namespace Prisma {
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
     defaultWeightG?: IntFieldUpdateOperationsInput | number
+    defaultEmptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    repurchaseQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutFilamentsNestedInput
@@ -25516,8 +25695,10 @@ export namespace Prisma {
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
     defaultWeightG?: IntFieldUpdateOperationsInput | number
+    defaultEmptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    repurchaseQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     colors?: FilamentColorStopUncheckedUpdateManyWithoutFilamentNestedInput
@@ -25533,8 +25714,10 @@ export namespace Prisma {
     colorName?: NullableStringFieldUpdateOperationsInput | string | null
     diameterMm?: FloatFieldUpdateOperationsInput | number
     defaultWeightG?: IntFieldUpdateOperationsInput | number
+    defaultEmptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     productUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    repurchaseQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -25545,8 +25728,8 @@ export namespace Prisma {
     filamentId: string
     initialWeightG: number
     remainingWeightG: number
+    emptyWeightG?: number | null
     status?: string
-    needsRepurchase?: boolean
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
@@ -25559,8 +25742,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
+    emptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25578,8 +25761,8 @@ export namespace Prisma {
     filamentId?: StringFieldUpdateOperationsInput | string
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
+    emptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25595,8 +25778,8 @@ export namespace Prisma {
     filamentId?: StringFieldUpdateOperationsInput | string
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
+    emptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25619,8 +25802,8 @@ export namespace Prisma {
     locationId?: string | null
     initialWeightG: number
     remainingWeightG: number
+    emptyWeightG?: number | null
     status?: string
-    needsRepurchase?: boolean
     purchasedAt?: Date | string | null
     priceCents?: number | null
     notes?: string | null
@@ -25666,8 +25849,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
+    emptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25685,8 +25868,8 @@ export namespace Prisma {
     locationId?: NullableStringFieldUpdateOperationsInput | string | null
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
+    emptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25702,8 +25885,8 @@ export namespace Prisma {
     locationId?: NullableStringFieldUpdateOperationsInput | string | null
     initialWeightG?: IntFieldUpdateOperationsInput | number
     remainingWeightG?: IntFieldUpdateOperationsInput | number
+    emptyWeightG?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
-    needsRepurchase?: BoolFieldUpdateOperationsInput | boolean
     purchasedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceCents?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null

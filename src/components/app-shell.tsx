@@ -7,7 +7,9 @@ import {
   RiArchiveLine,
   RiDashboardLine,
   RiLogoutBoxLine,
+  RiPaletteLine,
   RiSettings3Line,
+  RiShoppingCart2Line,
   RiStackLine,
 } from "@remixicon/react";
 
@@ -35,6 +37,8 @@ import { cn } from "@/lib/utils";
 const nav = [
   { href: "/dashboard", label: "Dashboard", icon: RiDashboardLine },
   { href: "/inventory", label: "Inventory", icon: RiStackLine },
+  { href: "/filaments", label: "Filaments", icon: RiPaletteLine },
+  { href: "/cart", label: "Cart", icon: RiShoppingCart2Line },
   { href: "/spools/new", label: "Add spool", icon: RiAddLine },
   { href: "/settings", label: "Settings", icon: RiSettings3Line },
 ];

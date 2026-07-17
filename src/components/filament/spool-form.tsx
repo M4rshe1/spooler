@@ -2,19 +2,12 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { RiFilter3Line } from "@remixicon/react";
 import { toast } from "sonner";
 
-import {
-  ColorEditor,
-  type ColorEditorValue,
-} from "@/components/filament/color-editor";
-import {
-  CustomFieldsFormSection,
-  customValuesToApiPayload,
-  type CustomFieldFormValue,
-} from "@/components/filament/custom-fields-form";
-import { NfcScanCard } from "@/components/filament/nfc-scan-card";
+import { ColorSwatch } from "@/components/filament/color-swatch";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,6 +17,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   Field,
   FieldDescription,
   FieldGroup,
@@ -32,29 +33,25 @@ import {
 import { Input } from "@/components/ui/input";
 import { SearchableSelect } from "@/components/ui/searchable-select";
 import { Textarea } from "@/components/ui/textarea";
-import { defaultColorsForMode } from "@/lib/color-preview";
 import { SPOOL_STATUSES, type SpoolStatus } from "@/lib/filament";
-import { findCatalogMatch, type NfcSpoolDraft } from "@/lib/nfc";
 import { api } from "@/trpc/react";
 
 type SpoolFormProps = {
   mode: "create" | "edit";
   spoolId?: string;
+  /** Pre-select a filament when opening from the filament detail page */
+  defaultFilamentId?: string;
   initial?: {
-    brandId: string;
-    materialId: string;
+    filamentId: string;
     locationId: string | null;
-    diameterMm: number;
     initialWeightG: number;
     remainingWeightG: number;
+    emptyWeightG: number | null;
     status: SpoolStatus;
     purchasedAt: string | null;
     priceCents: number | null;
     notes: string | null;
     lastDriedAt: string | null;
-    productUrl: string | null;
-    color: ColorEditorValue;
-    customValues: CustomFieldFormValue[];
   };
 };
 
@@ -65,28 +62,43 @@ function toDateInput(value: Date | string | null | undefined) {
   return d.toISOString().slice(0, 10);
 }
 
-export function SpoolForm({ mode, spoolId, initial }: SpoolFormProps) {
+export function SpoolForm({
+  mode,
+  spoolId,
+  defaultFilamentId,
+  initial,
+}: SpoolFormProps) {
   const router = useRouter();
   const utils = api.useUtils();
 
+  const [filterBrandId, setFilterBrandId] = useState("");
+  const [filterMaterialId, setFilterMaterialId] = useState("");
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [draftBrandId, setDraftBrandId] = useState("");
+  const [draftMaterialId, setDraftMaterialId] = useState("");
+
+  const filamentsQuery = api.filament.list.useQuery({
+    brandId: filterBrandId || undefined,
+    materialId: filterMaterialId || undefined,
+  });
   const brandsQuery = api.catalog.brands.useQuery();
   const materialsQuery = api.catalog.materials.useQuery();
   const locationsQuery = api.catalog.locations.useQuery();
-  const fieldsQuery = api.customField.list.useQuery();
 
-  const ensureBrand = api.catalog.ensureBrand.useMutation();
-  const ensureMaterial = api.catalog.ensureMaterial.useMutation();
-
-  const [brandId, setBrandId] = useState(initial?.brandId ?? "");
-  const [materialId, setMaterialId] = useState(initial?.materialId ?? "");
+  const [filamentId, setFilamentId] = useState(
+    initial?.filamentId ?? defaultFilamentId ?? "",
+  );
   const [locationId, setLocationId] = useState(initial?.locationId ?? "");
-  const [diameterMm, setDiameterMm] = useState(initial?.diameterMm ?? 1.75);
   const [initialWeightG, setInitialWeightG] = useState(
     initial?.initialWeightG ?? 1000,
   );
   const [remainingWeightG, setRemainingWeightG] = useState(
     initial?.remainingWeightG ?? initial?.initialWeightG ?? 1000,
   );
+  const [emptyWeightG, setEmptyWeightG] = useState(
+    initial?.emptyWeightG != null ? String(initial.emptyWeightG) : "",
+  );
+  const [emptyTouched, setEmptyTouched] = useState(mode === "edit");
   const [status, setStatus] = useState<SpoolStatus>(
     initial?.status ?? "sealed",
   );
@@ -96,24 +108,85 @@ export function SpoolForm({ mode, spoolId, initial }: SpoolFormProps) {
   );
   const [notes, setNotes] = useState(initial?.notes ?? "");
   const [lastDriedAt, setLastDriedAt] = useState(initial?.lastDriedAt ?? "");
-  const [productUrl, setProductUrl] = useState(initial?.productUrl ?? "");
-  const [color, setColor] = useState<ColorEditorValue>(
-    initial?.color ?? {
-      colorMode: "SOLID",
-      colorName: "",
-      colors: defaultColorsForMode("SOLID"),
-    },
-  );
-  const [customValues, setCustomValues] = useState<CustomFieldFormValue[]>(
-    initial?.customValues ?? [],
+  const [weightTouched, setWeightTouched] = useState(mode === "edit");
+  const [count, setCount] = useState(1);
+
+  const selectedFilament = (filamentsQuery.data ?? []).find(
+    (f) => f.id === filamentId,
   );
 
+  const activeFilterCount =
+    (filterBrandId ? 1 : 0) + (filterMaterialId ? 1 : 0);
+  const filterBrandName = (brandsQuery.data ?? []).find(
+    (b) => b.id === filterBrandId,
+  )?.name;
+  const filterMaterialName = (materialsQuery.data ?? []).find(
+    (m) => m.id === filterMaterialId,
+  )?.name;
+
+  const openFilterDialog = () => {
+    setDraftBrandId(filterBrandId);
+    setDraftMaterialId(filterMaterialId);
+    setFilterOpen(true);
+  };
+
+  const applyFilters = () => {
+    setFilterBrandId(draftBrandId);
+    setFilterMaterialId(draftMaterialId);
+    setFilterOpen(false);
+  };
+
+  const clearFilters = () => {
+    setDraftBrandId("");
+    setDraftMaterialId("");
+    setFilterBrandId("");
+    setFilterMaterialId("");
+    setFilterOpen(false);
+  };
+
+  useEffect(() => {
+    if (!filterBrandId && !filterMaterialId) return;
+    if (!filamentId || filamentsQuery.isLoading || !filamentsQuery.data) return;
+    if (!filamentsQuery.data.some((f) => f.id === filamentId)) {
+      setFilamentId("");
+      if (mode === "create") setWeightTouched(false);
+    }
+  }, [
+    mode,
+    filterBrandId,
+    filterMaterialId,
+    filamentId,
+    filamentsQuery.data,
+    filamentsQuery.isLoading,
+  ]);
+
+  useEffect(() => {
+    if (mode !== "create" || weightTouched || !selectedFilament) return;
+    setInitialWeightG(selectedFilament.defaultWeightG);
+    setRemainingWeightG(selectedFilament.defaultWeightG);
+  }, [mode, weightTouched, selectedFilament]);
+
+  useEffect(() => {
+    if (mode !== "create" || emptyTouched || !selectedFilament) return;
+    setEmptyWeightG(
+      selectedFilament.defaultEmptyWeightG != null
+        ? String(selectedFilament.defaultEmptyWeightG)
+        : "",
+    );
+  }, [mode, emptyTouched, selectedFilament]);
+
   const createSpool = api.spool.create.useMutation({
-    onSuccess: async (spool) => {
+    onSuccess: async (result) => {
       await utils.spool.invalidate();
+      await utils.filament.invalidate();
       await utils.stats.invalidate();
-      toast.success("Spool added");
-      router.push(`/spools/${spool.id}`);
+      if (result.count === 1 && result.spools[0]) {
+        toast.success("Spool added");
+        router.push(`/spools/${result.spools[0].id}`);
+      } else {
+        toast.success(`Added ${result.count} spools`);
+        router.push("/inventory");
+      }
     },
     onError: (err) => toast.error(err.message),
   });
@@ -128,104 +201,12 @@ export function SpoolForm({ mode, spoolId, initial }: SpoolFormProps) {
     onError: (err) => toast.error(err.message),
   });
 
-  const busy =
-    createSpool.isPending ||
-    updateSpool.isPending ||
-    ensureBrand.isPending ||
-    ensureMaterial.isPending;
-
-  const applyNfcDraft = async (draft: NfcSpoolDraft) => {
-    let nextBrandId = brandId;
-    let nextMaterialId = materialId;
-
-    if (draft.brandName) {
-      const local = findCatalogMatch(brandsQuery.data ?? [], draft.brandName);
-      if (local) {
-        nextBrandId = local.id;
-      } else {
-        const brand = await ensureBrand.mutateAsync({ name: draft.brandName });
-        nextBrandId = brand.id;
-        await utils.catalog.brands.invalidate();
-      }
-    }
-
-    if (draft.materialName) {
-      const local = findCatalogMatch(
-        materialsQuery.data ?? [],
-        draft.materialName,
-      );
-      if (local) {
-        nextMaterialId = local.id;
-      } else {
-        const material = await ensureMaterial.mutateAsync({
-          name: draft.materialName,
-          minNozzleC: draft.minNozzleC ?? null,
-          maxNozzleC: draft.maxNozzleC ?? null,
-        });
-        nextMaterialId = material.id;
-        await utils.catalog.materials.invalidate();
-      }
-    }
-
-    setBrandId(nextBrandId);
-    setMaterialId(nextMaterialId);
-
-    if (draft.diameterMm != null) setDiameterMm(draft.diameterMm);
-    if (draft.initialWeightG != null) {
-      setInitialWeightG(draft.initialWeightG);
-      setRemainingWeightG(draft.remainingWeightG ?? draft.initialWeightG);
-    } else if (draft.remainingWeightG != null) {
-      setRemainingWeightG(draft.remainingWeightG);
-    }
-    if (draft.productUrl) setProductUrl(draft.productUrl);
-    if (draft.notes) {
-      setNotes((prev) => (prev.trim() ? prev : draft.notes!));
-    }
-
-    if (draft.locationName) {
-      const loc = findCatalogMatch(
-        locationsQuery.data ?? [],
-        draft.locationName,
-      );
-      if (loc) setLocationId(loc.id);
-    }
-
-    const secondary = draft.secondaryColors ?? [];
-    if (draft.colorHex || draft.colorName || secondary.length > 0) {
-      const primary = draft.colorHex ?? secondary[0] ?? "#808080";
-      if (secondary.length >= 1) {
-        const stops = [primary, ...secondary].slice(0, 12);
-        setColor({
-          colorMode: stops.length >= 3 ? "MULTI" : "GRADIENT",
-          colorName: draft.colorName ?? "",
-          colors: stops.map((hex, index, arr) => ({
-            hex,
-            name: index === 0 ? (draft.colorName ?? null) : null,
-            position: arr.length === 1 ? 0 : index / (arr.length - 1),
-            weight: null,
-          })),
-        });
-      } else {
-        setColor({
-          colorMode: "SOLID",
-          colorName: draft.colorName ?? "",
-          colors: [
-            {
-              hex: primary,
-              name: draft.colorName ?? null,
-              position: 0,
-              weight: null,
-            },
-          ],
-        });
-      }
-    }
-  };
+  const busy = createSpool.isPending || updateSpool.isPending;
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!brandId || !materialId) {
-      toast.error("Brand and material are required");
+    if (!filamentId) {
+      toast.error("Pick a filament");
       return;
     }
 
@@ -233,37 +214,33 @@ export function SpoolForm({ mode, spoolId, initial }: SpoolFormProps) {
       price.trim() === "" ? null : Math.round(Number.parseFloat(price) * 100);
 
     const payload = {
-      brandId,
-      materialId,
+      filamentId,
       locationId: locationId || null,
-      diameterMm,
       initialWeightG,
       remainingWeightG,
+      emptyWeightG:
+        emptyWeightG.trim() === "" ? null : Number(emptyWeightG),
       status,
       purchasedAt: purchasedAt ? new Date(purchasedAt) : null,
       priceCents: Number.isFinite(priceCents) ? priceCents : null,
       notes: notes || null,
       lastDriedAt: lastDriedAt ? new Date(lastDriedAt) : null,
-      productUrl: productUrl.trim() || null,
-      colorMode: color.colorMode,
-      colorName: color.colorName || null,
-      colors: color.colors.map((c) => ({
-        hex: c.hex,
-        name: c.name ?? null,
-        position: c.position,
-        weight: c.weight ?? null,
-      })),
-      customValues: customValuesToApiPayload(customValues),
     };
 
     if (mode === "create") {
-      createSpool.mutate(payload);
+      const qty = Math.min(50, Math.max(1, Math.floor(count) || 1));
+      createSpool.mutate({ ...payload, count: qty });
     } else if (spoolId) {
       updateSpool.mutate({ id: spoolId, ...payload });
     }
   };
 
-  const submitLabel = mode === "create" ? "Add spool" : "Save changes";
+  const submitLabel =
+    mode === "create"
+      ? count > 1
+        ? `Add ${count} spools`
+        : "Add spool"
+      : "Save changes";
 
   const formActions = (
     <div className="flex justify-end gap-2">
@@ -282,66 +259,153 @@ export function SpoolForm({ mode, spoolId, initial }: SpoolFormProps) {
   );
 
   return (
+    <>
     <form
       onSubmit={onSubmit}
       className="mx-auto max-w-2xl space-y-4 pb-28 sm:space-y-6 md:pb-6"
     >
       <div className="hidden md:block">{formActions}</div>
 
-      {mode === "create" && <NfcScanCard onDraft={applyNfcDraft} />}
-
       <Card>
         <CardHeader>
-          <CardTitle>Basics</CardTitle>
+          <CardTitle>Filament</CardTitle>
           <CardDescription>
-            Pick brand and material from Settings if they aren’t listed yet.{" "}
+            Choose an existing product definition, or{" "}
             <Link
-              href="/settings"
+              href="/filaments/new"
               className="text-foreground underline underline-offset-2"
             >
-              Open settings
+              create a new filament
             </Link>
+            .
           </CardDescription>
         </CardHeader>
         <CardContent>
           <FieldGroup>
+            <Field>
+              <FieldLabel>Filament *</FieldLabel>
+              <div className="flex items-start gap-2">
+                <div className="min-w-0 flex-1">
+                  <SearchableSelect
+                    value={filamentId || null}
+                    onValueChange={(next) => {
+                      setFilamentId(next ?? "");
+                      if (mode === "create") setWeightTouched(false);
+                    }}
+                    placeholder="Search filaments…"
+                    emptyText="No filaments found"
+                    options={(filamentsQuery.data ?? []).map((f) => ({
+                      value: f.id,
+                      label: [
+                        f.colorName ?? "Untitled",
+                        f.brand.name,
+                        f.material.name,
+                      ].join(" · "),
+                    }))}
+                  />
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  className="relative shrink-0"
+                  onClick={openFilterDialog}
+                  aria-label="Filter filaments"
+                >
+                  <RiFilter3Line />
+                  {activeFilterCount > 0 && (
+                    <Badge
+                      variant="secondary"
+                      className="absolute -top-1.5 -right-1.5 h-4 min-w-4 px-1 text-[10px] leading-none"
+                    >
+                      {activeFilterCount}
+                    </Badge>
+                  )}
+                </Button>
+              </div>
+              {activeFilterCount > 0 && (
+                <div className="text-muted-foreground flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
+                  <span>
+                    Filtered by{" "}
+                    {[filterBrandName, filterMaterialName]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </span>
+                  <button
+                    type="button"
+                    className="text-foreground underline underline-offset-2"
+                    onClick={clearFilters}
+                  >
+                    Clear
+                  </button>
+                </div>
+              )}
+              {(filamentsQuery.data?.length ?? 0) === 0 && (
+                <FieldDescription>
+                  {activeFilterCount > 0
+                    ? "No filaments match these filters."
+                    : "No filaments yet — add one first, then open a physical spool."}
+                </FieldDescription>
+              )}
+            </Field>
+
+            {selectedFilament && (
+              <div className="border-border flex items-center gap-3 border px-3 py-2">
+                <ColorSwatch
+                  mode={selectedFilament.colorMode}
+                  colors={selectedFilament.colors}
+                  className="h-10 w-14 shrink-0"
+                />
+                <div className="min-w-0 text-sm">
+                  <div className="truncate font-medium">
+                    {selectedFilament.colorName ?? "Untitled"}
+                  </div>
+                  <div className="text-muted-foreground truncate text-xs">
+                    {selectedFilament.brand.name} ·{" "}
+                    {selectedFilament.material.name} ·{" "}
+                    {selectedFilament.diameterMm}mm · default{" "}
+                    {selectedFilament.defaultWeightG}g
+                  </div>
+                </div>
+              </div>
+            )}
+          </FieldGroup>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Spool instance</CardTitle>
+          <CardDescription>
+            Weights, status, location, and purchase details for this roll.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <FieldGroup>
+            {mode === "create" && (
+              <Field>
+                <FieldLabel htmlFor="spool-count">Quantity</FieldLabel>
+                <Input
+                  id="spool-count"
+                  type="number"
+                  inputMode="numeric"
+                  min={1}
+                  max={50}
+                  className="min-h-11 max-w-32 text-base sm:min-h-9 sm:text-sm"
+                  value={count}
+                  onChange={(e) =>
+                    setCount(
+                      Math.min(50, Math.max(1, Number(e.target.value) || 1)),
+                    )
+                  }
+                />
+                <FieldDescription>
+                  Create multiple identical spools of this filament at once.
+                </FieldDescription>
+              </Field>
+            )}
+
             <div className="grid gap-4 sm:grid-cols-2">
-              <Field>
-                <FieldLabel>Brand *</FieldLabel>
-                <SearchableSelect
-                  value={brandId || null}
-                  onValueChange={(next) => setBrandId(next ?? "")}
-                  placeholder="Search brands…"
-                  emptyText="No brands found"
-                  options={(brandsQuery.data ?? []).map((b) => ({
-                    value: b.id,
-                    label: b.name,
-                  }))}
-                />
-                {(brandsQuery.data?.length ?? 0) === 0 && (
-                  <FieldDescription>
-                    No brands yet — add one in Settings → Brands, or scan an NFC
-                    tag.
-                  </FieldDescription>
-                )}
-              </Field>
-
-              <Field>
-                <FieldLabel>Material *</FieldLabel>
-                <SearchableSelect
-                  value={materialId || null}
-                  onValueChange={(next) => setMaterialId(next ?? "")}
-                  placeholder="Search materials…"
-                  emptyText="No materials found"
-                  options={(materialsQuery.data ?? []).map((m) => ({
-                    value: m.id,
-                    label: m.name,
-                  }))}
-                />
-              </Field>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-3">
               <Field>
                 <FieldLabel>Status</FieldLabel>
                 <SearchableSelect
@@ -356,21 +420,6 @@ export function SpoolForm({ mode, spoolId, initial }: SpoolFormProps) {
                   }))}
                 />
               </Field>
-
-              <Field>
-                <FieldLabel htmlFor="diameter">Diameter (mm)</FieldLabel>
-                <Input
-                  id="diameter"
-                  type="number"
-                  inputMode="decimal"
-                  step="0.05"
-                  min="0.1"
-                  className="min-h-11 text-base sm:min-h-9 sm:text-sm"
-                  value={diameterMm}
-                  onChange={(e) => setDiameterMm(Number(e.target.value))}
-                />
-              </Field>
-
               <Field>
                 <FieldLabel>Location</FieldLabel>
                 <SearchableSelect
@@ -392,10 +441,10 @@ export function SpoolForm({ mode, spoolId, initial }: SpoolFormProps) {
               </Field>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-4 sm:grid-cols-3">
               <Field>
                 <FieldLabel htmlFor="initial-weight">
-                  Initial weight (g)
+                  Initial filament (g)
                 </FieldLabel>
                 <Input
                   id="initial-weight"
@@ -406,6 +455,7 @@ export function SpoolForm({ mode, spoolId, initial }: SpoolFormProps) {
                   value={initialWeightG}
                   onChange={(e) => {
                     const next = Number(e.target.value);
+                    setWeightTouched(true);
                     setInitialWeightG(next);
                     if (mode === "create") setRemainingWeightG(next);
                   }}
@@ -413,7 +463,7 @@ export function SpoolForm({ mode, spoolId, initial }: SpoolFormProps) {
               </Field>
               <Field>
                 <FieldLabel htmlFor="remaining-weight">
-                  Remaining weight (g)
+                  Remaining filament (g)
                 </FieldLabel>
                 <Input
                   id="remaining-weight"
@@ -422,8 +472,30 @@ export function SpoolForm({ mode, spoolId, initial }: SpoolFormProps) {
                   min={0}
                   className="min-h-11 text-base sm:min-h-9 sm:text-sm"
                   value={remainingWeightG}
-                  onChange={(e) => setRemainingWeightG(Number(e.target.value))}
+                  onChange={(e) => {
+                    setWeightTouched(true);
+                    setRemainingWeightG(Number(e.target.value));
+                  }}
                 />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="empty-weight">Empty spool (g)</FieldLabel>
+                <Input
+                  id="empty-weight"
+                  type="number"
+                  inputMode="numeric"
+                  min={0}
+                  placeholder="tare"
+                  className="min-h-11 text-base sm:min-h-9 sm:text-sm"
+                  value={emptyWeightG}
+                  onChange={(e) => {
+                    setEmptyTouched(true);
+                    setEmptyWeightG(e.target.value);
+                  }}
+                />
+                <FieldDescription>
+                  Tare for scale → filament math.
+                </FieldDescription>
               </Field>
             </div>
 
@@ -465,24 +537,6 @@ export function SpoolForm({ mode, spoolId, initial }: SpoolFormProps) {
             </div>
 
             <Field>
-              <FieldLabel htmlFor="product-url">
-                Product / store link
-              </FieldLabel>
-              <Input
-                id="product-url"
-                type="url"
-                inputMode="url"
-                placeholder="https://store.example.com/filament/…"
-                className="min-h-11 text-base sm:min-h-9 sm:text-sm"
-                value={productUrl}
-                onChange={(e) => setProductUrl(e.target.value)}
-              />
-              <FieldDescription>
-                Optional product page or storefront listing for this spool.
-              </FieldDescription>
-            </Field>
-
-            <Field>
               <FieldLabel htmlFor="notes">Notes</FieldLabel>
               <Textarea
                 id="notes"
@@ -496,40 +550,68 @@ export function SpoolForm({ mode, spoolId, initial }: SpoolFormProps) {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Color</CardTitle>
-          <CardDescription>
-            Solid, gradient, or multi-color band preview.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ColorEditor value={color} onChange={setColor} />
-        </CardContent>
-      </Card>
-
-      {(fieldsQuery.data?.length ?? 0) > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Custom fields</CardTitle>
-            <CardDescription>
-              Values for fields defined in Settings.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <CustomFieldsFormSection
-              fields={fieldsQuery.data ?? []}
-              values={customValues}
-              onChange={setCustomValues}
-            />
-          </CardContent>
-        </Card>
-      )}
-
       <div className="border-border bg-background/95 supports-backdrop-filter:bg-background/80 fixed inset-x-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] z-40 border-t p-3 backdrop-blur md:static md:z-auto md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none">
         <div className="mx-auto max-w-2xl md:pb-0">{formActions}</div>
       </div>
     </form>
+
+    <Dialog open={filterOpen} onOpenChange={setFilterOpen}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Filter filaments</DialogTitle>
+          <DialogDescription>
+            Narrow the filament list by brand and material.
+          </DialogDescription>
+        </DialogHeader>
+        <FieldGroup>
+          <Field>
+            <FieldLabel>Brand</FieldLabel>
+            <SearchableSelect
+              value={draftBrandId || "all"}
+              onValueChange={(value) =>
+                setDraftBrandId(value === "all" || value == null ? "" : value)
+              }
+              placeholder="All brands"
+              options={[
+                { value: "all", label: "All brands" },
+                ...(brandsQuery.data ?? []).map((b) => ({
+                  value: b.id,
+                  label: b.name,
+                })),
+              ]}
+            />
+          </Field>
+          <Field>
+            <FieldLabel>Material</FieldLabel>
+            <SearchableSelect
+              value={draftMaterialId || "all"}
+              onValueChange={(value) =>
+                setDraftMaterialId(
+                  value === "all" || value == null ? "" : value,
+                )
+              }
+              placeholder="All materials"
+              options={[
+                { value: "all", label: "All materials" },
+                ...(materialsQuery.data ?? []).map((m) => ({
+                  value: m.id,
+                  label: m.name,
+                })),
+              ]}
+            />
+          </Field>
+        </FieldGroup>
+        <DialogFooter>
+          <Button type="button" variant="outline" onClick={clearFilters}>
+            Clear
+          </Button>
+          <Button type="button" onClick={applyFilters}>
+            Apply
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+    </>
   );
 }
 

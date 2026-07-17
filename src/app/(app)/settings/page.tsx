@@ -26,7 +26,7 @@ export default function SettingsPage() {
           <TabsTrigger value="brands">Brands</TabsTrigger>
           <TabsTrigger value="materials">Materials</TabsTrigger>
           <TabsTrigger value="locations">Locations</TabsTrigger>
-          <TabsTrigger value="fields">Custom fields</TabsTrigger>
+          <TabsTrigger value="fields">Filament fields</TabsTrigger>
         </TabsList>
 
         <TabsContent value="brands" className="mt-4">
