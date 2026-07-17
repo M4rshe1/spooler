@@ -9,7 +9,6 @@ services:
     environment:
       NODE_ENV: production
       HOSTNAME: 0.0.0.0
-      PORT: 3000
       DATABASE_URL: file:/data/spooler.db
       BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://localhost:3000}
     volumes:
