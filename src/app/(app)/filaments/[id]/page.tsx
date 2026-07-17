@@ -130,6 +130,12 @@ export default function FilamentDetailPage() {
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
+          <Link
+            href={`/spools/new?filamentId=${filament.id}`}
+            className={cn(buttonVariants())}
+          >
+            Add spool
+          </Link>
           <FilamentBuyButton
             productUrl={filament.productUrl}
             brandWebsiteUrl={filament.brand.websiteUrl}
@@ -139,12 +145,6 @@ export default function FilamentDetailPage() {
             filamentId={filament.id}
             repurchaseQty={filament.repurchaseQty}
           />
-          <Link
-            href={`/spools/new?filamentId=${filament.id}`}
-            className={cn(buttonVariants({ variant: "outline" }))}
-          >
-            Open spool
-          </Link>
           <Link
             href={`/filaments/${filament.id}/edit`}
             className={cn(buttonVariants({ variant: "outline" }))}

@@ -29,28 +29,58 @@ import {
 import { Input } from "@/components/ui/input";
 import { SearchableSelect } from "@/components/ui/searchable-select";
 import { Switch } from "@/components/ui/switch";
-import { CUSTOM_FIELD_TYPES, type CustomFieldType } from "@/lib/filament";
-import { api } from "@/trpc/react";
+import {
+  CUSTOM_FIELD_TYPES,
+  parseOptionsJson,
+  type CustomFieldType,
+} from "@/lib/filament";
+import { api, type RouterOutputs } from "@/trpc/react";
+
+type CustomFieldRow = RouterOutputs["customField"]["list"][number];
 
 export function CustomFieldsPanel() {
   const utils = api.useUtils();
   const fieldsQuery = api.customField.list.useQuery();
 
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [label, setLabel] = useState("");
   const [type, setType] = useState<CustomFieldType>("TEXT");
   const [required, setRequired] = useState(false);
   const [showInList, setShowInList] = useState(false);
   const [optionsText, setOptionsText] = useState("");
 
+  const resetForm = () => {
+    setEditingId(null);
+    setLabel("");
+    setOptionsText("");
+    setRequired(false);
+    setShowInList(false);
+    setType("TEXT");
+  };
+
+  const startEdit = (field: CustomFieldRow) => {
+    setEditingId(field.id);
+    setLabel(field.label);
+    setType(field.type as CustomFieldType);
+    setRequired(field.required);
+    setShowInList(field.showInList);
+    setOptionsText(parseOptionsJson(field.options).join(", "));
+  };
+
   const createField = api.customField.create.useMutation({
     onSuccess: async () => {
       await utils.customField.list.invalidate();
-      setLabel("");
-      setOptionsText("");
-      setRequired(false);
-      setShowInList(false);
-      setType("TEXT");
+      resetForm();
       toast.success("Custom field created");
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const updateField = api.customField.update.useMutation({
+    onSuccess: async () => {
+      await utils.customField.list.invalidate();
+      resetForm();
+      toast.success("Custom field updated");
     },
     onError: (err) => toast.error(err.message),
   });
@@ -58,20 +88,54 @@ export function CustomFieldsPanel() {
   const deleteField = api.customField.delete.useMutation({
     onSuccess: async () => {
       await utils.customField.list.invalidate();
+      if (editingId) resetForm();
       toast.success("Field deleted");
     },
     onError: (err) => toast.error(err.message),
   });
 
   const needsOptions = type === "SELECT" || type === "MULTISELECT";
+  const busy = createField.isPending || updateField.isPending;
+
+  const onSubmit = () => {
+    if (!label.trim()) return;
+    const options = needsOptions
+      ? optionsText
+          .split(",")
+          .map((o) => o.trim())
+          .filter(Boolean)
+      : undefined;
+
+    if (editingId) {
+      updateField.mutate({
+        id: editingId,
+        label: label.trim(),
+        required,
+        showInList,
+        options: needsOptions ? options : undefined,
+      });
+      return;
+    }
+
+    createField.mutate({
+      label: label.trim(),
+      type,
+      required,
+      showInList,
+      options,
+    });
+  };
 
   return (
     <div className="grid gap-4 lg:grid-cols-[minmax(0,24rem)_1fr]">
       <Card>
         <CardHeader>
-          <CardTitle>Add custom field</CardTitle>
+          <CardTitle>
+            {editingId ? "Edit custom field" : "Add custom field"}
+          </CardTitle>
           <CardDescription>
             Extra filament attributes like finish, SKU, or tags.
+            {editingId ? " Field type can’t be changed after creation." : ""}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -90,9 +154,10 @@ export function CustomFieldsPanel() {
               <SearchableSelect
                 value={type}
                 onValueChange={(value) => {
-                  if (value) setType(value as CustomFieldType);
+                  if (value && !editingId) setType(value as CustomFieldType);
                 }}
                 placeholder="Search field types…"
+                disabled={!!editingId}
                 options={CUSTOM_FIELD_TYPES.map((t) => ({
                   value: t,
                   label: t,
@@ -108,7 +173,9 @@ export function CustomFieldsPanel() {
                   value={optionsText}
                   onChange={(e) => setOptionsText(e.target.value)}
                 />
-                <FieldDescription>Comma-separated for select types.</FieldDescription>
+                <FieldDescription>
+                  Comma-separated for select types.
+                </FieldDescription>
               </Field>
             )}
             <Field orientation="horizontal">
@@ -129,27 +196,30 @@ export function CustomFieldsPanel() {
             </Field>
           </FieldGroup>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex flex-wrap gap-2">
           <Button
-            disabled={!label.trim() || createField.isPending}
-            onClick={() =>
-              createField.mutate({
-                label: label.trim(),
-                type,
-                required,
-                showInList,
-                options: needsOptions
-                  ? optionsText
-                      .split(",")
-                      .map((o) => o.trim())
-                      .filter(Boolean)
-                  : undefined,
-              })
-            }
+            disabled={!label.trim() || busy}
+            onClick={onSubmit}
           >
-            <RiAddLine />
-            Create field
+            {editingId ? (
+              "Save changes"
+            ) : (
+              <>
+                <RiAddLine />
+                Create field
+              </>
+            )}
           </Button>
+          {editingId && (
+            <Button
+              type="button"
+              variant="outline"
+              disabled={busy}
+              onClick={resetForm}
+            >
+              Cancel
+            </Button>
+          )}
         </CardFooter>
       </Card>
 
@@ -187,24 +257,36 @@ export function CustomFieldsPanel() {
                       {field.showInList && (
                         <Badge variant="secondary">in list</Badge>
                       )}
+                      {editingId === field.id && (
+                        <Badge variant="default">editing</Badge>
+                      )}
                     </div>
                     <div className="text-muted-foreground font-mono text-xs">
                       {field.key}
                       {field.options ? ` · ${field.options}` : ""}
                     </div>
                   </div>
-                  <Button
-                    size="icon-sm"
-                    variant="ghost"
-                    onClick={() => {
-                      if (confirm(`Delete field “${field.label}”?`)) {
-                        deleteField.mutate({ id: field.id });
-                      }
-                    }}
-                    aria-label={`Delete ${field.label}`}
-                  >
-                    <RiDeleteBinLine />
-                  </Button>
+                  <div className="flex shrink-0 items-center gap-1">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => startEdit(field)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      size="icon-sm"
+                      variant="ghost"
+                      onClick={() => {
+                        if (confirm(`Delete field “${field.label}”?`)) {
+                          deleteField.mutate({ id: field.id });
+                        }
+                      }}
+                      aria-label={`Delete ${field.label}`}
+                    >
+                      <RiDeleteBinLine />
+                    </Button>
+                  </div>
                 </li>
               ))}
             </ul>

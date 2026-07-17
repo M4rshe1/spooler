@@ -158,6 +158,13 @@ export default function FilamentsPage() {
                   </div>
                 </Link>
                 <div className="flex shrink-0 flex-col items-end gap-1">
+                  <Link
+                    href={`/spools/new?filamentId=${filament.id}`}
+                    className={cn(buttonVariants({ size: "sm" }))}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    Add spool
+                  </Link>
                   <FilamentBuyButton
                     productUrl={filament.productUrl}
                     brandWebsiteUrl={filament.brand.websiteUrl}
@@ -255,6 +262,12 @@ export default function FilamentsPage() {
                       })}
                       <td className="px-3 py-2 text-right">
                         <div className="inline-flex flex-wrap items-center justify-end gap-1">
+                          <Link
+                            href={`/spools/new?filamentId=${filament.id}`}
+                            className={cn(buttonVariants({ size: "sm" }))}
+                          >
+                            Add spool
+                          </Link>
                           <FilamentBuyButton
                             productUrl={filament.productUrl}
                             brandWebsiteUrl={filament.brand.websiteUrl}
