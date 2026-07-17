@@ -11,4 +11,4 @@ services:
       DATABASE_URL: file:/data/spooler.db
       BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://localhost:3000}
     volumes:
-      - ./data:/data
+      - ../files/data:/data
