@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { ColorSwatch } from "@/components/filament/color-swatch";
@@ -11,6 +11,7 @@ import {
   RepurchaseControls,
   RepurchaseQtyBadge,
 } from "@/components/filament/repurchase-controls";
+import { SpoolQrButton } from "@/components/filament/spool-qr-button";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,13 +50,25 @@ function formatCustomValue(value: {
 }
 
 export default function SpoolDetailPage() {
+  return (
+    <Suspense
+      fallback={<p className="text-muted-foreground text-sm">Loading…</p>}
+    >
+      <SpoolDetailContent />
+    </Suspense>
+  );
+}
+
+function SpoolDetailContent() {
   const params = useParams<{ id: string }>();
+  const searchParams = useSearchParams();
   const router = useRouter();
   const utils = api.useUtils();
   const { data: spool, isLoading } = api.spool.get.useQuery({ id: params.id });
 
   const [gramsUsed, setGramsUsed] = useState("");
   const [usageNote, setUsageNote] = useState("");
+  const logSectionRef = useRef<HTMLElement>(null);
 
   const logUsage = api.spool.logUsage.useMutation({
     onSuccess: async () => {
@@ -88,6 +101,15 @@ export default function SpoolDetailPage() {
     },
     onError: (err) => toast.error(err.message),
   });
+
+  useEffect(() => {
+    if (searchParams.get("log") !== "1" || isLoading || !spool) return;
+    logSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const t = window.setTimeout(() => {
+      document.getElementById("grams")?.focus();
+    }, 300);
+    return () => window.clearTimeout(t);
+  }, [searchParams, isLoading, spool]);
 
   if (isLoading) {
     return <p className="text-muted-foreground text-sm">Loading…</p>;
@@ -165,6 +187,7 @@ export default function SpoolDetailPage() {
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
+          <SpoolQrButton spoolId={spool.id} />
           <RepurchaseControls
             filamentId={filament.id}
             repurchaseQty={filament.repurchaseQty}
@@ -274,7 +297,11 @@ export default function SpoolDetailPage() {
         </section>
       )}
 
-      <section className="space-y-3 border-t border-border pt-6">
+      <section
+        ref={logSectionRef}
+        id="log-usage"
+        className="space-y-3 border-t border-border pt-6"
+      >
         <h2 className="font-heading text-lg font-semibold">Log usage</h2>
         <div className="grid gap-3 sm:grid-cols-[1fr_2fr_auto]">
           <div className="space-y-2">

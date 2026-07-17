@@ -1,15 +1,16 @@
 "use client";
 
-import Link from "next/link";
-import { useMemo, useState } from "react";
 import {
   RiArchiveLine,
   RiMoreLine,
   RiScales3Line,
   RiSubtractLine,
 } from "@remixicon/react";
+import Link from "next/link";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
+import { SpoolQrButton } from "@/components/filament/spool-qr-button";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -251,6 +252,7 @@ export function InventoryQuickActions({
             Log
           </Button>
         )}
+        <SpoolQrButton spoolId={spool.id} compact />
         <DropdownMenu>
           <DropdownMenuTrigger
             render={
