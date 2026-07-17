@@ -114,6 +114,14 @@ export const STARTER_CUSTOM_FIELDS = [
     options: ["matte", "silk", "glossy", "glitter", "translucent"],
   },
   {
+    key: "preferred_nozzle",
+    label: "Preferred nozzle",
+    type: "SELECT" as const,
+    required: false,
+    showInList: false,
+    options: ["hardened", "brass", "stainless", "ruby"],
+  },
+  {
     key: "sku",
     label: "SKU",
     type: "TEXT" as const,

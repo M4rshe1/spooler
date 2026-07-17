@@ -256,6 +256,7 @@ export function MaterialsPanel() {
   const utils = api.useUtils();
   const materialsQuery = api.catalog.materials.useQuery();
 
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [density, setDensity] = useState("");
   const [preferredNozzle, setPreferredNozzle] = useState<string>("");
@@ -264,17 +265,51 @@ export function MaterialsPanel() {
   const [minBedC, setMinBedC] = useState("");
   const [maxBedC, setMaxBedC] = useState("");
 
+  const resetForm = () => {
+    setEditingId(null);
+    setName("");
+    setDensity("");
+    setPreferredNozzle("");
+    setMinNozzleC("");
+    setMaxNozzleC("");
+    setMinBedC("");
+    setMaxBedC("");
+  };
+
+  const startEdit = (material: {
+    id: string;
+    name: string;
+    density: number | null;
+    preferredNozzle: string | null;
+    minNozzleC: number | null;
+    maxNozzleC: number | null;
+    minBedC: number | null;
+    maxBedC: number | null;
+  }) => {
+    setEditingId(material.id);
+    setName(material.name);
+    setDensity(material.density != null ? String(material.density) : "");
+    setPreferredNozzle(material.preferredNozzle ?? "");
+    setMinNozzleC(material.minNozzleC != null ? String(material.minNozzleC) : "");
+    setMaxNozzleC(material.maxNozzleC != null ? String(material.maxNozzleC) : "");
+    setMinBedC(material.minBedC != null ? String(material.minBedC) : "");
+    setMaxBedC(material.maxBedC != null ? String(material.maxBedC) : "");
+  };
+
   const createMaterial = api.catalog.createMaterial.useMutation({
     onSuccess: async () => {
       await utils.catalog.materials.invalidate();
-      setName("");
-      setDensity("");
-      setPreferredNozzle("");
-      setMinNozzleC("");
-      setMaxNozzleC("");
-      setMinBedC("");
-      setMaxBedC("");
+      resetForm();
       toast.success("Material added");
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const updateMaterial = api.catalog.updateMaterial.useMutation({
+    onSuccess: async () => {
+      await utils.catalog.materials.invalidate();
+      resetForm();
+      toast.success("Material updated");
     },
     onError: (err) => toast.error(err.message),
   });
@@ -282,31 +317,42 @@ export function MaterialsPanel() {
   const deleteMaterial = api.catalog.deleteMaterial.useMutation({
     onSuccess: async () => {
       await utils.catalog.materials.invalidate();
+      if (editingId) resetForm();
       toast.success("Material deleted");
     },
     onError: (err) => toast.error(err.message),
   });
 
+  const busy = createMaterial.isPending || updateMaterial.isPending;
+
+  const materialPayload = () => ({
+    name: name.trim(),
+    density: optionalFloat(density),
+    preferredNozzle: preferredNozzle
+      ? (preferredNozzle as (typeof NOZZLE_MATERIALS)[number])
+      : null,
+    minNozzleC: optionalInt(minNozzleC),
+    maxNozzleC: optionalInt(maxNozzleC),
+    minBedC: optionalInt(minBedC),
+    maxBedC: optionalInt(maxBedC),
+  });
+
   const onSubmit = () => {
     if (!name.trim()) return;
-    createMaterial.mutate({
-      name: name.trim(),
-      density: optionalFloat(density),
-      preferredNozzle: preferredNozzle
-        ? (preferredNozzle as (typeof NOZZLE_MATERIALS)[number])
-        : null,
-      minNozzleC: optionalInt(minNozzleC),
-      maxNozzleC: optionalInt(maxNozzleC),
-      minBedC: optionalInt(minBedC),
-      maxBedC: optionalInt(maxBedC),
-    });
+    if (editingId) {
+      updateMaterial.mutate({ id: editingId, ...materialPayload() });
+      return;
+    }
+    createMaterial.mutate(materialPayload());
   };
 
   return (
     <div className="grid gap-4 lg:grid-cols-[minmax(0,24rem)_1fr]">
       <Card>
         <CardHeader>
-          <CardTitle>Add material</CardTitle>
+          <CardTitle>
+            {editingId ? "Edit material" : "Add material"}
+          </CardTitle>
           <CardDescription>
             Filament types with optional density and temp ranges.
           </CardDescription>
@@ -398,14 +444,27 @@ export function MaterialsPanel() {
             </div>
           </FieldGroup>
         </CardContent>
-        <CardFooter>
-          <Button
-            disabled={!name.trim() || createMaterial.isPending}
-            onClick={onSubmit}
-          >
-            <RiAddLine />
-            Add material
+        <CardFooter className="flex flex-wrap gap-2">
+          <Button disabled={!name.trim() || busy} onClick={onSubmit}>
+            {editingId ? (
+              "Save changes"
+            ) : (
+              <>
+                <RiAddLine />
+                Add material
+              </>
+            )}
           </Button>
+          {editingId && (
+            <Button
+              type="button"
+              variant="outline"
+              disabled={busy}
+              onClick={resetForm}
+            >
+              Cancel
+            </Button>
+          )}
         </CardFooter>
       </Card>
 
@@ -440,6 +499,9 @@ export function MaterialsPanel() {
                         {material._count.filaments} filament
                         {material._count.filaments === 1 ? "" : "s"}
                       </Badge>
+                      {editingId === material.id && (
+                        <Badge variant="default">editing</Badge>
+                      )}
                     </div>
                     <div className="text-muted-foreground text-xs">
                       {material.density != null
@@ -469,21 +531,30 @@ export function MaterialsPanel() {
                       )}
                     </div>
                   </div>
-                  <Button
-                    size="icon-sm"
-                    variant="ghost"
-                    disabled={
-                      material._count.filaments > 0 || deleteMaterial.isPending
-                    }
-                    onClick={() => {
-                      if (confirm(`Delete material “${material.name}”?`)) {
-                        deleteMaterial.mutate({ id: material.id });
+                  <div className="flex shrink-0 items-center gap-1">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => startEdit(material)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      size="icon-sm"
+                      variant="ghost"
+                      disabled={
+                        material._count.filaments > 0 || deleteMaterial.isPending
                       }
-                    }}
-                    aria-label={`Delete ${material.name}`}
-                  >
-                    <RiDeleteBinLine />
-                  </Button>
+                      onClick={() => {
+                        if (confirm(`Delete material “${material.name}”?`)) {
+                          deleteMaterial.mutate({ id: material.id });
+                        }
+                      }}
+                      aria-label={`Delete ${material.name}`}
+                    >
+                      <RiDeleteBinLine />
+                    </Button>
+                  </div>
                 </li>
               ))}
             </ul>
