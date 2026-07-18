@@ -39,6 +39,11 @@ export const filamentRouter = createTRPCRouter({
         },
         include: {
           brand: true,
+          spools: {
+            select: {
+              remainingWeightG: true,
+            },
+          },
           material: true,
           colors: { orderBy: { position: "asc" } },
           customFieldValues: {

@@ -205,7 +205,7 @@ export default function FilamentsPage() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border">
+              <tbody className="divide-border divide-y">
                 {filamentsQuery.data?.map((filament) => {
                   const byField = new Map(
                     filament.customFieldValues.map((v) => [v.fieldId, v]),
@@ -231,9 +231,7 @@ export default function FilamentsPage() {
                           {filament.brand.name} · {filament.diameterMm}mm
                         </div>
                       </td>
-                      <td className="px-3 py-2">
-                        {filament.material.name}
-                      </td>
+                      <td className="px-3 py-2">{filament.material.name}</td>
                       <td className="px-3 py-2 tabular-nums">
                         {filament.defaultWeightG}g
                         {filament.defaultEmptyWeightG != null && (
@@ -244,7 +242,15 @@ export default function FilamentsPage() {
                         )}
                       </td>
                       <td className="px-3 py-2 tabular-nums">
-                        {filament._count.spools}
+                        {filament._count.spools}{" "}
+                        <span className="text-muted-foreground">
+                          (
+                          {filament.spools.reduce(
+                            (acc, spool) => acc + spool.remainingWeightG,
+                            0,
+                          )}
+                          g left)
+                        </span>
                       </td>
                       <td className="px-3 py-2">
                         <RepurchaseQtyBadge quantity={filament.repurchaseQty} />
