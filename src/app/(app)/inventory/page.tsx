@@ -14,7 +14,9 @@ import { RepurchaseQtyBadge } from "@/components/filament/repurchase-controls";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ListPagination } from "@/components/ui/list-pagination";
 import { SearchableSelect } from "@/components/ui/searchable-select";
+import { useClientPagination } from "@/hooks/use-client-pagination";
 import { parseMultiSelect, SPOOL_STATUSES } from "@/lib/filament";
 import { cn } from "@/lib/utils";
 import { api, type RouterOutputs } from "@/trpc/react";
@@ -22,6 +24,20 @@ import { api, type RouterOutputs } from "@/trpc/react";
 type SpoolRow = RouterOutputs["spool"]["list"][number];
 
 type GroupBy = "none" | "filament" | "material";
+
+type SpoolGroup = {
+  key: string;
+  title: string;
+  subtitle: string;
+  colorMode?: string;
+  colors?: SpoolRow["filament"]["colors"];
+  href?: string;
+  colorDistance: number | null;
+  spools: SpoolRow[];
+};
+
+const EMPTY_SPOOLS: SpoolRow[] = [];
+const EMPTY_GROUPS: SpoolGroup[] = [];
 
 function formatCustomValue(value: {
   valueText: string | null;
@@ -200,25 +216,13 @@ export default function InventoryPage() {
     return [...fields.entries()];
   }, [spoolsQuery.data]);
 
-  const groups = useMemo(() => {
-    const spools = spoolsQuery.data ?? [];
+  const groups = useMemo((): SpoolGroup[] | null => {
+    const allSpools = spoolsQuery.data ?? EMPTY_SPOOLS;
     if (groupBy === "none") return null;
 
-    const map = new Map<
-      string,
-      {
-        key: string;
-        title: string;
-        subtitle: string;
-        colorMode?: string;
-        colors?: SpoolRow["filament"]["colors"];
-        href?: string;
-        colorDistance: number | null;
-        spools: SpoolRow[];
-      }
-    >();
+    const map = new Map<string, SpoolGroup>();
 
-    for (const spool of spools) {
+    for (const spool of allSpools) {
       if (groupBy === "filament") {
         const key = spool.filamentId;
         const existing = map.get(key);
@@ -270,10 +274,20 @@ export default function InventoryPage() {
     });
   }, [spoolsQuery.data, groupBy, colorHex]);
 
-  const overall = useMemo(
-    () => spoolTotals(spoolsQuery.data ?? []),
-    [spoolsQuery.data],
-  );
+  const spools = spoolsQuery.data ?? EMPTY_SPOOLS;
+
+  const overall = useMemo(() => spoolTotals(spools), [spools]);
+
+  const filterKey = `${search}|${status}|${materialId}|${colorHex ?? ""}|${includeArchived}|${groupBy}`;
+
+  const flatPagination = useClientPagination(spools, {
+    resetKey: filterKey,
+  });
+
+  const groupPagination = useClientPagination(groups ?? EMPTY_GROUPS, {
+    resetKey: filterKey,
+    pageSize: 10,
+  });
 
   return (
     <div className="space-y-6">
@@ -366,7 +380,7 @@ export default function InventoryPage() {
 
       {spoolsQuery.isLoading ? (
         <p className="text-muted-foreground text-sm">Loading…</p>
-      ) : (spoolsQuery.data?.length ?? 0) === 0 ? (
+      ) : spools.length === 0 ? (
         <div className="border-border border border-dashed px-6 py-12 text-center">
           <p className="font-heading text-lg font-semibold">No spools yet</p>
           <p className="text-muted-foreground mt-1 text-sm">
@@ -410,7 +424,7 @@ export default function InventoryPage() {
           {groupBy === "none" ? (
             <>
               <ul className="divide-border border-border divide-y border md:hidden">
-                {spoolsQuery.data?.map((spool) => (
+                {flatPagination.pageItems.map((spool) => (
                   <SpoolMobileRow key={spool.id} spool={spool} />
                 ))}
               </ul>
@@ -439,7 +453,7 @@ export default function InventoryPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
-                    {spoolsQuery.data?.map((spool) => (
+                    {flatPagination.pageItems.map((spool) => (
                       <SpoolTableRow
                         key={spool.id}
                         spool={spool}
@@ -450,10 +464,20 @@ export default function InventoryPage() {
                   </tbody>
                 </table>
               </div>
+
+              <ListPagination
+                page={flatPagination.page}
+                pageCount={flatPagination.pageCount}
+                total={flatPagination.total}
+                rangeStart={flatPagination.rangeStart}
+                rangeEnd={flatPagination.rangeEnd}
+                onPageChange={flatPagination.setPage}
+                itemLabel="spools"
+              />
             </>
           ) : (
             <div className="space-y-4">
-              {groups?.map((group) => {
+              {groupPagination.pageItems.map((group) => {
                 const totals = spoolTotals(group.spools);
                 return (
                   <section
@@ -552,6 +576,16 @@ export default function InventoryPage() {
                   </section>
                 );
               })}
+
+              <ListPagination
+                page={groupPagination.page}
+                pageCount={groupPagination.pageCount}
+                total={groupPagination.total}
+                rangeStart={groupPagination.rangeStart}
+                rangeEnd={groupPagination.rangeEnd}
+                onPageChange={groupPagination.setPage}
+                itemLabel="groups"
+              />
             </div>
           )}
         </>

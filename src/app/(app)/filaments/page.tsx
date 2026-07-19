@@ -17,7 +17,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ListPagination } from "@/components/ui/list-pagination";
 import { SearchableSelect } from "@/components/ui/searchable-select";
+import { useClientPagination } from "@/hooks/use-client-pagination";
 import { parseMultiSelect } from "@/lib/filament";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
@@ -63,15 +65,21 @@ export default function FilamentsPage() {
     colorHex: colorHex ?? undefined,
   });
 
+  const filaments = filamentsQuery.data ?? [];
+
   const listColumns = useMemo(() => {
     const fields = new Map<string, string>();
-    for (const filament of filamentsQuery.data ?? []) {
+    for (const filament of filaments) {
       for (const cv of filament.customFieldValues) {
         if (cv.field.showInList) fields.set(cv.field.id, cv.field.label);
       }
     }
     return [...fields.entries()];
-  }, [filamentsQuery.data]);
+  }, [filaments]);
+
+  const pagination = useClientPagination(filaments, {
+    resetKey: `${search}|${materialId}|${colorHex ?? ""}`,
+  });
 
   return (
     <div className="space-y-6">
@@ -130,7 +138,7 @@ export default function FilamentsPage() {
 
       {filamentsQuery.isLoading ? (
         <p className="text-muted-foreground text-sm">Loading…</p>
-      ) : (filamentsQuery.data?.length ?? 0) === 0 ? (
+      ) : filaments.length === 0 ? (
         <div className="border-border border border-dashed px-6 py-12 text-center">
           <p className="font-heading text-lg font-semibold">No filaments yet</p>
           <p className="text-muted-foreground mt-1 text-sm">
@@ -143,7 +151,7 @@ export default function FilamentsPage() {
       ) : (
         <>
           <ul className="divide-border border-border divide-y border md:hidden">
-            {filamentsQuery.data?.map((filament) => (
+            {pagination.pageItems.map((filament) => (
               <li
                 key={filament.id}
                 className="flex items-center gap-2 px-3 py-3"
@@ -231,7 +239,7 @@ export default function FilamentsPage() {
                 </tr>
               </thead>
               <tbody className="divide-border divide-y">
-                {filamentsQuery.data?.map((filament) => {
+                {pagination.pageItems.map((filament) => {
                   const byField = new Map(
                     filament.customFieldValues.map((v) => [v.fieldId, v]),
                   );
@@ -329,6 +337,16 @@ export default function FilamentsPage() {
               </tbody>
             </table>
           </div>
+
+          <ListPagination
+            page={pagination.page}
+            pageCount={pagination.pageCount}
+            total={pagination.total}
+            rangeStart={pagination.rangeStart}
+            rangeEnd={pagination.rangeEnd}
+            onPageChange={pagination.setPage}
+            itemLabel="filaments"
+          />
         </>
       )}
     </div>

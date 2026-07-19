@@ -11,6 +11,8 @@ import {
 } from "@/components/filament/repurchase-controls";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { ListPagination } from "@/components/ui/list-pagination";
+import { useClientPagination } from "@/hooks/use-client-pagination";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
@@ -41,13 +43,14 @@ export default function CartPage() {
     onError: (err) => toast.error(err.message),
   });
 
+  const items = data?.toRepurchase ?? [];
+  const pagination = useClientPagination(items);
+  const totalQty = data?.repurchaseCount ?? 0;
+  const thresholdG = data?.lowStockThresholdG ?? 200;
+
   if (isLoading) {
     return <p className="text-muted-foreground text-sm">Loading cart…</p>;
   }
-
-  const items = data?.toRepurchase ?? [];
-  const totalQty = data?.repurchaseCount ?? 0;
-  const thresholdG = data?.lowStockThresholdG ?? 200;
 
   return (
     <div className="space-y-6">
@@ -98,7 +101,7 @@ export default function CartPage() {
       ) : (
         <>
           <ul className="border-border divide-border divide-y border md:hidden">
-            {items.map((item) => (
+            {pagination.pageItems.map((item) => (
               <li key={item.id} className="space-y-3 p-3">
                 <Link
                   href={`/filaments/${item.id}`}
@@ -180,7 +183,7 @@ export default function CartPage() {
                 </tr>
               </thead>
               <tbody className="divide-border divide-y">
-                {items.map((item) => (
+                {pagination.pageItems.map((item) => (
                   <tr key={item.id} className="hover:bg-muted/30">
                     <td className="px-3 py-3">
                       <Link
@@ -258,6 +261,16 @@ export default function CartPage() {
               </tbody>
             </table>
           </div>
+
+          <ListPagination
+            page={pagination.page}
+            pageCount={pagination.pageCount}
+            total={pagination.total}
+            rangeStart={pagination.rangeStart}
+            rangeEnd={pagination.rangeEnd}
+            onPageChange={pagination.setPage}
+            itemLabel="items"
+          />
         </>
       )}
     </div>
