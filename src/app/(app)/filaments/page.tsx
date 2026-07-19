@@ -3,6 +3,10 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
+import {
+  ColorDistanceBadge,
+  ColorSearch,
+} from "@/components/filament/color-search";
 import { ColorSwatch } from "@/components/filament/color-swatch";
 import { ExternalLink } from "@/components/filament/external-link";
 import { FilamentBuyButton } from "@/components/filament/filament-buy-button";
@@ -49,12 +53,14 @@ function formatCustomValue(value: {
 
 export default function FilamentsPage() {
   const [search, setSearch] = useState("");
+  const [colorHex, setColorHex] = useState<string | null>(null);
   const [materialId, setMaterialId] = useState("");
 
   const materialsQuery = api.catalog.materials.useQuery();
   const filamentsQuery = api.filament.list.useQuery({
     search: search || undefined,
     materialId: materialId || undefined,
+    colorHex: colorHex ?? undefined,
   });
 
   const listColumns = useMemo(() => {
@@ -86,9 +92,14 @@ export default function FilamentsPage() {
       <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
         <Input
           className="min-h-11 w-full text-base sm:min-h-9 sm:max-w-xs sm:text-sm"
-          placeholder="Search color, brand, notes…"
+          placeholder="Search color name, brand, notes…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+        />
+        <ColorSearch
+          className="w-full sm:w-40"
+          value={colorHex}
+          onChange={setColorHex}
         />
         <SearchableSelect
           className="w-full sm:w-44"
@@ -106,6 +117,16 @@ export default function FilamentsPage() {
           ]}
         />
       </div>
+
+      {colorHex && (
+        <p className="text-muted-foreground text-xs">
+          Sorted by perceptual color distance to{" "}
+          <span className="text-foreground font-medium tabular-nums">
+            {colorHex}
+          </span>
+          . Lower ΔE is closer.
+        </p>
+      )}
 
       {filamentsQuery.isLoading ? (
         <p className="text-muted-foreground text-sm">Loading…</p>
@@ -148,6 +169,7 @@ export default function FilamentsPage() {
                       <Badge variant="secondary" className="text-[10px]">
                         {filament.colorMode.toLowerCase()}
                       </Badge>
+                      <ColorDistanceBadge distance={filament.colorDistance} />
                       <RepurchaseQtyBadge quantity={filament.repurchaseQty} />
                       <span className="text-muted-foreground text-xs tabular-nums">
                         {filament._count.spools} spool
@@ -191,6 +213,9 @@ export default function FilamentsPage() {
                 <tr>
                   <th className="px-3 py-2 font-medium">Color</th>
                   <th className="px-3 py-2 font-medium">Filament</th>
+                  {colorHex && (
+                    <th className="px-3 py-2 font-medium">Match</th>
+                  )}
                   <th className="px-3 py-2 font-medium">Material</th>
                   <th className="px-3 py-2 font-medium">Defaults</th>
                   <th className="px-3 py-2 font-medium">Spools</th>
@@ -231,6 +256,13 @@ export default function FilamentsPage() {
                           {filament.brand.name} · {filament.diameterMm}mm
                         </div>
                       </td>
+                      {colorHex && (
+                        <td className="px-3 py-2">
+                          <ColorDistanceBadge
+                            distance={filament.colorDistance}
+                          />
+                        </td>
+                      )}
                       <td className="px-3 py-2">{filament.material.name}</td>
                       <td className="px-3 py-2 tabular-nums">
                         {filament.defaultWeightG}g

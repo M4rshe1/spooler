@@ -2,6 +2,10 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import {
+  closestColorDistance,
+  parseHexColor,
+} from "@/lib/color-distance";
+import {
   filamentFromGrossWeight,
   LOW_STOCK_THRESHOLD_G,
   SPOOL_STATUSES,
@@ -22,6 +26,8 @@ export const spoolRouter = createTRPCRouter({
           brandId: z.string().optional(),
           filamentId: z.string().optional(),
           search: z.string().optional(),
+          /** Target #RRGGBB — results include colorDistance and sort closest-first. */
+          colorHex: z.string().optional(),
           includeArchived: z.boolean().default(false),
         })
         .optional(),
@@ -29,8 +35,11 @@ export const spoolRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
       const search = input?.search?.trim();
+      const colorHex = input?.colorHex
+        ? parseHexColor(input.colorHex)
+        : null;
 
-      return ctx.db.spool.findMany({
+      const spools = await ctx.db.spool.findMany({
         where: {
           userId,
           status:
@@ -70,6 +79,22 @@ export const spoolRouter = createTRPCRouter({
         },
         orderBy: [{ updatedAt: "desc" }],
       });
+
+      if (!colorHex) {
+        return spools.map((s) => ({ ...s, colorDistance: null as number | null }));
+      }
+
+      return spools
+        .map((s) => ({
+          ...s,
+          colorDistance: closestColorDistance(colorHex, s.filament.colors),
+        }))
+        .sort((a, b) => {
+          const da = a.colorDistance ?? Number.POSITIVE_INFINITY;
+          const db = b.colorDistance ?? Number.POSITIVE_INFINITY;
+          if (da !== db) return da - db;
+          return b.updatedAt.getTime() - a.updatedAt.getTime();
+        });
     }),
 
   get: protectedProcedure

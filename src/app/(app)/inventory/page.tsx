@@ -3,6 +3,10 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
+import {
+  ColorDistanceBadge,
+  ColorSearch,
+} from "@/components/filament/color-search";
 import { ColorSwatch } from "@/components/filament/color-swatch";
 import { ExternalLink } from "@/components/filament/external-link";
 import { InventoryQuickActions } from "@/components/filament/inventory-quick-actions";
@@ -80,6 +84,7 @@ function SpoolMobileRow({ spool }: { spool: SpoolRow }) {
             <Badge variant="outline" className="text-[10px]">
               {spool.status}
             </Badge>
+            <ColorDistanceBadge distance={spool.colorDistance} />
             <RepurchaseQtyBadge quantity={spool.filament.repurchaseQty} />
             <span className="text-muted-foreground text-xs tabular-nums">
               {spool.remainingWeightG}g / {spool.initialWeightG}g
@@ -95,9 +100,11 @@ function SpoolMobileRow({ spool }: { spool: SpoolRow }) {
 function SpoolTableRow({
   spool,
   listColumns,
+  showMatch,
 }: {
   spool: SpoolRow;
   listColumns: [string, string][];
+  showMatch?: boolean;
 }) {
   const byField = new Map(
     spool.filament.customFieldValues.map((v) => [v.fieldId, v]),
@@ -123,6 +130,11 @@ function SpoolTableRow({
           {spool.filament.brand.name}
         </div>
       </td>
+      {showMatch && (
+        <td className="px-3 py-2">
+          <ColorDistanceBadge distance={spool.colorDistance} />
+        </td>
+      )}
       <td className="px-3 py-2">{spool.filament.material.name}</td>
       <td className="px-3 py-2 tabular-nums">
         {spool.remainingWeightG}g
@@ -161,6 +173,7 @@ function SpoolTableRow({
 
 export default function InventoryPage() {
   const [search, setSearch] = useState("");
+  const [colorHex, setColorHex] = useState<string | null>(null);
   const [status, setStatus] = useState<string>("");
   const [materialId, setMaterialId] = useState("");
   const [includeArchived, setIncludeArchived] = useState(false);
@@ -169,6 +182,7 @@ export default function InventoryPage() {
   const materialsQuery = api.catalog.materials.useQuery();
   const spoolsQuery = api.spool.list.useQuery({
     search: search || undefined,
+    colorHex: colorHex ?? undefined,
     status: status
       ? (status as (typeof SPOOL_STATUSES)[number])
       : undefined,
@@ -199,6 +213,7 @@ export default function InventoryPage() {
         colorMode?: string;
         colors?: SpoolRow["filament"]["colors"];
         href?: string;
+        colorDistance: number | null;
         spools: SpoolRow[];
       }
     >();
@@ -217,6 +232,7 @@ export default function InventoryPage() {
             colorMode: spool.filament.colorMode,
             colors: spool.filament.colors,
             href: `/filaments/${spool.filamentId}`,
+            colorDistance: spool.colorDistance,
             spools: [spool],
           });
         }
@@ -225,19 +241,34 @@ export default function InventoryPage() {
         const existing = map.get(key);
         if (existing) {
           existing.spools.push(spool);
+          if (
+            spool.colorDistance != null &&
+            (existing.colorDistance == null ||
+              spool.colorDistance < existing.colorDistance)
+          ) {
+            existing.colorDistance = spool.colorDistance;
+          }
         } else {
           map.set(key, {
             key,
             title: spool.filament.material.name,
             subtitle: "Material",
+            colorDistance: spool.colorDistance,
             spools: [spool],
           });
         }
       }
     }
 
-    return [...map.values()].sort((a, b) => a.title.localeCompare(b.title));
-  }, [spoolsQuery.data, groupBy]);
+    return [...map.values()].sort((a, b) => {
+      if (colorHex) {
+        const da = a.colorDistance ?? Number.POSITIVE_INFINITY;
+        const db = b.colorDistance ?? Number.POSITIVE_INFINITY;
+        if (da !== db) return da - db;
+      }
+      return a.title.localeCompare(b.title);
+    });
+  }, [spoolsQuery.data, groupBy, colorHex]);
 
   const overall = useMemo(
     () => spoolTotals(spoolsQuery.data ?? []),
@@ -263,9 +294,14 @@ export default function InventoryPage() {
       <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
         <Input
           className="min-h-11 w-full text-base sm:min-h-9 sm:max-w-xs sm:text-sm"
-          placeholder="Search color, brand, notes…"
+          placeholder="Search color name, brand, notes…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+        />
+        <ColorSearch
+          className="w-full sm:w-40"
+          value={colorHex}
+          onChange={setColorHex}
         />
         <SearchableSelect
           className="w-full sm:w-44"
@@ -317,6 +353,16 @@ export default function InventoryPage() {
           Include archived
         </label>
       </div>
+
+      {colorHex && (
+        <p className="text-muted-foreground text-xs">
+          Sorted by perceptual color distance to{" "}
+          <span className="text-foreground font-medium tabular-nums">
+            {colorHex}
+          </span>
+          . Lower ΔE is closer.
+        </p>
+      )}
 
       {spoolsQuery.isLoading ? (
         <p className="text-muted-foreground text-sm">Loading…</p>
@@ -375,6 +421,9 @@ export default function InventoryPage() {
                     <tr>
                       <th className="px-3 py-2 font-medium">Color</th>
                       <th className="px-3 py-2 font-medium">Spool</th>
+                      {colorHex && (
+                        <th className="px-3 py-2 font-medium">Match</th>
+                      )}
                       <th className="px-3 py-2 font-medium">Material</th>
                       <th className="px-3 py-2 font-medium">Left</th>
                       <th className="px-3 py-2 font-medium">Status</th>
@@ -395,6 +444,7 @@ export default function InventoryPage() {
                         key={spool.id}
                         spool={spool}
                         listColumns={listColumns}
+                        showMatch={!!colorHex}
                       />
                     ))}
                   </tbody>
@@ -435,6 +485,7 @@ export default function InventoryPage() {
                           {group.subtitle}
                         </div>
                       </div>
+                      <ColorDistanceBadge distance={group.colorDistance} />
                       <div className="text-muted-foreground flex flex-wrap gap-x-3 gap-y-0.5 text-xs tabular-nums sm:text-sm">
                         <span>
                           <span className="text-foreground font-medium">
@@ -469,6 +520,9 @@ export default function InventoryPage() {
                           <tr>
                             <th className="px-3 py-2 font-medium">Color</th>
                             <th className="px-3 py-2 font-medium">Spool</th>
+                            {colorHex && (
+                              <th className="px-3 py-2 font-medium">Match</th>
+                            )}
                             <th className="px-3 py-2 font-medium">Material</th>
                             <th className="px-3 py-2 font-medium">Left</th>
                             <th className="px-3 py-2 font-medium">Status</th>
@@ -489,6 +543,7 @@ export default function InventoryPage() {
                               key={spool.id}
                               spool={spool}
                               listColumns={listColumns}
+                              showMatch={!!colorHex}
                             />
                           ))}
                         </tbody>

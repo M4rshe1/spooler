@@ -20,14 +20,20 @@ export type CustomFieldType = (typeof CUSTOM_FIELD_TYPES)[number];
 export const LOW_STOCK_THRESHOLD_G = 200;
 
 /** Common empty plastic spool tare weights (g) */
-export const COMMON_EMPTY_SPOOL_WEIGHTS_G = [140, 160, 180, 200, 220, 250] as const;
+export const COMMON_EMPTY_SPOOL_WEIGHTS_G = [
+  140, 160, 180, 200, 220, 250,
+] as const;
 
 /** Filament remaining from a scale reading of spool + filament */
 export function filamentFromGrossWeight(
   grossG: number,
   emptyWeightG: number | null | undefined,
 ): number | null {
-  if (emptyWeightG == null || !Number.isFinite(grossG) || !Number.isFinite(emptyWeightG)) {
+  if (
+    emptyWeightG == null ||
+    !Number.isFinite(grossG) ||
+    !Number.isFinite(emptyWeightG)
+  ) {
     return null;
   }
   return Math.max(0, Math.round(grossG - emptyWeightG));
@@ -38,7 +44,11 @@ export function grossFromFilamentWeight(
   filamentG: number,
   emptyWeightG: number | null | undefined,
 ): number | null {
-  if (emptyWeightG == null || !Number.isFinite(filamentG) || !Number.isFinite(emptyWeightG)) {
+  if (
+    emptyWeightG == null ||
+    !Number.isFinite(filamentG) ||
+    !Number.isFinite(emptyWeightG)
+  ) {
     return null;
   }
   return Math.round(filamentG + emptyWeightG);
@@ -158,10 +168,7 @@ export const NOZZLE_MATERIAL_LABELS: Record<NozzleMaterial, string> = {
 const optionalTempC = z.number().int().min(0).max(500).optional().nullable();
 
 /** Preferred nozzle tip; null clears the filament override. */
-const optionalPreferredNozzle = z
-  .enum(NOZZLE_MATERIALS)
-  .optional()
-  .nullable();
+const optionalPreferredNozzle = z.enum(NOZZLE_MATERIALS).optional().nullable();
 
 export const filamentTempFieldsSchema = z.object({
   minNozzleC: optionalTempC,

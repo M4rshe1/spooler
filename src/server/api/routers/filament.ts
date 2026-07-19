@@ -1,6 +1,10 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import {
+  closestColorDistance,
+  parseHexColor,
+} from "@/lib/color-distance";
 import { filamentCreateSchema, filamentUpdateSchema } from "@/lib/filament";
 import {
   filamentInclude,
@@ -16,14 +20,19 @@ export const filamentRouter = createTRPCRouter({
           materialId: z.string().optional(),
           brandId: z.string().optional(),
           search: z.string().optional(),
+          /** Target #RRGGBB — results include colorDistance and sort closest-first. */
+          colorHex: z.string().optional(),
         })
         .optional(),
     )
     .query(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
       const search = input?.search?.trim();
+      const colorHex = input?.colorHex
+        ? parseHexColor(input.colorHex)
+        : null;
 
-      return ctx.db.filament.findMany({
+      const filaments = await ctx.db.filament.findMany({
         where: {
           userId,
           materialId: input?.materialId,
@@ -54,6 +63,22 @@ export const filamentRouter = createTRPCRouter({
         },
         orderBy: [{ updatedAt: "desc" }],
       });
+
+      if (!colorHex) {
+        return filaments.map((f) => ({ ...f, colorDistance: null as number | null }));
+      }
+
+      return filaments
+        .map((f) => ({
+          ...f,
+          colorDistance: closestColorDistance(colorHex, f.colors),
+        }))
+        .sort((a, b) => {
+          const da = a.colorDistance ?? Number.POSITIVE_INFINITY;
+          const db = b.colorDistance ?? Number.POSITIVE_INFINITY;
+          if (da !== db) return da - db;
+          return b.updatedAt.getTime() - a.updatedAt.getTime();
+        });
     }),
 
   get: protectedProcedure
